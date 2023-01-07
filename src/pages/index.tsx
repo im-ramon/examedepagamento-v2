@@ -1,5 +1,6 @@
 import { Inter } from '@next/font/google'
 import Head from 'next/head'
+import Link from 'next/link'
 import { appIdentity } from '../utils/texts'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -15,6 +16,7 @@ export default function Home() {
             </Head>
             <main className='bg-red-600 text-blue-500'>
                 <p>Hello word!s</p>
+                <Link href="/app">APP</Link>
             </main>
         </>
     )

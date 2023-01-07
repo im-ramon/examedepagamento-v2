@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { BiBook, BiCustomize, BiDotsVerticalRounded, BiGridAlt, BiHelpCircle, BiHomeAlt, BiMoon, BiSun, BiX } from "react-icons/bi";
@@ -51,8 +52,8 @@ export function Aside() {
             <div className='mt-auto transition-all'>
                 <div className='flex mb-2 px-4 py-2'>
                     <div className='mr-4 flex justify-center items-center'>
-                        <button id="dropdownUserAvatarButton" onClick={() => { setShowConfigMenu(!showConfigMenu) }} className="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" type="button">
-                            {showConfigMenu ? <BiDotsVerticalRounded size={22} className={`${showAside ? '' : 'dark:bg-gray-700 p-1 box-content shadow-lg rounded-xl'}`} /> : <BiX className={`${showAside ? '' : 'dark:bg-gray-700 p-1 box-content shadow-lg rounded-xl'}`} size={22} />}
+                        <button id="dropdownUserAvatarButton" onClick={() => { setShowConfigMenu(!showConfigMenu) }} className="flex mx-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" type="button">
+                            {showConfigMenu ? <BiDotsVerticalRounded size={22} className={`${showAside ? '' : 'bg-white dark:bg-gray-700 p-1 box-content shadow-lg rounded-xl'}`} /> : <BiX className={`${showAside ? '' : 'bg-white dark:bg-gray-700 p-1 box-content shadow-lg rounded-xl'}`} size={22} />}
                         </button>
 
                         <div id="dropdownAvatar" className={`z-10 left-4 bg-white divide-y divide-gray-100 rounded-xl shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ${showConfigMenu ? 'hidden' : 'absolute left-0 bottom-16 '}`}>
@@ -69,7 +70,7 @@ export function Aside() {
                                 </li>
                             </ul>
                             <div className="py-0">
-                                <a href="#" className="no-underline block transition-all px-4 py-2 rounded-bl-xl  rounded-br-xl text-sm text-red-700 hover:bg-gray-100 dark:hover:bg-red-500 dark:text-red-500 dark:hover:text-white">Sair</a>
+                                <Link href="/" className="no-underline block transition-all px-4 py-2 rounded-bl-xl  rounded-br-xl text-sm text-red-700 hover:bg-gray-100 dark:hover:bg-red-500 dark:text-red-500 dark:hover:text-white">Sair</Link>
                             </div>
                         </div>
                     </div>
