@@ -1,9 +1,9 @@
-interface PageTitleProps {
+interface BlockTitleProps {
     title: string;
     sub_title?: string;
 }
 
-export default function PageTitle({ title, sub_title }: PageTitleProps) {
+export default function BlockTitle({ title, sub_title }: BlockTitleProps) {
     return (
         <div>
             <h1 className="text-4xl mt-8">{title}</h1>

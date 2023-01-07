@@ -1,7 +1,7 @@
 import { Inter } from '@next/font/google'
 import Head from 'next/head'
 import Link from 'next/link'
-import { appIdentity } from '../utils/texts'
+import { appIdentity } from '../utils/util_texts'
 
 const inter = Inter({ subsets: ['latin'] })
 

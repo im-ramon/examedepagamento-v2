@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import LayoutRouteApp from "../../components/layouts/LayoutRouteApp";
 import { NextPageWithLayout } from "../_app";
 

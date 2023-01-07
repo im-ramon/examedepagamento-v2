@@ -49,7 +49,7 @@ export function Aside() {
                     </AsideLinks>
                 </ul>
             </div>
-            <div className='mt-auto transition-all'>
+            <div id='config_menu' className='mt-auto transition-all'>
                 <div className='flex mb-2 px-4 py-2'>
                     <div className='mr-4 flex justify-center items-center'>
                         <button id="dropdownUserAvatarButton" onClick={() => { setShowConfigMenu(!showConfigMenu) }} className="flex mx-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" type="button">

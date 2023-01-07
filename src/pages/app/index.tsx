@@ -22,7 +22,7 @@ const Home: NextPageWithLayout = () => {
                     em frente.
                 </p>
             </Card>
-
+            <div className='mt-8'></div>
             <Card title="Avisos importantes">
                 <p className="text-justify">
                     • Em razão de algumas restrições impostas pela Lei nº 13.709, de
