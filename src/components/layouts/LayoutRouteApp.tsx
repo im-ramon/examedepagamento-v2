@@ -1,7 +1,7 @@
 import { Aside } from "../Aside";
 
 interface LayoutRouteAppProps {
-    children: React.ReactElement;
+    children: React.ReactNode;
 }
 
 export default function LayoutRouteApp({ children }: LayoutRouteAppProps) {

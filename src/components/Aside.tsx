@@ -57,8 +57,8 @@ export function Aside() {
 
                         <div id="dropdownAvatar" className={`z-10 left-4 bg-white divide-y divide-gray-100 rounded-xl shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ${showConfigMenu ? 'hidden' : 'absolute left-0 bottom-16 '}`}>
                             <div className="px-4 py-3 text-sm text-gray-900 dark:text-white flex items-center cursor-pointer transition-all" onClick={toggle}>
+                                <div className='mr-2'><span className="font-medium truncate">Alternar tema: </span></div>
                                 <div className='mr-2'>{!isDarkMode ? <BiMoon size={16} className='dark:text-gray-300' /> : <BiSun size={16} />}</div>
-                                <div><span className="font-medium truncate">{!isDarkMode ? 'Ativar tema escuro' : 'Ativar tema claro'}</span></div>
                             </div>
                             <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownUserAvatarButton">
                                 <li>

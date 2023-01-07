@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDarkMode } from 'usehooks-ts';
 
 interface LayoutApplicationProps {
-    children: React.ReactElement;
+    children: React.ReactNode;
 }
 
 export default function LayoutApplication({ children }: LayoutApplicationProps) {
