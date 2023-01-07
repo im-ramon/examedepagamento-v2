@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import { BiLinkExternal } from 'react-icons/bi';
-import Card from '../../components/Card';
+import { Card } from '../../components/Card';
 import LayoutRouteApp from "../../components/layouts/LayoutRouteApp";
 import PageTitle from '../../components/PageTitle';
 import { filesList } from '../../utils/util_filesList';

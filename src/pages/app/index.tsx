@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import Card from '../../components/Card';
+import { Card } from '../../components/Card';
 import LayoutRouteApp from '../../components/layouts/LayoutRouteApp';
 import PageTitle from '../../components/PageTitle';
 import type { NextPageWithLayout } from '../_app';

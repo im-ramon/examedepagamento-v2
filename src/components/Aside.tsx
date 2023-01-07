@@ -14,7 +14,7 @@ export function Aside() {
     const { isDarkMode, toggle } = useDarkMode()
 
     return (
-        <aside className={`absolute md:relative top-0 left-0 flex flex-col transition-all duration-300 bg-white dark:bg-gradient-to-b dark:from-gray-700 dark:to-gray-800 dark:text-white h-full ${showAside ? 'w-64 border-r dark:border-r-gray-700' : 'w-0 border-none'}`}>
+        <aside className={`absolute md:relative top-0 left-0 z-10 flex flex-col transition-all duration-300 bg-white dark:bg-gradient-to-b dark:from-gray-700 dark:to-gray-800 dark:text-white h-full ${showAside ? 'w-64 border-r dark:border-r-gray-700' : 'w-0 border-none'}`}>
             <div className={`absolute top-3 right-0 rounded-tr-xl rounded-br-xl translate-x-8 w-8 h-8 flex justify-center items-center bg-white dark:bg-gray-700 dark:text-white cursor-pointer border dark:border-gray-600 border-l-0 ${showAside ? '' : 'shadow-md'}`} onClick={() => setShowAside(!showAside)}>
                 {showAside ? <AiOutlineClose /> : <AiOutlineMenu />}
             </div>
@@ -56,7 +56,7 @@ export function Aside() {
                             {showConfigMenu ? <BiDotsVerticalRounded size={22} className={`${showAside ? '' : 'bg-white dark:bg-gray-700 p-1 box-content shadow-lg rounded-xl'}`} /> : <BiX className={`${showAside ? '' : 'bg-white dark:bg-gray-700 p-1 box-content shadow-lg rounded-xl'}`} size={22} />}
                         </button>
 
-                        <div id="dropdownAvatar" className={`z-10 left-4 bg-white divide-y divide-gray-100 rounded-xl shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ${showConfigMenu ? 'hidden' : 'absolute left-0 bottom-16 '}`}>
+                        <div id="dropdownAvatar" className={`z-20 left-4 bg-white divide-y divide-gray-100 rounded-xl shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ${showConfigMenu ? 'hidden' : 'absolute left-0 bottom-16 '}`}>
                             <div className="px-4 py-3 text-sm text-gray-900 dark:text-white flex items-center cursor-pointer transition-all" onClick={toggle}>
                                 <div className='mr-2'><span className="font-medium truncate">Alternar tema: </span></div>
                                 <div className='mr-2'>{!isDarkMode ? <BiMoon size={16} className='dark:text-gray-300' /> : <BiSun size={16} />}</div>

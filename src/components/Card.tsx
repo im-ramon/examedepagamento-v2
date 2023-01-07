@@ -3,9 +3,9 @@ interface CardProps {
     title?: string;
 }
 
-export default function Card({ children, title }: CardProps) {
+export function Card({ children, title }: CardProps) {
     return (
-        <div className="bg-gradient-to-r border-transparent dark:border dark:border-gray-700 from-white to-slate-50 dark:from-gray-700 dark:text-white dark:to-gray-750 rounded-xl py-4 px-4 shadow-sm">
+        <div className="bg-gradient-to-l border-transparent dark:border dark:border-gray-700 relative from-white to-slate-50 dark:from-gray-700 dark:text-white dark:to-gray-750 rounded-xl py-4 px-4 shadow-sm">
             {title && <h1 className="text-lg font-bold mb-4">{title}</h1>}
             {children}
         </div>
