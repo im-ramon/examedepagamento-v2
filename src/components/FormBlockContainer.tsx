@@ -5,7 +5,7 @@ interface FormBlockContainerProps {
 
 export const FormBlockContainer = ({ children }: FormBlockContainerProps) => {
     return (
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-500/5 shadow-md rounded-lg px-4 py-6'>
+        <div className='columns-2 bg-gray-300/5 shadow-md rounded-3xl px-8 pt-12'>
             {children}
         </div>
     )

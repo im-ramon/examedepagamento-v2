@@ -3,7 +3,7 @@ import { Card } from "./Card";
 
 interface FormItemProps {
     children: React.ReactNode;
-    labelText: string;
+    labelText?: string;
     supportText: string;
     helpText?: string;
 }
@@ -19,9 +19,9 @@ export const FormItem = ({ children, labelText, supportText, helpText }: FormIte
                     </div>
                 </div>
             )}
-            <label htmlFor="small-input" className="block absolute -top-4 left-3 text-md mb-1 font-medium dark:border dark:border-gray-700 dark:bg-gray-800 px-2 rounded-lg text-gray-900 dark:text-white">{labelText}</label>
+            {labelText && <label htmlFor="small-input" className="block absolute -top-4 left-3 text-md mb-1 font-medium bg-white dark:border dark:border-gray-700 dark:bg-gray-800 px-2 rounded-lg text-gray-900 dark:text-white">{labelText}</label>}
             <p className="block mb-4 text-sm text-gray-900 dark:text-white">{supportText}</p>
-            <div className='flex px-4'>
+            <div className='flex px-4 flex-wrap flex-col'>
                 {children}
             </div>
         </Card>
