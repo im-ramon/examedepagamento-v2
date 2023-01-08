@@ -17,7 +17,10 @@ module.exports = {
                 "primary-300": "#7dd97a",
                 "primary-200": "#96d091",
                 "primary-100": "#b1dcac",
-                "gray-750": "#2b333e"
+                "gray-750": "#2b333e",
+                "danger": "#dc3545",
+                "warning": "#ff8307",
+                "info": "#17a2b8",
             }
         },
     },

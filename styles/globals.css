@@ -27,6 +27,9 @@ a {
     opacity: 1;
 }
 
+input, select, textarea { 
+    outline: none;
+}
 
 aside {
     box-shadow: rgba(0, 0, 0, 0.05) 5px 0px 10px 0px;
@@ -34,4 +37,14 @@ aside {
 
 aside>div:first-child {
     box-shadow: rgba(0, 0, 0, 0.05) 5px 0px 6px 0px;
+}
+
+/* Icone de ajude nos cards do formulário */
+.help_box-text {
+    hyphens: auto;
+}
+
+.help_box-container:hover .help_box-text {
+    opacity: 1 !important;
+    visibility: visible !important;
 }
