@@ -20,7 +20,7 @@ export const FormItem = ({ children, labelText, supportText, helpText }: FormIte
                 </div>
             )}
             {labelText && <label htmlFor="small-input" className="block absolute -top-4 left-3 text-md mb-1 font-medium bg-white dark:border dark:border-gray-700 dark:bg-gray-800 px-2 rounded-lg text-gray-900 dark:text-white">{labelText}</label>}
-            <p className="block mb-4 text-sm text-gray-900 dark:text-white">{supportText}</p>
+            <p className="block mb-4 text-sm text-gray-900 dark:text-white text-justify">{supportText}</p>
             <div className='flex px-4 flex-wrap flex-col'>
                 {children}
             </div>
