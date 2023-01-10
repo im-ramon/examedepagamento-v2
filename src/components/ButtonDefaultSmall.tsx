@@ -1,22 +1,21 @@
 import Image from 'next/image';
 import loading from '../assets/images/svg/loading.svg';
 
-interface ButtonDefaultProps {
+interface ButtonDefaultSmallProps {
     type: "button" | "submit" | "reset" | undefined;
     color: 'green' | 'red' | 'orange' | 'blue' | 'yellow';
     variant: 'solid' | 'outline'
     children: string;
     isLoading?: boolean;
     click?: Function;
-
 }
 
-export function ButtonDefault({ type, children, isLoading, variant, color, click }: ButtonDefaultProps) {
+export function ButtonDefaultSmall({ type, children, isLoading, variant, color, click }: ButtonDefaultSmallProps) {
     return (
         <button
             type={type}
             className={`
-                relative no-underline inline-flex mx-2 items-center justify-center p-4 px-5 py-2 overflow-hidden font-medium text-primary-600 transition duration-300 ease-out rounded-full shadow-xl group hover:ring-2 hover:ring-gray-500/50
+                relative no-underline inline-flex mx-2 items-center justify-center p-4 px-5 py-1 overflow-hidden font-medium text-primary-600 transition duration-300 ease-out rounded-full shadow-xl group hover:ring-2 hover:ring-gray-500/50
                 ${isLoading ? 'opacity-60 cursor-wait' : ''}
                 ${variant == 'outline' ? 'bg-transparent !text-gray-900 dark:!text-white' : ''}
             `}

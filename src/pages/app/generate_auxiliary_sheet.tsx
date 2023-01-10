@@ -1,10 +1,11 @@
 import Head from 'next/head';
-import type { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
-import { BiErrorCircle } from 'react-icons/bi';
+import { BiErrorCircle, BiTrash } from 'react-icons/bi';
 import BlockTitle from '../../components/BlockTitle';
 import { BreakLine } from '../../components/BreakLine';
 import { ButtonDefault } from '../../components/ButtonDefault';
+import { ButtonDefaultSmall } from '../../components/ButtonDefaultSmall';
 import { FormBlockContainer } from '../../components/FormBlockContainer';
 import { FormItem } from '../../components/FormItem';
 import LayoutRouteApp from "../../components/layouts/LayoutRouteApp";
@@ -81,30 +82,61 @@ interface FormInputs {
 const GeneratePayslip: NextPageWithLayout = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormInputs>();
 
+    const [extraValueDescription, setExtraValueDescription] = useState<string>("")
+    const [extraValueAmount, setExtraValueAmount] = useState<string>("")
+    const [extraValueType, setExtraValueType] = useState<'receita' | 'desconto'>('receita')
+    const [extraValueTaxable, setExtraValueTaxable] = useState<'0' | '1'>('0')
+    const [extraValues, setExtraValues] = useState<ExtraValues[]>([])
+
     const onSubmit: SubmitHandler<FormInputs> = data => {
         if (data.universo == '-') {
-            console.log(data)
-            console.log(extraValuesList)
+            const requestData = {
+                ...data,
+                extraValues: {
+                    ...extraValues
+                }
+            }
+            console.log(requestData)
+            
             // procurar todos os selects para validar
             // console.error('implementar validação aqui.')
         } else {
             console.log(data)
         }
     };
-
+    
     interface ExtraValues {
         description: string;
         value: string;
-        type: string;
-        isTaxable: boolean;
+        type: 'receita' | 'desconto';
+        isTaxable: '0' | '1';
+    }
+    
+    function pushExtraValuesInArrayAndClearItsForm() {
+        setExtraValues([
+            ...extraValues,
+            {
+                description: extraValueDescription == '' ? '-' : extraValueDescription,
+                value: extraValueAmount == '' ? '0' : extraValueAmount,
+                type: extraValueType,
+                isTaxable: extraValueTaxable,
+            }
+        ])
+        clearExtraValuesForm()
     }
 
-    const extraValuesList: ExtraValues[] = [{
-        description: 'string',
-        value: 'string',
-        type: 'string',
-        isTaxable: true
-    }];
+    function excludeExtraValueInArray(index: number) {
+        let extraValuesFiltered = [...extraValues];
+        extraValuesFiltered.splice(index, 1)
+        setExtraValues(extraValuesFiltered)
+    }
+
+    function clearExtraValuesForm() {
+        setExtraValueDescription('')
+        setExtraValueAmount('')
+        setExtraValueType('receita')
+        setExtraValueTaxable('0')
+    }
 
     const styleInputNumber = "block w-32 p-2 mx-auto text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
     const styleInputSelect = "block w-64 mx-auto px-2 py-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
@@ -126,7 +158,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                     <div className="flex items-center p-4 -mb-4 text-sm text-yellow-700 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800" role="alert">
                         <BiErrorCircle size={16} />
-                        <span className="font-medium ml-2">Você está editando a ficha auxiliar nº xxxx. Ao gerar a salvar, os dados serão sobreescritos no banco de dados</span> 
+                        <span className="font-medium ml-2">Você está editando a ficha auxiliar nº xxxx. Ao gerar a salvar, os dados serão sobreescritos no banco de dados</span>
                     </div>
                     <BlockTitle title='Informações gerais' />
                     <FormBlockContainer>
@@ -705,19 +737,72 @@ const GeneratePayslip: NextPageWithLayout = () => {
                     {watch('existemValoresExtraBool') && (
                         <div className='bg-gray-300/5 shadow-md rounded-3xl px-8 pt-8'>
 
-                            {extraValuesList.map((item, index, array) => {
+                            {extraValues.map((el, index) => {
                                 return (
-                                    <div key={item.description}>
-                                        <FormItem>
-                                            <div className='grid grid-cols-2'>
-                                                <input type="text" onChange={(event) => { item.description = event.target.value }} className={styleInputSelect} />
-                                                {/* <input type="text" onChange={(event) => { event.target.value }} className={styleInputSelect} /> */}
-                                            </div>
-                                        </FormItem>
+                                    <div key={index} className='bg-white/50 dark:bg-black/10 border dark:border-gray-700 border-gray-200 shadow-md rounded-xl px-4 py-2 mb-3 flex justify-between items-center'>
+                                        <div className='flex text-sm'>
+                                            <p className='pr-3 border-r dark:border-gray-700 border-gray-200'><strong>Descrição:</strong> {el.description}</p>
+                                            <p className='ml-3 pr-3 border-r dark:border-gray-700 border-gray-200'><strong>Valor: </strong>R$ {el.value}</p>
+                                            <p className='ml-3 pr-3 border-r dark:border-gray-700 border-gray-200'><strong>Tributável:</strong> {el.isTaxable == '1' ? 'Sim' : 'Não'}</p>
+                                            <p className='ml-3'><strong>Tipo: </strong><span className='capitalize'>{el.type}</span></p>
+                                        </div>
+                                        <div className='cursor-pointer' onClick={() => excludeExtraValueInArray(index)}>
+                                            <BiTrash size={20} className="text-red-400" />
+                                        </div>
                                     </div>
                                 )
-                            })
-                            }
+                            })}
+
+                            <div>
+                                <FormItem badgeColor='green' badgeText='Novo registro' labelText=' '>
+                                    <div className='grid grid-cols-12 mt-2'>
+
+                                        <div className='col-span-10 grid gap-2 grid-cols-2'>
+                                            <div className='flex items-center pr-2 mr-2'>
+                                                <label>Descrição: </label>
+                                                <input value={extraValueDescription} onChange={e => setExtraValueDescription(e.target.value.toLocaleUpperCase())} placeholder='Ex: SOLDO AT' type="text" className="block flex-1 p-2 ml-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                                            </div>
+
+                                            <div className='flex items-center justify-center pr-2 mr-2'>
+                                                <div className="flex items-center">
+                                                    <input checked={extraValueTaxable == '1'} onChange={(e) => setExtraValueTaxable('1')} value="1" type="radio" className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                                    <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Tributável</label>
+                                                </div>
+                                                <div className="flex items-center ml-2">
+                                                    <input checked={extraValueTaxable == '0'} onChange={(e) => setExtraValueTaxable('0')} value="0" type="radio" className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                                    <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Não tributável</label>
+                                                </div>
+                                            </div>
+
+                                            <div className='flex items-center pr-2 mr-2'>
+                                                <label>Valor: </label>
+                                                <input value={extraValueAmount} onChange={e => setExtraValueAmount(e.target.value)} type="number" min="0" max="99999" step="0.01" className="block flex-1 p-2 ml-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                                            </div>
+
+
+                                            <div className='flex items-center justify-center pr-2 mr-2'>
+                                                <div className="flex items-center">
+                                                    <input checked={extraValueType == 'receita'} onChange={() => setExtraValueType('receita')} value="receita" type="radio" className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                                    <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Receita</label>
+                                                </div>
+                                                <div className="flex items-center ml-2">
+                                                    <input checked={extraValueType == 'desconto'} onChange={() => setExtraValueType('desconto')} value="desconto" type="radio" className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                                    <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Desconto</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='col-span-2 flex justify-center flex-col'>
+                                            <ButtonDefaultSmall color='green' type='button' variant='solid' click={pushExtraValuesInArrayAndClearItsForm}>
+                                                Salvar
+                                            </ButtonDefaultSmall>
+                                            <div className="my-0.5"></div>
+                                            <ButtonDefaultSmall color='yellow' type='button' variant='solid' click={() => { setExtraValueDescription(''); setExtraValueAmount('') }} >
+                                                Limpar
+                                            </ButtonDefaultSmall>
+                                        </div>
+                                    </div>
+                                </FormItem>
+                            </div>
                         </div>
                     )}
 
