@@ -14,7 +14,7 @@ export function Aside() {
     const { isDarkMode, toggle } = useDarkMode()
 
     return (
-        <aside className={`absolute md:relative top-0 left-0 z-10 flex flex-col transition-all duration-300 bg-white dark:bg-gradient-to-b dark:from-gray-700 dark:to-gray-800 dark:text-white h-full ${showAside ? 'w-64 border-r dark:border-r-gray-700' : 'w-0 border-none'}`}>
+        <aside className={`absolute lg:relative top-0 left-0 z-10 flex flex-col transition-all duration-300 bg-white dark:bg-gradient-to-b dark:from-gray-700 dark:to-gray-800 dark:text-white h-full ${showAside ? 'w-64 border-r dark:border-r-gray-700' : 'w-0 border-none'}`}>
             <div className={`absolute top-3 right-0 rounded-tr-xl rounded-br-xl translate-x-8 w-8 h-8 flex justify-center items-center bg-white dark:bg-gray-700 dark:text-white cursor-pointer border dark:border-gray-600 border-l-0 ${showAside ? '' : 'shadow-md'}`} onClick={() => setShowAside(!showAside)}>
                 {showAside ? <AiOutlineClose /> : <AiOutlineMenu />}
             </div>
@@ -52,7 +52,7 @@ export function Aside() {
             <div id='config_menu' className='mt-auto transition-all select-none'>
                 <div className='flex mb-2 px-4 py-2'>
                     <div className='mr-4 flex justify-center items-center'>
-                        <button id="dropdownUserAvatarButton" onClick={() => { setShowConfigMenu(!showConfigMenu) }} className="flex mx-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" type="button">
+                        <button id="dropdownUserAvatarButton" onClick={() => { setShowConfigMenu(!showConfigMenu) }} className="flex mx-3 text-sm rounded-full lg:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" type="button">
                             {showConfigMenu ? <BiDotsVerticalRounded size={22} className={`${showAside ? '' : 'bg-white dark:bg-gray-700 p-1 box-content shadow-lg rounded-xl'}`} /> : <BiX className={`${showAside ? '' : 'bg-white dark:bg-gray-700 p-1 box-content shadow-lg rounded-xl'}`} size={22} />}
                         </button>
 

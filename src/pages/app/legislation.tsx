@@ -1,16 +1,21 @@
+import Head from 'next/head';
 import type { ReactElement } from 'react';
 import { BiLinkExternal } from 'react-icons/bi';
 import { Card } from '../../components/Card';
 import LayoutRouteApp from "../../components/layouts/LayoutRouteApp";
 import PageTitle from '../../components/PageTitle';
 import { filesList } from '../../utils/util_filesList';
+import { appIdentity } from '../../utils/util_texts';
 import { NextPageWithLayout } from "../_app";
 
 const Legislation: NextPageWithLayout = () => {
     return (
         <>
+            <Head>
+                <title>{appIdentity.app_name} | Legislação</title>
+            </Head>
             <PageTitle title='Legislação' sub_title='Encontre aqui a legislação base para o pagamento de pessoal no Exército Brasileiro.' />
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 '>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 '>
                 <CardLegislation badgeType='receita' filesListFiltered={filesList.receitas} />
                 <CardLegislation badgeType='desconto' filesListFiltered={filesList.descontos} />
                 <CardLegislation badgeType='lei' filesListFiltered={filesList.leis} />

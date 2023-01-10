@@ -4,11 +4,13 @@ import { Card } from "./Card";
 interface FormItemProps {
     children: React.ReactNode;
     labelText?: string;
-    supportText: string;
+    supportText?: string;
     helpText?: string;
+    badgeColor?: 'blue' | 'gray' | 'redred' | 'green' | 'yellow' | 'indigo' | 'purple' | 'pink' | 'red';
+    badgeText?: string,
 }
 
-export const FormItem = ({ children, labelText, supportText, helpText }: FormItemProps) => {
+export const FormItem = ({ children, labelText, supportText, helpText, badgeColor, badgeText }: FormItemProps) => {
     return (
         <Card>
             {helpText && (
@@ -19,8 +21,11 @@ export const FormItem = ({ children, labelText, supportText, helpText }: FormIte
                     </div>
                 </div>
             )}
-            {labelText && <label htmlFor="small-input" className="block absolute -top-4 left-3 text-md mb-1 font-medium bg-white dark:border dark:border-gray-700 dark:bg-gray-800 px-2 rounded-lg text-gray-900 dark:text-white">{labelText}</label>}
-            <p className="block mb-4 text-sm text-gray-900 dark:text-white text-justify">{supportText}</p>
+            {labelText && <label htmlFor="small-input" className="block mb-2 text-md dark:border border-none font-bold rounded-lg text-gray-900 dark:text-white">
+                {labelText}
+                {badgeColor && <span className={`ml-2 bg-${badgeColor}-100 text-${badgeColor}-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-${badgeColor}-900 dark:text-${badgeColor}-300`}>{badgeText}</span>}
+            </label>}
+            {supportText && <p className="block mb-4 text-sm text-gray-900 dark:text-white text-justify">{supportText}</p>}
             <div className='flex px-4 flex-wrap flex-col'>
                 {children}
             </div>

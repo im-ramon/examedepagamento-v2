@@ -3,7 +3,7 @@ import loading from '../assets/images/svg/loading.svg';
 
 interface ButtonDefaultProps {
     type: "button" | "submit" | "reset" | undefined;
-    color: 'danger' | 'warning' | 'info' | 'default';
+    color: 'green' | 'red' | 'orange' | 'blue' | 'yellow';
     variant: 'solid' | 'outline'
     children: string;
     isLoading?: boolean;
@@ -14,20 +14,27 @@ export function ButtonDefault({ type, children, isLoading, variant, color }: But
         <button
             type={type}
             className={`
-                flex justify-center shadow-md items-center text-white transition-all border-2 border-transparent hover:brightness-95 hover:scale-95 focus:ring-4
-                ${color == 'default' ? 'bg-primary-900 border-primary-900 ring-primary-900/50' : ''}
-                ${color == 'warning' ? 'bg-warning border-warning ring-warning/50' : ''}
-                ${color == 'danger' ? 'bg-danger border-danger ring-danger/50' : ''}
-                ${color == 'info' ? 'bg-info border-info ring-info/50' : ''}
-                focus:outline-none font-medium rounded-xl text-sm px-5 py-2.5 text-center mr-2 mb-2 
+                relative no-underline inline-flex mx-2 items-center justify-center p-4 px-5 py-2 overflow-hidden font-medium text-primary-600 transition duration-300 ease-out rounded-full shadow-xl group hover:ring-2 hover:ring-gray-500/50
                 ${isLoading ? 'opacity-60 cursor-wait' : ''}
                 ${variant == 'outline' ? 'bg-transparent !text-gray-900 dark:!text-white' : ''}
             `}
             disabled={isLoading}
         >
-            {children}
-            {isLoading && <Image src={loading} alt="loading" width={16} className="ml-2" />}
+            {color == 'red' && <><span className={`absolute inset-0 w-full h-full bg-gradient-to-br from-red-400 via-red-600 to-red-900`}></span><span className={`absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-45 translate-x-24 bg-red-900 rounded-full opacity-30 group-hover:rotate-90 ease`}></span></>}
+            {color == 'green' && <><span className={`absolute inset-0 w-full h-full bg-gradient-to-br from-primary-400 via-primary-600 to-primary-900`}></span><span className={`absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-45 translate-x-24 bg-primary-900 rounded-full opacity-30 group-hover:rotate-90 ease`}></span></>}
+            {color == 'orange' && <><span className={`absolute inset-0 w-full h-full bg-gradient-to-br from-orange-400 via-orange-600 to-orange-900`}></span><span className={`absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-45 translate-x-24 bg-orange-900 rounded-full opacity-30 group-hover:rotate-90 ease`}></span></>}
+            {color == 'blue' && <><span className={`absolute inset-0 w-full h-full bg-gradient-to-br from-sky-400 via-sky-600 to-sky-900`}></span><span className={`absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-45 translate-x-24 bg-sky-900 rounded-full opacity-30 group-hover:rotate-90 ease`}></span></>}
+            {color == 'yellow' && <><span className={`absolute inset-0 w-full h-full bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600`}></span><span className={`absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-45 translate-x-24 bg-yellow-600 rounded-full opacity-30 group-hover:rotate-90 ease`}></span></>}
+            <span className="relative text-white">{children}</span>
+            <span className="relative text-white">{isLoading && <Image src={loading} alt="loading" width={18} className="ml-2" />}</span>
+            
         </button>
 
     )
 }
+
+
+<a href="#_" className="">
+
+
+</a>

@@ -1,12 +1,17 @@
+import Head from 'next/head';
 import type { ReactElement } from 'react';
 import { Card } from '../../components/Card';
 import LayoutRouteApp from '../../components/layouts/LayoutRouteApp';
 import PageTitle from '../../components/PageTitle';
+import { appIdentity } from '../../utils/util_texts';
 import type { NextPageWithLayout } from '../_app';
 
 const Home: NextPageWithLayout = () => {
     return (
         <div>
+            <Head>
+                <title>{appIdentity.app_name} | Home</title>
+            </Head>
             <PageTitle title="Página inicial" />
             <Card title="👋🏽 Bem vindo ao App Exame de Pagamento.">
                 <p>
