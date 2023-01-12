@@ -15,9 +15,8 @@ const Help: NextPageWithLayout = () => {
             <PageTitle title='Ajuda' />
             <Card title='Algumas informações importantes sobre este App:'>
                 <ul className='px-8'>
-                    <li className='list-disc'>Mudança do nome</li>
-                    <li className='list-disc'>Contato com dev</li>
-                    <li className='list-disc'>Obrigação de ler a legislação</li>
+                    <li className='list-disc'>Contato do desenvolvedor: <a href="mailto:contato@ramonoliveira.dev">contato@ramonoliveira.dev</a></li>
+                    <li className='list-disc'>Esta aplicação é apenas <strong>uma ferramenta para facilitar</strong> a confeccção das fichas auxiliares, sendo responsabilidade do examinador ler e conhecer a legislação para identificar possíveis divergências.</li>
                 </ul>
             </Card>
         </>
