@@ -83,7 +83,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormInputs>();
 
     const [extraValueDescription, setExtraValueDescription] = useState<string>("")
-    const [extraValueAmount, setExtraValueAmount] = useState<string>("")
+    const [extraValueAmount, setExtraValueAmount] = useState<string>("0")
     const [extraValueType, setExtraValueType] = useState<'receita' | 'desconto'>('receita')
     const [extraValueTaxable, setExtraValueTaxable] = useState<'0' | '1'>('0')
     const [extraValues, setExtraValues] = useState<ExtraValues[]>([])
@@ -97,21 +97,21 @@ const GeneratePayslip: NextPageWithLayout = () => {
                 }
             }
             console.log(requestData)
-            
+
             // procurar todos os selects para validar
             // console.error('implementar validação aqui.')
         } else {
             console.log(data)
         }
     };
-    
+
     interface ExtraValues {
         description: string;
         value: string;
         type: 'receita' | 'desconto';
         isTaxable: '0' | '1';
     }
-    
+
     function pushExtraValuesInArrayAndClearItsForm() {
         setExtraValues([
             ...extraValues,
@@ -755,9 +755,8 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                             <div>
                                 <FormItem badgeColor='green' badgeText='Novo registro' labelText=' '>
-                                    <div className='grid grid-cols-12 mt-2'>
-
-                                        <div className='col-span-10 grid gap-2 grid-cols-2'>
+                                    <div className='grid grid-cols-1 lg:grid-cols-12 mt-2'>
+                                        <div className='lg:col-span-10 grid gap-4 lg:gap-2 grid-cols-1 lg:grid-cols-2'>
                                             <div className='flex items-center pr-2 mr-2'>
                                                 <label>Descrição: </label>
                                                 <input value={extraValueDescription} onChange={e => setExtraValueDescription(e.target.value.toLocaleUpperCase())} placeholder='Ex: SOLDO AT' type="text" className="block flex-1 p-2 ml-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
@@ -791,12 +790,12 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className='col-span-2 flex justify-center flex-col'>
+                                        <div className='lg:col-span-2 flex justify-center flex-col mt-4 lg:mt-0'>
                                             <ButtonDefaultSmall color='green' type='button' variant='solid' click={pushExtraValuesInArrayAndClearItsForm}>
                                                 Salvar
                                             </ButtonDefaultSmall>
-                                            <div className="my-0.5"></div>
-                                            <ButtonDefaultSmall color='yellow' type='button' variant='solid' click={() => { setExtraValueDescription(''); setExtraValueAmount('') }} >
+                                            <div className="lg:my-0.5 my-3"></div>
+                                            <ButtonDefaultSmall color='yellow' type='button' variant='solid' click={() => { setExtraValueDescription(''); setExtraValueAmount('0') }} >
                                                 Limpar
                                             </ButtonDefaultSmall>
                                         </div>
