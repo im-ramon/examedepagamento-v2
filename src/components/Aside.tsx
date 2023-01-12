@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { BiBook, BiCustomize, BiDotsVerticalRounded, BiGridAlt, BiHelpCircle, BiHomeAlt, BiMoon, BiSun, BiX } from "react-icons/bi";
+import { BiBook, BiCustomize, BiDotsVerticalRounded, BiGridAlt, BiHelpCircle, BiHomeAlt, BiMoon, BiSun, BiUser, BiX } from "react-icons/bi";
 import { useDarkMode } from 'usehooks-ts';
 import logo from '../assets/images/img/logo.png';
 import AsideDivider from './AsideDivider';
@@ -14,7 +14,7 @@ export function Aside() {
     const { isDarkMode, toggle } = useDarkMode()
 
     return (
-        <aside className={`absolute lg:relative top-0 left-0 z-10 flex flex-col transition-all duration-300 bg-white dark:bg-gradient-to-b dark:from-gray-700 dark:to-gray-800 dark:text-white h-full ${showAside ? 'w-64 border-r dark:border-r-gray-700' : 'w-0 border-none'}`}>
+        <aside className={`absolute lg:relative top-0 left-0 z-10 flex flex-col transition-all duration-300 bg-white dark:bg-gradient-to-b dark:from-gray-700 dark:to-gray-800 dark:text-white h-full ${showAside ? 'w-60 border-r dark:border-r-gray-700' : 'w-0 border-none'}`}>
             <div className={`absolute top-3 right-0 rounded-tr-xl rounded-br-xl translate-x-8 w-8 h-8 flex justify-center items-center bg-white dark:bg-gray-700 dark:text-white cursor-pointer border dark:border-gray-600 border-l-0 ${showAside ? '' : 'shadow-md'}`} onClick={() => setShowAside(!showAside)}>
                 {showAside ? <AiOutlineClose /> : <AiOutlineMenu />}
             </div>
@@ -46,6 +46,9 @@ export function Aside() {
                     </AsideLinks>
                     <AsideLinks to='/app/help' title='Ajuda'>
                         <BiHelpCircle size={20} />
+                    </AsideLinks>
+                    <AsideLinks to='/app/profile' title='Perfil'>
+                        <BiUser size={20} />
                     </AsideLinks>
                 </ul>
             </div>
