@@ -18,6 +18,10 @@ export default function Home() {
             <main className='bg-red-600 text-blue-500'>
                 <p>Hello word!s</p>
                 <Link href="/app">APP</Link>
+                <br />
+                <Link href="/auth/singin">singin</Link>
+                <br />
+                <Link href="/auth/singup">singup</Link>
             </main>
         </>
     )

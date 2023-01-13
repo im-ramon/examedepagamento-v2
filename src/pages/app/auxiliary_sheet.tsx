@@ -15,34 +15,34 @@ const AuxiliarySheet: NextPageWithLayout = () => {
             {
                 title: 'SOLDO',
                 percent: '-',
-                value: '3825,00'
+                value: 3825.00
             },
             {
                 title: 'ADIC HAB',
                 percent: '12%',
-                value: '480,00'
+                value: 480.00
             },
             {
                 title: 'ADIC MIL',
                 percent: '16%',
-                value: '620,00'
+                value: 620.00
             },
         ],
         descontos: [
             {
                 title: 'P MIL',
                 percent: '-',
-                value: '3825,00'
+                value: 3825.00
             },
             {
                 title: 'FUSEX',
                 percent: '12%',
-                value: '480,00'
+                value: 480.00
             },
             {
                 title: 'IR',
                 percent: '16%',
-                value: '620,00'
+                value: 620.00
             },
 
         ]
@@ -56,10 +56,10 @@ const AuxiliarySheet: NextPageWithLayout = () => {
     const [showUserNameInPrint, setShowUserNameInPrint] = useState<boolean>(true);
     const [showBossNameInPrint, setShowBossNameInPrint] = useState<boolean>(true);
 
-    function addWhiteLineWhenTheListIsSmallerThenEithteen(listOfValues: { title: string; percent: string; value: string }[]) {
+    function addWhiteLineWhenTheListIsSmallerThenEithteen(listOfValues: { title: string; percent: string; value: number | null }[]) {
         const list = listOfValues
         while (list.length < 16) {
-            list.push({ title: "", percent: "", value: "" })
+            list.push({ title: "", percent: "", value: null })
         }
         return list
     }
@@ -81,6 +81,9 @@ const AuxiliarySheet: NextPageWithLayout = () => {
             </div> */}
 
             <div id='auxiliary_sheet' ref={componentRef} className='bg-white text-black rounded-lg border-2 print:border-none p-2'>
+                <div className='col-span-12 !border-none flex justify-center font-bold text-lg'>
+                    FICHA AUXILIAR
+                </div>
                 <div className='col-span-12 grid grid-cols-12 !border-none px-2 pt-3 pb-2'>
                     <label><strong>UG:</strong></label>
                     <input type="text" className='col-span-2' />
@@ -141,7 +144,7 @@ const AuxiliarySheet: NextPageWithLayout = () => {
                                 <>
                                     <div className='col-span-3 pl-1'> {el.title || <br />}</div>
                                     <div className='text-center'>{el.percent}</div>
-                                    <div className='col-span-2 text-right pr-1'>{el.value}</div>
+                                    <div className='col-span-2 text-right pr-1'>{el.value ? Number(el.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''}</div>
                                     <div className='col-span-2 pr-1'><input type="text" className='text-right w-full' /></div>
                                 </>
                             )
