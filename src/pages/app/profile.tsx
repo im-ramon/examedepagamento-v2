@@ -24,7 +24,7 @@ const Profile: NextPageWithLayout = () => {
         console.log(data)
     };
 
-    const styleInputNumber = "block w-full mt-1 lg:mt-0 lg:w-auto disabled:opacity-50 p-2 flex-1 ml-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
+    const styleInputNumber = "block w-full mt-1 lg:mt-0 lg:w-auto disabled:opacity-50 disabled:cursor-not-allowed p-2 flex-1 ml-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
 
     return (
         <>
@@ -33,7 +33,7 @@ const Profile: NextPageWithLayout = () => {
             </Head>
             <PageTitle title='Perfil' sub_title='Edite aqui as informações do seu perfil.' />
             <Card>
-                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-2 gap-4 ">
                     <div className='flex items-center md:flex-row flex-col'>
                         <label>Nome:</label>
                         <input {...register('userName', { disabled: true },)} type="text" placeholder='Nome completo do examinador' className={styleInputNumber} />

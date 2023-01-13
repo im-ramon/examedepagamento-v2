@@ -1,0 +1,4 @@
+services:
+  pocketbase:
+    image: pocketbase
+    ports: -8090:8090

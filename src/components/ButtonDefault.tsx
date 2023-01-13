@@ -5,7 +5,7 @@ interface ButtonDefaultProps {
     type: "button" | "submit" | "reset" | undefined;
     color: 'green' | 'red' | 'orange' | 'blue' | 'yellow';
     variant: 'solid' | 'outline'
-    children: string;
+    children: React.ReactNode;
     isLoading?: boolean;
     click?: Function;
 
@@ -30,7 +30,7 @@ export function ButtonDefault({ type, children, isLoading, variant, color, click
             {color == 'yellow' && <><span className={`absolute inset-0 w-full h-full bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600`}></span><span className={`absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-45 translate-x-24 bg-yellow-600 rounded-full opacity-30 group-hover:rotate-90 ease`}></span></>}
             <span className="relative text-white">{children}</span>
             <span className="relative text-white">{isLoading && <Image src={loading} alt="loading" width={18} className="ml-2" />}</span>
-            
+
         </button>
 
     )
