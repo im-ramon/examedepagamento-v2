@@ -29,7 +29,7 @@ const Profile: NextPageWithLayout = () => {
     return (
         <>
             <Head>
-                <title>{appIdentity.app_name} | Perfil</title>
+                <title>{appIdentity.app_name + ' | Perfil'}</title>
             </Head>
             <PageTitle title='Perfil' sub_title='Edite aqui as informações do seu perfil.' />
             <Card>

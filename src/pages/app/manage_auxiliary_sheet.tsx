@@ -19,7 +19,7 @@ const ManagePayslip: NextPageWithLayout = () => {
     return (
         <>
             <Head>
-                <title>{appIdentity.app_name} | Gerenciar fichas auxiliares</title>
+                <title>{appIdentity.app_name + ' | Gerenciar fichas auxiliares'}</title>
             </Head>
             <PageTitle title='Gerenciar fichas auxilares' sub_title='Visualize, edite ou exclua as fichas auxiliares que você já gerou.' />
             {mockAuxiliarySheet.length > 0 && mockAuxiliarySheet.map((el, index) => {

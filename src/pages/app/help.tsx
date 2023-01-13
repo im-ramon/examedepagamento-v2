@@ -10,7 +10,7 @@ const Help: NextPageWithLayout = () => {
     return (
         <>
             <Head>
-                <title>{appIdentity.app_name} | Ajuda</title>
+                <title>{appIdentity.app_name + ' | Ajuda'}</title>
             </Head>
             <PageTitle title='Ajuda' />
             <Card title='Algumas informações importantes sobre este App:'>

@@ -12,7 +12,7 @@ const Legislation: NextPageWithLayout = () => {
     return (
         <>
             <Head>
-                <title>{appIdentity.app_name} | Legislação</title>
+                <title>{appIdentity.app_name + ' | Legislação'}</title>
             </Head>
             <PageTitle title='Legislação' sub_title='Encontre aqui a legislação base para o pagamento de pessoal no Exército Brasileiro.' />
             <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 '>

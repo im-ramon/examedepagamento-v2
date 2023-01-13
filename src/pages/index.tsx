@@ -13,6 +13,7 @@ export default function Home() {
                 <meta name="description" content="Faça o exame de pagamento de pessoal, no âmbito do exército brasileiro, de forma fácil e descomplicada." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.png" />
+                <title>{appIdentity.app_name + ' | Bem vindo!'}</title>
             </Head>
             <main className='bg-red-600 text-blue-500'>
                 <p>Hello word!s</p>

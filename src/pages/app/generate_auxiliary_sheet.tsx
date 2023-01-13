@@ -145,7 +145,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
     return (
         <>
             <Head>
-                <title>{appIdentity.app_name} | Gerar ficha auxiliar</title>
+                <title>{appIdentity.app_name + ' | Gerar ficha auxiliar'}</title>
             </Head>
             <PageTitle title='Gerar ficha auxilar' sub_title='Responda o formulário abaixo com as informação do militar/ pensionista que deseja gerar uma ficha auxiliar. Se sugir dúvidas, clique na interrogação (?) no canto de cada campo.' />
             <div>

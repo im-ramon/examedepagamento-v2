@@ -67,7 +67,7 @@ const AuxiliarySheet: NextPageWithLayout = () => {
     return (
         <>
             <Head>
-                <title>{appIdentity.app_name} | Ficha auxiliar - 001</title>
+                <title>{appIdentity.app_name + ' | Ficha auxiliar - 001'}</title>
             </Head>
             <PageTitle title='Ficha auxiliar' sub_title='Esta é a ficha auxiliar gerada com os dados que você informou no formulário.' />
             <div className="flex items-center p-4 mb-4 text-sm text-green-700 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800">

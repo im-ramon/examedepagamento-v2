@@ -10,7 +10,7 @@ const Home: NextPageWithLayout = () => {
     return (
         <div>
             <Head>
-                <title>{appIdentity.app_name} | Home</title>
+                <title>{appIdentity.app_name + ' | Home'}</title>
             </Head>
             <PageTitle title="Página inicial" />
             <Card title="👋🏽 Bem vindo ao App Exame de Pagamento.">
