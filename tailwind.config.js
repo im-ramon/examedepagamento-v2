@@ -22,7 +22,10 @@ module.exports = {
                 "danger": "#dc3545",
                 "warning": "#ff8307",
                 "info": "#17a2b8",
-            }
+            },
+            maxWidth: {
+                "8xl": "90rem"
+            },
         },
     },
     plugins: [require('flowbite/plugin')],
