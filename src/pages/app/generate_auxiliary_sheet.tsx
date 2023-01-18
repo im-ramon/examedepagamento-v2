@@ -1,5 +1,6 @@
+import moment from 'moment';
 import Head from 'next/head';
-import { ReactElement, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiErrorCircle, BiTrash } from 'react-icons/bi';
 import BlockTitle from '../../components/BlockTitle';
@@ -10,107 +11,118 @@ import { FormBlockContainer } from '../../components/FormBlockContainer';
 import { FormItem } from '../../components/FormItem';
 import LayoutRouteApp from "../../components/layouts/LayoutRouteApp";
 import PageTitle from '../../components/PageTitle';
+import { pg_data } from '../../data/pg_data';
+import { api } from '../../services/api';
 import { appIdentity } from '../../utils/util_texts';
 import { NextPageWithLayout } from "../_app";
 
-interface FormInputs {
-    universo: string,
-    dataReferencia: string,
-    maior65: boolean,
-    isentoIr: boolean,
-    pgSoldo: string,
-    pgReal: string,
-    soldoType: string,
-    soldoPropPercent: string,
-    complemetoCotaSoldoBool: string,
-    adicTpSvPercent: string,
-    adicCompDispMilBool: boolean,
-    adicHabType: string,
-    adicMilType: string,
-    adicHVooBool: boolean,
-    adicHVooPercent: string,
-    adicHVooPg: string,
-    acres25Bool: boolean,
-    pttcBool: boolean,
-    depSalFamiliaQtd: string,
-    depIrQtd: string,
-    ferias: boolean,
-    auxTransporte: boolean,
-    auxNatatalidadeBool: boolean,
-    auxNatatalidadeQtd: string,
-    adicNatalinoBool: boolean,
-    adicNatalinoMesesQtd: string,
-    adicNatalino1ParcelaVal: string,
-    auxInvalidezBool: boolean,
-    auxPreEscQtd: string,
-    auxFardBool: boolean,
-    auxFard1VezBool: boolean,
-    gratRepreType: string,
-    gratCmdoBool: boolean,
-    gratRep2Bool: boolean,
-    gratRep2DiasQtd: string,
-    gratRep2Pg: string,
-    auxAlimentC: boolean,
-    auxAlimentEspBool: boolean,
-    auxAlimentEspQtd: string,
-    pMilBool: boolean,
-    pMilMesmoPgBool: boolean,
-    pMilMesmoPg: string,
-    pMil15Bool: boolean,
-    pMil30Bool: boolean,
-    descDepFusexType: string,
-    fusex3Bool: boolean,
-    pnrBool: boolean,
-    pnrType: string,
-    pjBoolean: boolean,
-    pj1Val: string,
-    pj2Val: string,
-    pj3Val: string,
-    pj4Val: string,
-    pj5Val: string,
-    pj6Val: string,
-    pjAdicNatalBoolean: boolean,
-    pjAdicNatal1Val: string,
-    pjAdicNatal2Val: string,
-    pjAdicNatal3Val: string,
-    pjAdicNatal4Val: string,
-    pjAdicNatal5Val: string,
-    pjAdicNatal6Val: string,
-    existemValoresExtraBool: boolean,
+
+export type PostGrad = 'Gen Ex Inat' | 'Gen Ex' | 'Gen Div' | 'Gen Bda' | 'Cel' | 'TC' | 'Maj' | 'Cap' | 'Cap QAO' | '1º Ten' | '1º Ten QAO' | '2º Ten' | '2º Ten QAO' | 'Asp Of' | 'Cad último ano' | 'Cad 1/2/3 ano' | 'Al CPOR' | 'Al ES F S' | 'Al EPC' | 'Al EPC 1/2/3' | 'S Ten' | '1º Sgt' | '2º Sgt' | '2º Sgt QE' | '3º Sgt' | '3º Sgt QE' | 'Cb Eng' | 'Cb N Eng' | 'Sd Esp' | 'Sd 2A Cl' | 'Sd 3A Cl' | 'Sd Eng' | 'Sd Rcr' | 'TF Mor' | 'TF 1Cl' | 'TF 2Cl';
+
+export interface AuxiliarySheetFields {
+    universo?: 'MA' | 'VT' | 'PN',
+    dataReferencia?: string,
+    maior65?: boolean,
+    isentoIr?: boolean,
+    pgSoldo: PostGrad,
+    pgReal: PostGrad,
+    soldoType?: 'integral' | 'cota',
+    soldoPropPercent?: string,
+    cotaParteSoldoPercent?: string,
+    complemetoCotaSoldoBool?: boolean,
+    adicTpSvPercent?: string,
+    adicCompDispMilBool?: boolean,
+    adicHabType?: string,
+    adicMilBool?: boolean,
+    adicHVooBool?: boolean,
+    adicHVooPercent?: string,
+    adicHVooPg?: PostGrad,
+    acres25Bool?: boolean,
+    pttcBool?: boolean,
+    depSalFamiliaQtd?: string,
+    depIrQtd?: string,
+    ferias?: boolean,
+    auxTransporteBool?: boolean,
+    auxTransporteVal?: string,
+    auxNatatalidadeBool?: boolean,
+    auxNatatalidadeQtd?: string,
+    adicNatalinoBool?: boolean,
+    adicNatalinoMesesQtd?: string,
+    adicNatalino1ParcelaVal?: string,
+    auxInvalidezBool?: boolean,
+    auxPreEscQtd?: string,
+    auxFardBool?: boolean,
+    auxFard1VezBool?: boolean,
+    gratRepreType?: string,
+    gratCmdoBool?: boolean,
+    gratRep2Bool?: boolean,
+    gratRep2DiasQtd?: string,
+    gratRep2Pg?: PostGrad,
+    auxAlimentC?: boolean,
+    auxAlimentEspBool?: boolean,
+    auxAlimentEspQtd?: string,
+    pMilBool?: boolean,
+    pMilPgAcimaBool?: boolean,
+    pMilPgAcimaPg?: PostGrad,
+    pMil15Bool?: boolean,
+    pMil30Bool?: boolean,
+    descDepFusexType?: string,
+    fusex3Bool?: boolean,
+    pnrBool?: boolean,
+    pnrType?: string,
+    pjBoolean?: boolean,
+    pj1Val?: string,
+    pj2Val?: string,
+    pj3Val?: string,
+    pj4Val?: string,
+    pj5Val?: string,
+    pj6Val?: string,
+    pjAdicNatalBoolean?: boolean,
+    pjAdicNatal1Val?: string,
+    pjAdicNatal2Val?: string,
+    pjAdicNatal3Val?: string,
+    pjAdicNatal4Val?: string,
+    pjAdicNatal5Val?: string,
+    pjAdicNatal6Val?: string,
+    existemValoresExtraBool?: boolean,
+    extraValues?: ExtraValues[] | {}
 };
 
+export interface ExtraValues {
+    description: string;
+    value: string;
+    type: 'receita' | 'desconto';
+    isTaxable: '0' | '1';
+}
+
 const GeneratePayslip: NextPageWithLayout = () => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormInputs>();
+    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm<AuxiliarySheetFields>();
 
     const [extraValueDescription, setExtraValueDescription] = useState<string>("")
     const [extraValueAmount, setExtraValueAmount] = useState<string>("0")
     const [extraValueType, setExtraValueType] = useState<'receita' | 'desconto'>('receita')
     const [extraValueTaxable, setExtraValueTaxable] = useState<'0' | '1'>('0')
     const [extraValues, setExtraValues] = useState<ExtraValues[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const onSubmit: SubmitHandler<FormInputs> = data => {
-        if (data.universo == '-') {
-            const requestData = {
-                ...data,
-                extraValues: {
-                    ...extraValues
-                }
+    const onSubmit: SubmitHandler<AuxiliarySheetFields> = async data => {
+        setIsLoading(true)
+
+        const requestData = {
+            ...data,
+            extraValues: {
+                ...extraValues
             }
-            console.log(requestData)
-
-            // procurar todos os selects para validar
-            // console.error('implementar validação aqui.')
-        } else {
-            console.log(data)
         }
+
+        await api.post('/generate_auxiliary_sheet', requestData)
+            .then(responseData => console.log(responseData.data))
+            .catch(e => console.error(e))
+            .finally(() => {
+                setIsLoading(false)
+            })
     };
 
-    interface ExtraValues {
-        description: string;
-        value: string;
-        type: 'receita' | 'desconto';
-        isTaxable: '0' | '1';
-    }
 
     function pushExtraValuesInArrayAndClearItsForm() {
         setExtraValues([
@@ -141,6 +153,32 @@ const GeneratePayslip: NextPageWithLayout = () => {
     const styleInputNumber = "block w-32 p-2 mx-auto text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
     const styleInputSelect = "block w-64 mx-auto px-2 py-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
     const styleInputToggle = "w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300/50 dark:peer-focus:ring-primary-800/50 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600";
+
+    const [pgOptionsToSelectInput, setPgOptionsToSelectInput] = useState<any>([])
+    const [auxiliarySheetDate, setAuxiliarySheetDate] = useState<string>(moment().format("YYYY-MM-DD"))
+
+    const resetAllForm = () => {
+        reset()
+    }
+
+    useEffect(() => {
+        const allPgInfo = pg_data.filter((item) => {
+            return moment(auxiliarySheetDate).isBetween(item.startAt, item.endAt)
+        })[0]
+
+        if (allPgInfo) {
+            const arrayElements = [<option key={'-'} disabled value="-">- Selecione uma opção -</option>]
+            Object.keys(allPgInfo).forEach(key => {
+                if (key == 'startAt' || key == 'endAt') {
+                    return
+                }
+                arrayElements.push(<option key={key} value={key}>{key}</option>)
+            })
+            setPgOptionsToSelectInput([...arrayElements])
+        }
+
+
+    }, [auxiliarySheetDate])
 
     return (
         <>
@@ -173,7 +211,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                         </FormItem>
 
                         <FormItem labelText='Data do contracheque' supportText='Qual a data do contracheque?'>
-                            <input type="date" placeholder="Data" {...register("dataReferencia", {})} className={styleInputSelect} />
+                            <input defaultValue={auxiliarySheetDate} type="date" min="2020-01-01" placeholder="Data" {...register("dataReferencia", { onChange: (e) => { setAuxiliarySheetDate(e.target.value) }, min: "2020-01-01" })} className={styleInputSelect} />
                         </FormItem>
 
                         <FormItem labelText='Idade' supportText='O examinado tem mais de 65 anos?' helpText='Essa informação irá influenciar no valor final do imposto de renda.'>
@@ -199,21 +237,16 @@ const GeneratePayslip: NextPageWithLayout = () => {
                         </FormItem>
 
                         <FormItem labelText='Post/Grad para Soldo' supportText='Qual o P/G em que o examinado recebe o soldo?' helpText='Deve ser selecionado o Posto/ Graduação em que o examinado recebe o soldo. No caso dos miltiares da ativa, o P/G para soldo e P/G Real são os mesmos, entretanto, no caso dos Militares Veteranos e Pensionistas, essas informações poderão ser difirentes.'>
-                            <select defaultValue={'-'} {...register('pgSoldo', { required: true })} className={styleInputSelect}>
-                                <option value="-" disabled>- Selecione uma opção -</option>
-                                <option value="MAR">MAR</option>
-                                <option value="CEL">CEL</option>
+                            <select defaultValue={'-'} {...register('pgSoldo')} className={styleInputSelect}>
+                                {pgOptionsToSelectInput}
                             </select>
                         </FormItem>
 
                         <FormItem labelText='Post/Grad Real' supportText='Qual o P/G real do examinado?' helpText='O P/G real é o último Posto ou Graduação do militar (ou instituidor de pensão) enquanto na ativa. Não deve ser considerado: - Postos ou graduações alcançados pelo militar como benefício, na forma prevista em lei, em decorrência de reforma, morte ou transferência para a reserva; - Percepção de soldo ou de remuneração correspondente a grau hierárquico superior ao alcançado na ativa, em decorrência de reforma, morte ou transferência para a reserva; e - Percepção de pensão militar correspondente a grau hierárquico superior ao alcançado pelo militar em atividade, em decorrência de benefícios concedidos pela Lei nº 3.765, de 4 de maio de 1960.'>
-                            <select defaultValue={'-'} {...register('pgReal', { required: true })} className={styleInputSelect}>
-                                <option value="-" disabled>- Selecione uma opção -</option>
-                                <option value="MAR">MAR</option>
-                                <option value="CEL">CEL</option>
+                            <select defaultValue={'-'} {...register('pgReal')} className={styleInputSelect}>
+                                {pgOptionsToSelectInput}
                             </select>
                         </FormItem>
-
                     </FormBlockContainer>
 
                     <BlockTitle title='Informações financeiras' />
@@ -229,6 +262,10 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                         {watch('soldoType') == 'cota' && (
                             <>
+                                <FormItem labelText='Soldo Proporcional para Cota' supportText='Qual porcentagem de soldo proporcional para cota o examinado recebe?' helpText='O soldo proporcional para cota é difirente da cota-parte do soldo. O soldo proporcional para cota é devido, normalmente, aos militares que foram para a reserva antes do tempo mínimo, como no caso de militares reformados por ser julgado incapaz definitivamente. Os pensionistas desses militares também pode receber o soldo proporcional para cota. Por exemplo, o instituidor da pensão poderia receber soldo proporcional para cota de 29/30 e ao falecer deixar a pensão de 1/3 para cada dependente, logo, a pensão será calculada primeiro sobre o soldo proporcional depois será dividida por cota-parte para cada beneficiário. Referência: Lei nº 6.880, de 9 de dezembro de 1980.'>
+                                    <input {...register('soldoPropPercent', { required: true, min: 0, max: 100 })} defaultValue={0.00} step="0.01" min="0" max="100" type="number" className={styleInputNumber} />
+                                </FormItem>
+
                                 <FormItem labelText='Complemento de cota de soldo' supportText='Recebe complemento de cota de soldo?' helpText='Direito extinto'>
                                     <div className='flex items-center justify-center w-full py-1'>
                                         <span className='text-sm mx-2'>Não</span>
@@ -239,11 +276,13 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                         <span className='text-sm mx-2'>Sim</span>
                                     </div>
                                 </FormItem>
-
-                                <FormItem labelText='Soldo Proporcional para Cota' supportText='Qual porcentagem de soldo proporcional para cota o examinado recebe?' helpText='O soldo proporcional para cota é difirente da cota-parte do soldo. O soldo proporcional para cota é devido, normalmente, aos militares que foram para a reserva antes do tempo mínimo, como no caso de militares reformados por ser julgado incapaz definitivamente. Os pensionistas desses militares também pode receber o soldo proporcional para cota. Por exemplo, o instituidor da pensão poderia receber soldo proporcional para cota de 29/30 e ao falecer deixar a pensão de 1/3 para cada dependente, logo, a pensão será calculada primeiro sobre o soldo proporcional depois será dividida por cota-parte para cada beneficiário. Referência: Lei nº 6.880, de 9 de dezembro de 1980.'>
-                                    <input {...register('soldoPropPercent', { required: true, min: 0, max: 100 })} defaultValue={0.00} step="0.01" min="0" max="100" type="number" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                                </FormItem>
                             </>
+                        )}
+
+                        {watch('universo') == 'PN' && (
+                            <FormItem labelText='Cota-parte do Soldo' supportText='Qual porcetagem de cota-parte a pensionista recebe?' helpText='Esse campo é exclusivo para pensionistas. Aqui deve ser informado qual porcentagem de cota-parte o(a) pensionista recebe. Essa informação fica disponível no título de pensão ou na apostila, na PHPM do(a) examinado(a). Em documentos mais antigos, é informado o percentual em fração, então, para inserir a informação no campo, converta a fração em porcentagem, por exemplo: 1/2 = 50%.' badgeColor='green' badgeText='Receita'>
+                                <input {...register('cotaParteSoldoPercent', { required: true, min: 0, max: 100 })} defaultValue={100} step="0.01" min="0" max="100" type="number" className={styleInputNumber} />
+                            </FormItem>
                         )}
 
                         <FormItem labelText='Adicional de Tempo de Serviço' supportText='Qual o percentual que o examinado faz jus de Adicional de Tempo de Serviço?' helpText='Adicional de Tempo de Serviço é a parcela remuneratória mensal devida ao militar, inerente ao tempo de serviço e os acréscimos permitidos por lei, observado o disposto no art. 30 da Medida Provisória 2215/01. Será computado 1% para cada ano de serviço anterior a 31 DEZ 2000. É vedada a concessão cumulativa do adicional de compensação por disponibilidade militar com o adicional de tempo de serviço, sendo assegurado, caso o militar faça jus a ambos os adicionais, o recebimento do mais vantajoso.' badgeColor='green' badgeText='Receita'>
@@ -273,11 +312,11 @@ const GeneratePayslip: NextPageWithLayout = () => {
                             </select>
                         </FormItem>
 
-                        <FormItem labelText='Adicional Militar' supportText='O militar receber Adicional Militar' helpText='O Adicional Militar é a parcela remuneratória mensal devida ao militar, inerente a cada círculo hierárquico da carreira militar. Os percentuais estão presentes na Medida Provisória nº 2.215-10, de 31 de agosto de 2001. O próprio CPEx faz a gerencia sobre que percentual do Adicional Militar deve ser pago para cadas militar/ pensionistas.' badgeColor='green' badgeText='Receita'>
+                        <FormItem labelText='Adicional Militar' supportText='O militar recebe Adicional Militar' helpText='O Adicional Militar é a parcela remuneratória mensal devida ao militar, inerente a cada círculo hierárquico da carreira militar. Os percentuais estão presentes na Medida Provisória nº 2.215-10, de 31 de agosto de 2001. O próprio CPEx faz a gerencia sobre que percentual do Adicional Militar deve ser pago para cadas militar/ pensionistas.' badgeColor='green' badgeText='Receita'>
                             <div className='flex items-center justify-center w-full py-1'>
                                 <span className='text-sm mx-2'>Não</span>
                                 <label className="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" {...register('adicMilType')} value="" className="sr-only peer" />
+                                    <input type="checkbox" {...register('adicMilBool')} defaultChecked value="" className="sr-only peer" />
                                     <div className={styleInputToggle}></div>
                                 </label>
                                 <span className='text-sm mx-2'>Sim</span>
@@ -302,10 +341,8 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                     </FormItem>
 
                                     <FormItem supportText='Calculado sobre o soldo de qual soldo?'>
-                                        <select defaultValue={'-'} {...register('adicHVooPg', { required: true })} className={styleInputSelect}>
-                                            <option value="-" disabled>- Selecione uma opção -</option>
-                                            <option value="MAR">MAR</option>
-                                            <option value="CEL">CEL</option>
+                                        <select defaultValue={'-'} {...register('adicHVooPg')} className={styleInputSelect}>
+                                            {pgOptionsToSelectInput}
                                         </select>
                                     </FormItem>
                                 </>
@@ -382,11 +419,22 @@ const GeneratePayslip: NextPageWithLayout = () => {
                             <div className='flex items-center justify-center w-full py-1'>
                                 <span className='text-sm mx-2'>Não</span>
                                 <label className="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" {...register('auxTransporte')} value="" className="sr-only peer" />
+                                    <input type="checkbox" {...register('auxTransporteBool')} value="" className="sr-only peer" />
                                     <div className={styleInputToggle}></div>
                                 </label>
                                 <span className='text-sm mx-2'>Sim</span>
                             </div>
+
+                            {watch('auxTransporteBool') && (
+                                <>
+                                    <BreakLine />
+
+                                    <FormItem supportText='Valor do auxilío transporte:'>
+                                        <input {...register('auxTransporteVal', { required: true, min: 0, max: 99999 })} defaultValue="0" step="0.01" min="0" max="99999" type="number" className={styleInputNumber} />
+                                    </FormItem>
+                                </>)
+                            }
+                            {/* COLOCAR VALOR DO AUXILIO TRANSPORTE AQUI */}
                         </FormItem>
 
                         <FormItem labelText='Auxílio Natalidade' supportText='O examinado irá receber Auxílio Natalidade?' helpText='É o direito pecuniário devido ao militar por motivo de nascimento do filho, adoção ou reconhecimento de paternidade, conforme Decreto nº 4.307, de 18 de julho de 2002, e corresponde a uma vez o soldo do posto ou graduação. Na hipótese de ambos os genitores serem militares, o auxílio-natalidade será pago apenas à parturiente, com base no soldo daquele que possuir a maior remuneração ou provento; Na ocorrência de parto múltiplo, o auxílio-natalidade será acrescido de cinquenta por cento (50%) por cada recém-nascido, sendo 1 ½ soldo ao 1º filho, acrescido de ½ soldo a cada nascido. Exemplo: Parto de trigêmeos ou adoção de 3 (três) crianças: 1 soldo e 50% (1º filho) + 50% (2º filho) + 50% (3º filho) = 2,5 soldos.' badgeColor='green' badgeText='Receita'>
@@ -487,7 +535,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                         <FormItem labelText='Gratificação de Localidade Especial' supportText='Qual tipo de Gratificação de Localidade Especial o examinado recebe?' helpText='O militar em Localidade Especial Tipo “A” faz jus ao percentual de 20% (vinte por cento) do soldo e o militar em Localidade Especial Tipo “B” faz jus ao percentual de 10% (dez por cento) do soldo, nos termos da Portaria Normativa nº 13-MD, de 5 de janeiro de 2006 e suas atualizações; O direito do militar à gratificação de localidade especial, quando for transferido, começa no dia da sua apresentação à OM de destino e cessa no seu desligamento; É assegurado ao militar o direito à continuidade da percepção da gratificação de localidade especial nos afastamentos sem desligamento da OM; O deslocamento do militar de uma localidade especial para exercer atividades em outra localidade que não é considerada especial, por necessidade do serviço e em caráter temporário, não implicará na perda da Gratificação de Localidade Especial; e O militar que recebe a Gratificação de Localidade Especial Tipo B (10%) e vai exercer atividades em Localidade Especial Tipo A (20%) faz jus à diferença entre as gratificações.' badgeColor='green' badgeText='Receita'>
                             <select defaultValue={'-'} {...register('gratRepreType', { required: true })} className={styleInputSelect}>
-                                <option value="-" disabled>- Selecione uma opção -</option>
+                                <option value="-">Não recebe</option>
                                 <option value="A">Tipo “A”</option>
                                 <option value="B">Tipo “B”</option>
                             </select>
@@ -523,10 +571,8 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                     </FormItem>
 
                                     <FormItem supportText='Sobre qual posto ou graduação?'>
-                                        <select defaultValue={'-'} {...register('gratRep2Pg', { required: true })} className={styleInputSelect}>
-                                            <option value="-" disabled>- Selecione uma opção -</option>
-                                            <option value="MAR">MAR</option>
-                                            <option value="CEL">CEL</option>
+                                        <select defaultValue={'-'} {...register('gratRep2Pg')} className={styleInputSelect}>
+                                            {pgOptionsToSelectInput}
                                         </select>
                                     </FormItem>
                                 </>
@@ -539,7 +585,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                             <div className='flex flex-1 items-center justify-center w-full py-1'>
                                 <span className='text-sm mx-2'>Não</span>
                                 <label className="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" {...register('pMilBool')} value="" className="sr-only peer" />
+                                    <input type="checkbox" {...register('pMilBool')} value="" defaultChecked className="sr-only peer" />
                                     <div className={styleInputToggle}></div>
                                 </label>
                                 <span className='text-sm mx-2'>Sim</span>
@@ -549,26 +595,29 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                 <>
                                     <BreakLine />
 
-                                    <FormItem supportText='Contribui sobre o soldo do mesmo posto/ gradução?'>
+                                    <FormItem supportText='Contribui em um posto/ gradução acima do que recebe?'>
                                         <div className='flex flex-1 items-center justify-center w-full py-1'>
                                             <span className='text-sm mx-2'>Não</span>
                                             <label className="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" {...register('pMilMesmoPgBool')} value="" className="sr-only peer" />
+                                                <input type="checkbox" {...register('pMilPgAcimaBool')} value="" className="sr-only peer" />
                                                 <div className={styleInputToggle}></div>
                                             </label>
                                             <span className='text-sm mx-2'>Sim</span>
                                         </div>
                                     </FormItem>
 
-                                    <FormItem supportText='Sobre qual posto/ gradução o examinado contribui para a Pensão Militar?'>
-                                        <select defaultValue={'-'} {...register('pMilMesmoPg', { required: true })} className={styleInputSelect}>
-                                            <option value="-" disabled>- Selecione uma opção -</option>
-                                            <option value="MAR">MAR</option>
-                                            <option value="CEL">CEL</option>
-                                        </select>
-                                    </FormItem>
+                                    {watch('pMilPgAcimaBool') && (
+                                        <>
+                                            <FormItem supportText='Sobre qual posto/ gradução o examinado contribui para a Pensão Militar?'>
+                                                <select defaultValue={'-'} {...register('pMilPgAcimaPg')} className={styleInputSelect}>
+                                                    {pgOptionsToSelectInput}
+                                                </select>
+                                            </FormItem>
+                                        </>
+                                    )}
                                 </>
                             )}
+
                         </FormItem>
 
                         <FormItem labelText='Pensão Militar 1,5%' supportText='Fez a opção pelo desconto de Pensão Militar de 1.5%?' helpText='O desconto da pensão militar de 1,5% (um e meio por cento) destina-se à manutenção dos benefícios previstos na Lei nº 3.765, de 4 de maio de 1960, ou seja, anteriores à vigência da MP 2.215-10, de 31 de agosto de 2001. O desconto tem como finalidade garantir a permanência das filhas como dependente habilitável à pensão militar, mesmo após as "perderem" a condição de dependência (casarem-se e ultrapassar os 24 anos). Também contribui, obrigatoriamente, a pensionista que era esposa do instituidor da pensão e esse optou em  contribuir com este desconto adicional.' badgeColor='red' badgeText='Desconto'>
@@ -807,8 +856,8 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
 
                     <div className='flex justify-end py-2 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-t-3xl fixed'>
-                        <ButtonDefault type='submit' isLoading={!true} color='green' variant='solid'>Gerar ficha</ButtonDefault>
-                        <ButtonDefault type='reset' isLoading={!true} color='yellow' variant='solid'>Limpar formulário</ButtonDefault>
+                        <ButtonDefault type='submit' isLoading={isLoading} color='green' variant='solid'>Gerar ficha</ButtonDefault>
+                        <ButtonDefault type='button' disabled={isLoading} color='yellow' variant='solid' click={resetAllForm}>Limpar formulário</ButtonDefault>
                     </div>
                 </form>
             </div>

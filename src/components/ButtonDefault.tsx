@@ -8,10 +8,10 @@ interface ButtonDefaultProps {
     children: React.ReactNode;
     isLoading?: boolean;
     click?: Function;
-
+    disabled?: boolean;
 }
 
-export function ButtonDefault({ type, children, isLoading, variant, color, click }: ButtonDefaultProps) {
+export function ButtonDefault({ type, children, isLoading, variant, color, click, disabled }: ButtonDefaultProps) {
     return (
         <button
             type={type}
@@ -21,7 +21,7 @@ export function ButtonDefault({ type, children, isLoading, variant, color, click
                 ${variant == 'outline' ? 'bg-transparent !text-gray-900 dark:!text-white' : ''}
             `}
             onClick={() => { click && click() }}
-            disabled={isLoading}
+            disabled={isLoading || disabled}
         >
             {color == 'red' && <><span className={`absolute inset-0 w-full h-full bg-gradient-to-br from-red-400 via-red-600 to-red-900`}></span><span className={`absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-45 translate-x-24 bg-red-900 rounded-full opacity-30 group-hover:rotate-90 ease`}></span></>}
             {color == 'green' && <><span className={`absolute inset-0 w-full h-full bg-gradient-to-br from-primary-400 via-primary-600 to-primary-900`}></span><span className={`absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-45 translate-x-24 bg-primary-900 rounded-full opacity-30 group-hover:rotate-90 ease`}></span></>}
