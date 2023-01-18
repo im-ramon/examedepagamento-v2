@@ -135,7 +135,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.adicTpSv.value).toBe(0);
     });
 
-    test('Test calc [AD C DISP MIL | ADIC TP SV]: When AD C DISP MIL is equals ADIC TP SV', () => {
+    test('Test calc [AD C DISP MIL | ADIC TP SV]: When AD C DISP MIL equals ADIC TP SV', () => {
         const MockForm: AuxiliarySheetFields = {
             ...baseMockForm,
             universo: 'PN',
