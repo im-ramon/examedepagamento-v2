@@ -1307,7 +1307,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
     });
 
 
-    test('Test calc GRAT REPRES 2%]: 7 days of 2º Sgt', () => {
+    test('Test calc [GRAT REPRES 2%]: 7 days of 2º Sgt', () => {
         const MockForm: AuxiliarySheetFields = {
             "universo": "MA",
             "dataReferencia": "2023-01-19",
@@ -1368,7 +1368,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.gratRep2.value).toBe(667.80);
     });
 
-    test('Test calc GRAT REPRES 2%]: 15 day of Cap', () => {
+    test('Test calc [GRAT REPRES 2%]: 15 day of Cap', () => {
         const MockForm: AuxiliarySheetFields = {
             "universo": "MA",
             "dataReferencia": "2023-01-19",
@@ -1427,6 +1427,56 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
         expect(auxialarySheet.gratRep2.value).toBe(2740.5);
+    });
+
+    test('Test calc [ADIC PTTC]: To Cap - With vocation', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-19",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "Cap",
+            "pgReal": "Cap",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "formacao",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": true,
+            "ferias": true,
+            "adicNatalinoBool": false,
+            "depSalFamiliaQtd": "0",
+            "depIrQtd": "0",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": false,
+            "auxPreEscQtd": "0",
+            "auxFardBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": false,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": false,
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "00",
+            "pnrBool": false,
+            "pjBoolean": false,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "extraValues": {}
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.adicPTTC.value).toBe(3672.27);
+        expect(auxialarySheet.adicFerias.value).toBe(1224.08);
     });
 
 });
