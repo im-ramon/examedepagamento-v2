@@ -920,4 +920,114 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
 
         expect(auxialarySheet.auxInvalidez.value).toBe(2283.75);
     });
+
+    test('Test calc [ASSIST PRE-ESC]: For 3º Sgt', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "VT",
+            "dataReferencia": "2023-01-19",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "3º Sgt",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "sem_formacao",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": false,
+            "ferias": true,
+            "adicNatalinoBool": false,
+            "depSalFamiliaQtd": "0",
+            "depIrQtd": "0",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": true,
+            "auxPreEscQtd": "2",
+            "auxFardBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": false,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": false,
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "00",
+            "pnrBool": false,
+            "pjBoolean": false,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "adicCoOrgPercent": "10",
+            "adicCoOrgPg": "2º Ten",
+            "adicCoOrgType": "PDQT",
+            "extraValues": {}
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.auxPreEsc.length).toBe(2);
+        expect(auxialarySheet.auxPreEsc[0].value).toBe(304.95);
+        expect(auxialarySheet.auxPreEsc[1].value).toBe(304.95);
+        expect(auxialarySheet.auxPreEsc[2]).toBeUndefined();
+    });
+
+
+    test('Test calc [ASSIST PRE-ESC]: For 0 dependent', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "VT",
+            "dataReferencia": "2023-01-19",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "3º Sgt",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "sem_formacao",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": false,
+            "ferias": true,
+            "adicNatalinoBool": false,
+            "depSalFamiliaQtd": "0",
+            "depIrQtd": "0",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": true,
+            "auxPreEscQtd": "0",
+            "auxFardBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": false,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": false,
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "00",
+            "pnrBool": false,
+            "pjBoolean": false,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "adicCoOrgPercent": "10",
+            "adicCoOrgPg": "2º Ten",
+            "adicCoOrgType": "PDQT",
+            "extraValues": {}
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.auxPreEsc.length).toBe(1);
+        expect(auxialarySheet.auxPreEsc[0].value).toBe(0);
+        expect(auxialarySheet.auxPreEsc[1]).toBeUndefined();
+    });
 });
