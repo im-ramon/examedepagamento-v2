@@ -417,6 +417,34 @@ export class AuxiliarySheetEtitie {
             value: this.truncateDecimalNumbers(valueCalculated)
         }
     }
+
+    get auxAlimentC(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.auxAlimentC) {
+            valueCalculated = 9 * 30
+        }
+
+        return {
+            title: 'AUX ALIM C',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get auxAliment(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.auxAlimentEspBool && this.fields.auxAlimentEspType && this.fields.auxAlimentEspQtd) {
+            let valueEtapa = 9
+            valueCalculated = valueEtapa * Number(this.fields.auxAlimentEspQtd) * Number(this.fields.auxAlimentEspType)
+        }
+        return {
+            title: `AUX ALIM ${this.fields.auxAlimentEspType}X`,
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
 }
 
 // Conferir os campos de ADIC NATALINO, FERIAS e BRUTO
