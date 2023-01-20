@@ -356,6 +356,47 @@ export class AuxiliarySheetEtitie {
             value: this.truncateDecimalNumbers(valueCalculated)
         }
     }
+
+    get auxPreEsc(): fieldInterface[] {
+        let valueCalculated = 0
+        let arrayResponse: fieldInterface[] = [{
+            title: 'ASSIST PRE-ESC',
+            percent: '-',
+            value: 0
+        }]
+
+        if (this.fields.auxPreEscQtd != "0") {
+            let auxPreEscBaseValue = 321
+            let gross = this.calculateGrossAmountToIR()
+            let calcBaseSdSoldo = this.paymentRefereceByDate["Sd Eng"].soldo
+            let quota = gross / calcBaseSdSoldo
+            let quotaToCal = 0
+
+            if (quota > 0 && quota <= 5) {
+                quotaToCal = 0.05;
+            } else if (quota > 5 && quota <= 10) {
+                quotaToCal = 0.10;
+            } else if (quota > 10 && quota <= 15) {
+                quotaToCal = 0.15;
+            } else if (quota > 15 && quota <= 20) {
+                quotaToCal = 0.20;
+            } else if (quota > 20) {
+                quotaToCal = 0.25;
+            }
+
+            valueCalculated = auxPreEscBaseValue - (quotaToCal * auxPreEscBaseValue)
+            arrayResponse.length = 0
+            for (let i = 0; i < Number(this.fields.auxPreEscQtd); i++) {
+                arrayResponse.push({
+                    title: 'ASSIST PRE-ESC',
+                    percent: '-',
+                    value: this.truncateDecimalNumbers(valueCalculated)
+                })
+            }
+        }
+
+        return arrayResponse
+    }
 }
 
 // Conferir os campos de ADIC NATALINO, FERIAS e BRUTO
