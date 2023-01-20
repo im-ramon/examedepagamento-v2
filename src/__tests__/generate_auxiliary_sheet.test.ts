@@ -1030,4 +1030,113 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.auxPreEsc[0].value).toBe(0);
         expect(auxialarySheet.auxPreEsc[1]).toBeUndefined();
     });
+
+    test("Test calc [AUX FARDAMENTO]: Don't First time - 3º Sgt", () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-19",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "3º Sgt",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "sem_formacao",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": false,
+            "ferias": true,
+            "adicNatalinoBool": false,
+            "depSalFamiliaQtd": "0",
+            "depIrQtd": "0",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": false,
+            "auxPreEscQtd": "0",
+            "auxFardBool": true,
+            "auxFard1VezBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": false,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": false,
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "00",
+            "pnrBool": false,
+            "pjBoolean": false,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "adicCoOrgPercent": "10",
+            "adicCoOrgPg": "2º Ten",
+            "adicCoOrgType": "PDQT",
+            "extraValues": {}
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.auxFardamento.value).toBe(3825);
+        expect(auxialarySheet.auxFardamento.title).toBe('AUX FARD 1 SLD');
+    });
+
+    test('Test calc [AUX FARDAMENTO]: First time - 2º Ten', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-19",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "2º Ten",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "sem_formacao",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": false,
+            "ferias": true,
+            "adicNatalinoBool": false,
+            "depSalFamiliaQtd": "0",
+            "depIrQtd": "0",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": false,
+            "auxPreEscQtd": "0",
+            "auxFardBool": true,
+            "auxFard1VezBool": true,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": false,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": false,
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "00",
+            "pnrBool": false,
+            "pjBoolean": false,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "adicCoOrgPercent": "10",
+            "adicCoOrgPg": "2º Ten",
+            "adicCoOrgType": "PDQT",
+            "extraValues": {}
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.auxFardamento.value).toBe(11235);
+        expect(auxialarySheet.auxFardamento.title).toBe('AUX FARD 1.5 SLD');
+
+    });
 });
