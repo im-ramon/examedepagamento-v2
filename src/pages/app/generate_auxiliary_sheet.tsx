@@ -548,7 +548,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                             )}
                         </FormItem>
 
-                        <FormItem labelText='Auxílio Alimentação - Tipo "C"' supportText='O examinado receberá Auxílio Alimentação - Tipo "C"?' helpText='Este auxílio é devido aos Cabos e Soldados, da ativa, quando entram de férias. São pagas 30 etapas, no valor de R$ 9,00 cada.' badgeColor='green' badgeText='Receita'>
+                        <FormItem labelText='Auxílio Alimentação - Tipo "C"' supportText='O examinado receberá Auxílio Alimentação - Tipo "C"?' helpText='Este auxílio é devido aos Cabos e Soldados, da ativa, quando entram de férias. São pagas 30 etapas.' badgeColor='green' badgeText='Receita'>
                             <div className='flex items-center justify-center w-full py-1'>
                                 <span className='text-sm mx-2'>Não</span>
                                 <label className="relative inline-flex items-center cursor-pointer">
