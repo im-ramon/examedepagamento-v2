@@ -32,6 +32,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             auxiliarySheet.gratRepCmdo,
         ],
         descontos: [
+            ...auxiliarySheet.pMil,
+            auxiliarySheet.pMilExt,
+            auxiliarySheet.fusex,
+            auxiliarySheet.descDepFusex,
+        ],
+        data: [
             data
         ]
     })

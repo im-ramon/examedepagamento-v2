@@ -712,9 +712,9 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                         <FormItem labelText='Desconto de dependentes no FuSEx' supportText='Qual percentual de desconto de dependentes no FuSEx?' helpText='Deve ser analisado a quantidade de dependentes que o militar/ pensionista possui cadastrado como dependentes no FuSEx. Para 1 (um) dependente cadastrado, exceto o cônjuge ou companheira(o), o desconto será de 0,4% sobre o bruto. Para 2 (dois) ou mais dependentes cadastrados,   exceto o cônjuge ou companheira(o),  o desconto será de 0,5% sobre o bruto, não ultrapassando essa alíquota.' badgeColor='red' badgeText='Desconto'>
                             <select defaultValue={'-'} {...register('descDepFusexType', { required: true })} className={styleInputSelect}>
-                                <option value="00">Não desconta</option>
-                                <option value="04">0,4%</option>
-                                <option value="05">0,5%</option>
+                                <option value="0">Não desconta</option>
+                                <option value="4">0,4%</option>
+                                <option value="5">0,5%</option>
                             </select>
                         </FormItem>
 

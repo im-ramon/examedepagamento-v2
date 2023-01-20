@@ -46,7 +46,7 @@ export class AuxiliarySheetEtitie {
     }
 
     // ATENÇÃO!!!
-    private calculateGrossAmountToIR(): number {
+    get grossAmountToDiscounts(): number {
         return (
             this.soldo.value +
             this.complementoCotaSoldo.value +
@@ -167,7 +167,7 @@ export class AuxiliarySheetEtitie {
 
     get adicPerm(): fieldInterface {
         let valueCalculated = 0
-        if (this.fields.adicPerm != '0') {
+        if (this.fields.adicPerm && this.fields.adicPerm != '0') {
             valueCalculated = this.soldo.value * (Number(this.fields.adicPerm) / 100)
         }
         return {
@@ -251,7 +251,7 @@ export class AuxiliarySheetEtitie {
         let valueCalculated = 0
 
         if (this.fields.ferias) {
-            valueCalculated = this.calculateGrossAmountToIR() / 3
+            valueCalculated = this.grossAmountToDiscounts / 3
 
             if (this.adicPTTC.value > 0) {
                 valueCalculated = this.adicPTTC.value / 3
@@ -366,7 +366,7 @@ export class AuxiliarySheetEtitie {
 
         if (this.fields.auxPreEscQtd != "0") {
             let auxPreEscBaseValue = 321
-            let gross = this.calculateGrossAmountToIR()
+            let gross = this.grossAmountToDiscounts
             let calcBaseSdSoldo = this.paymentRefereceByDate["Sd Eng"].soldo
             let quota = gross / calcBaseSdSoldo
             let quotaToCal = 0
@@ -500,6 +500,84 @@ export class AuxiliarySheetEtitie {
             value: this.truncateDecimalNumbers(valueCalculated)
         }
     }
+
+    get pMil(): fieldInterface[] {
+        let valueCalculatedPMil10_5 = 0
+        let valueCalculatedPMil1_5 = 0
+        let percentBetweenPg = 0
+
+        if (this.fields.pMilBool) {
+            valueCalculatedPMil10_5 = this.grossAmountToDiscounts * 0.105
+
+            if (this.fields.pMil15Bool) {
+                valueCalculatedPMil1_5 = this.grossAmountToDiscounts * 0.015
+            }
+
+            if (this.fields.pMilPgAcimaBool && this.fields.pMilPgAcimaPg) {
+                percentBetweenPg = this.paymentRefereceByDate[this.fields.pMilPgAcimaPg].soldo / this.soldoBase
+                valueCalculatedPMil10_5 = valueCalculatedPMil10_5 * percentBetweenPg
+                valueCalculatedPMil1_5 = valueCalculatedPMil1_5 * percentBetweenPg
+            }
+
+
+        }
+        return [
+            {
+                title: 'P MIL',
+                percent: this.fields.pMilBool ? '10.5' : '0',
+                value: this.truncateDecimalNumbers(valueCalculatedPMil10_5)
+            },
+            {
+                title: 'P MIL 1.5%',
+                percent: this.fields.pMil15Bool ? '1.5' : '0',
+                value: this.truncateDecimalNumbers(valueCalculatedPMil1_5)
+            },
+        ]
+    }
+
+    get pMilExt(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.pMil30Bool && this.fields.universo == 'PN') {
+            valueCalculated = Number(this.grossAmountToDiscounts * 0.03)
+        }
+        return {
+            title: 'P MIL EXT',
+            percent: '3',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get fusex(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.fusex3Bool) {
+            valueCalculated = Number(this.grossAmountToDiscounts * 0.03)
+        }
+        return {
+            title: 'FUSEX 3%',
+            percent: '3',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get descDepFusex(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.descDepFusexType == "4") {
+            valueCalculated = Number(this.grossAmountToDiscounts * 0.004)
+        } else if (this.fields.descDepFusexType == "5") {
+            valueCalculated = Number(this.grossAmountToDiscounts * 0.005)
+        }
+
+        return {
+            title: 'DESC DEP FUSEX',
+            percent: this.fields.descDepFusexType == "0" ? "0" : `0.${this.fields.descDepFusexType}`,
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+
 }
 
 // Conferir os campos de ADIC NATALINO, FERIAS e BRUTO
