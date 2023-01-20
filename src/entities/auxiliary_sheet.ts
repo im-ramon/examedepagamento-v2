@@ -337,6 +337,25 @@ export class AuxiliarySheetEtitie {
             value: this.truncateDecimalNumbers(valueCalculated)
         }
     }
+
+    get auxInvalidez(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.auxInvalidezBool) {
+            let minValue = 1520;
+            valueCalculated = this.soldo.value * 0.25
+
+            if (valueCalculated < minValue) {
+                valueCalculated = minValue
+            }
+        }
+
+        return {
+            title: 'AUX INVALIDEZ',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
 }
 
 // Conferir os campos de ADIC NATALINO, FERIAS e BRUTO

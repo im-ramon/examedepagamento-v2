@@ -23,6 +23,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             auxiliarySheet.salarioFamilia,
             auxiliarySheet.auxTransporte,
             auxiliarySheet.auxNatalidade,
+            auxiliarySheet.auxInvalidez,
         ],
         descontos: [
             data
