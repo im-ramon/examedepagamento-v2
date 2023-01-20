@@ -292,12 +292,41 @@ export class AuxiliarySheetEtitie {
         }
     }
 
+    get salarioFamilia(): fieldInterface {
+        let valueCalculated = 0
 
+        if (this.fields.depSalFamiliaQtd != "0") {
+            valueCalculated = Number(this.fields.depSalFamiliaQtd) * 0.16
+        }
 
+        return {
+            title: 'SALARIO FAMILIA',
+            percent: '-',
+            value: valueCalculated
+        }
+    }
+
+    get auxTransporte(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.auxTransporteBool && this.fields.auxTransporteVal != "0") {
+            let cotaParte = this.truncateDecimalNumbers((this.soldo.value / 30 * 22) * 0.06)
+            valueCalculated = Number(this.fields.auxTransporteVal) - cotaParte;
+        }
+
+        return {
+            title: 'AUX TRANSPORTE',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
 }
 
 // Conferir os campos de ADIC NATALINO, FERIAS e BRUTO
+// Dependentes para IR
+
 /*
+
 get adicTpSv(): fieldInterface {
     let valueCalculated = 0
     return {
@@ -306,4 +335,5 @@ get adicTpSv(): fieldInterface {
         value: this.truncateDecimalNumbers(valueCalculated)
     }
 }
+
 */

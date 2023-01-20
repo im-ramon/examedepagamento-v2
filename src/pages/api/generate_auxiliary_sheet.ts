@@ -20,6 +20,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             { ...auxiliarySheet.adicPTTC },
             { ...auxiliarySheet.adicFerias },
             { ...auxiliarySheet.adicNatalino },
+            { ...auxiliarySheet.salarioFamilia },
+            { ...auxiliarySheet.auxTransporte },
         ],
         descontos: [
             data
