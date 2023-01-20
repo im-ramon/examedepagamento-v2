@@ -28,6 +28,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             auxiliarySheet.auxFardamento,
             auxiliarySheet.auxAlimentC,
             auxiliarySheet.auxAliment,
+            auxiliarySheet.gratLocEsp,
+            auxiliarySheet.gratRepCmdo,
         ],
         descontos: [
             data

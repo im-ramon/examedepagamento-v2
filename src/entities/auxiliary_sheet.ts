@@ -45,12 +45,8 @@ export class AuxiliarySheetEtitie {
         return this.truncateDecimalNumbers(soldoCalculated)
     }
 
+    // ATENÇÃO!!!
     private calculateGrossAmountToIR(): number {
-        // ESCREVER TESTE!!!!!
-        // GRAT REP CMDO
-        // LOC ESP
-        // GRAT 2%
-
         return (
             this.soldo.value +
             this.complementoCotaSoldo.value +
@@ -62,8 +58,13 @@ export class AuxiliarySheetEtitie {
             this.adicCoOrg.value +
             this.adicHVoo.value +
             this.acres25Soldo.value +
-            this.adicPTTC.value
+            this.adicPTTC.value +
+            this.gratLocEsp.value +
+            this.gratRepCmdo.value
         )
+
+        // ESCREVER TESTE!!!!!
+        // GRAT 2%
     }
 
     get soldo(): fieldInterface {
@@ -231,11 +232,12 @@ export class AuxiliarySheetEtitie {
                 this.adicHVoo.value +
                 this.acres25Soldo.value +
                 this.adicPerm.value +
-                this.adicCoOrg.value
+                this.adicCoOrg.value +
+                this.gratLocEsp.value +
+                this.gratRepCmdo.value
+
 
             // ESCREVER TESTE!!!!!
-            // GRAT REP CMDO
-            // LOC ESP
             // GRAT 2%
 
             valueCalculated *= 0.3
@@ -441,6 +443,62 @@ export class AuxiliarySheetEtitie {
         }
         return {
             title: `AUX ALIM ${this.fields.auxAlimentEspType}X`,
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get gratLocEsp(): fieldInterface {
+        let valueCalculated = 0
+        let percent = '0'
+
+        if (this.fields.gratRepreType) {
+            switch (this.fields.gratRepreType) {
+                case 'A':
+                    valueCalculated = this.soldo.value * 0.2
+                    percent = '20'
+                    break;
+
+                case 'B':
+                    valueCalculated = this.soldo.value * 0.1
+                    percent = '10'
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        return {
+            title: `GRAT LOC ESP ${this.fields.gratRepreType}`,
+            percent: percent,
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get gratRepCmdo(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.gratCmdoBool) {
+            valueCalculated = this.soldo.value * 0.1
+        }
+
+        return {
+            title: 'GRAT REPR CMDO',
+            percent: '10',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get gratRep2(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.gratRep2Bool && this.fields.gratRep2Pg && this.fields.gratRep2DiasQtd) {
+            valueCalculated = this.calculateSoldo(this.paymentRefereceByDate[this.fields.gratRep2Pg].soldo) * 0.02 * Number(this.fields.gratRep2DiasQtd)
+        }
+
+        return {
+            title: 'GRAT REPRES 2%',
             percent: '-',
             value: this.truncateDecimalNumbers(valueCalculated)
         }
