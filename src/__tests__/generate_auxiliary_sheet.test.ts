@@ -1269,4 +1269,164 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
 
         expect(auxialarySheet.auxAliment.value).toBe(900);
     });
+
+    test('Test calc [GRAT LOC ESP ]: Type "A" - 3º Sgt', () => {
+        const MockForm: AuxiliarySheetFields = {
+            ...baseMockForm,
+            universo: 'VT',
+            soldoType: 'integral',
+            gratRepreType: 'A',
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.gratLocEsp.value).toBe(765);
+    });
+
+    test('Test calc [GRAT LOC ESP ]: Type "B" - 3º Sgt', () => {
+        const MockForm: AuxiliarySheetFields = {
+            ...baseMockForm,
+            universo: 'VT',
+            soldoType: 'integral',
+            gratRepreType: 'B',
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.gratLocEsp.value).toBe(382.50);
+    });
+
+    test('Test calc [GRAT REPR CMDO]: 3º Sgt', () => {
+        const MockForm: AuxiliarySheetFields = {
+            ...baseMockForm,
+            universo: 'VT',
+            soldoType: 'integral',
+            gratCmdoBool: true,
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.gratRepCmdo.value).toBe(382.50);
+    });
+
+
+    test('Test calc GRAT REPRES 2%]: 7 days of 2º Sgt', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-19",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "Cap",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "sem_formacao",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": true,
+            "ferias": true,
+            "adicNatalinoBool": false,
+            "depSalFamiliaQtd": "10",
+            "depIrQtd": "0",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": true,
+            "auxPreEscQtd": "0",
+            "auxFardBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": true,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": true,
+            "gratRep2DiasQtd": '7',
+            "gratRep2Pg": '2º Sgt',
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "00",
+            "pnrBool": false,
+            "pjBoolean": false,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "adicCoOrgPercent": "10",
+            "adicCoOrgPg": "2º Ten",
+            "adicCoOrgType": "PDQT",
+            "adicNatalinoMesesQtd": "6",
+            "adicNatalino1ParcelaVal": "0",
+            "auxNatatalidadeQtd": "3",
+            "auxTransporteVal": "1000",
+            "auxFard1VezBool": false,
+            "auxAlimentEspQtd": "10",
+            "auxAlimentEspType": "10",
+            "extraValues": {}
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.gratRep2.value).toBe(667.80);
+    });
+
+    test('Test calc GRAT REPRES 2%]: 15 day of Cap', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-19",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "1º Ten QAO",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "sem_formacao",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": true,
+            "ferias": true,
+            "adicNatalinoBool": false,
+            "depSalFamiliaQtd": "10",
+            "depIrQtd": "0",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": true,
+            "auxPreEscQtd": "0",
+            "auxFardBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": true,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": true,
+            "gratRep2DiasQtd": '15',
+            "gratRep2Pg": 'Cap',
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "00",
+            "pnrBool": false,
+            "pjBoolean": false,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "adicCoOrgPercent": "10",
+            "adicCoOrgPg": "2º Ten",
+            "adicCoOrgType": "PDQT",
+            "adicNatalinoMesesQtd": "6",
+            "adicNatalino1ParcelaVal": "0",
+            "auxNatatalidadeQtd": "3",
+            "auxTransporteVal": "1000",
+            "auxFard1VezBool": false,
+            "auxAlimentEspQtd": "10",
+            "auxAlimentEspType": "10",
+            "extraValues": {}
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.gratRep2.value).toBe(2740.5);
+    });
+
 });
