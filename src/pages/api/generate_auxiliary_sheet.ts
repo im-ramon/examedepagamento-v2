@@ -22,6 +22,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             { ...auxiliarySheet.adicNatalino },
             { ...auxiliarySheet.salarioFamilia },
             { ...auxiliarySheet.auxTransporte },
+            { ...auxiliarySheet.auxNatalidade },
         ],
         descontos: [
             data

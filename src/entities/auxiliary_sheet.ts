@@ -320,6 +320,23 @@ export class AuxiliarySheetEtitie {
             value: this.truncateDecimalNumbers(valueCalculated)
         }
     }
+
+    get auxNatalidade(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.auxNatatalidadeBool && this.fields.auxNatatalidadeQtd != "0") {
+            if (Number(this.fields.auxNatatalidadeQtd) === 1) {
+                valueCalculated = this.soldo.value
+            } else if (Number(this.fields.auxNatatalidadeQtd) >= 2) {
+                valueCalculated = this.soldo.value + ((this.soldo.value / 2) * (Number(this.fields.auxNatatalidadeQtd) - 1))
+            }
+        }
+        return {
+            title: 'AUX NATALIDADE',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
 }
 
 // Conferir os campos de ADIC NATALINO, FERIAS e BRUTO
