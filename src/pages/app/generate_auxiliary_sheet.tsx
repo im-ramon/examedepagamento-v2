@@ -66,6 +66,7 @@ export interface AuxiliarySheetFields {
     auxAlimentC?: boolean,
     auxAlimentEspBool?: boolean,
     auxAlimentEspQtd?: string,
+    auxAlimentEspType?: '1' | '5' | '10',
     pMilBool?: boolean,
     pMilPgAcimaBool?: boolean,
     pMilPgAcimaPg?: PostGrad,
@@ -571,6 +572,15 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                             {watch('auxAlimentEspBool') && (
                                 <>
+                                    <BreakLine />
+                                    <FormItem supportText='Qual tipo de etapa?' badgeColor='green' badgeText='Receita'>
+                                        <select {...register('auxAlimentEspType', { required: true })} className={styleInputSelect}>
+                                            <option value="1">Normal - 1x</option>
+                                            <option value="5">Majorada - 5x</option>
+                                            <option value="10">Majorada - 10x</option>
+                                        </select>
+                                    </FormItem>
+
                                     <BreakLine />
 
                                     <FormItem supportText='Quantas etapas?'>
