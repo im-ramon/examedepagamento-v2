@@ -60,11 +60,11 @@ export class AuxiliarySheetEtitie {
             this.acres25Soldo.value +
             this.adicPTTC.value +
             this.gratLocEsp.value +
-            this.gratRepCmdo.value
+            this.gratRepCmdo.value +
+            this.gratRep2.value
         )
 
         // ESCREVER TESTE!!!!!
-        // GRAT 2%
     }
 
     get soldo(): fieldInterface {
@@ -217,12 +217,11 @@ export class AuxiliarySheetEtitie {
         }
     }
 
-    // ATENÇÃO!!!
     get adicPTTC(): fieldInterface {
         let valueCalculated = 0
 
         if (this.fields.pttcBool) {
-            valueCalculated =
+            valueCalculated = (
                 this.soldo.value +
                 this.complementoCotaSoldo.value +
                 this.adicTpSv.value +
@@ -234,11 +233,9 @@ export class AuxiliarySheetEtitie {
                 this.adicPerm.value +
                 this.adicCoOrg.value +
                 this.gratLocEsp.value +
-                this.gratRepCmdo.value
-
-
-            // ESCREVER TESTE!!!!!
-            // GRAT 2%
+                this.gratRepCmdo.value +
+                this.gratRep2.value
+            )
 
             valueCalculated *= 0.3
         }
