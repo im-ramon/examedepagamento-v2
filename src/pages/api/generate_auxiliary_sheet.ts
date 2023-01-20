@@ -25,6 +25,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             auxiliarySheet.auxNatalidade,
             auxiliarySheet.auxInvalidez,
             ...auxiliarySheet.auxPreEsc,
+            auxiliarySheet.auxFardamento,
         ],
         descontos: [
             data

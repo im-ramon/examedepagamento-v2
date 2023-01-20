@@ -397,6 +397,26 @@ export class AuxiliarySheetEtitie {
 
         return arrayResponse
     }
+
+    get auxFardamento(): fieldInterface {
+        let valueCalculated = 0
+        let title = 'AUX FARD 1 SLD'
+
+        if (this.fields.auxFardBool) {
+            valueCalculated = this.soldo.value
+
+            if (this.fields.auxFard1VezBool) {
+                valueCalculated += (valueCalculated / 2)
+                title = 'AUX FARD 1.5 SLD'
+            }
+
+        }
+        return {
+            title: title,
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
 }
 
 // Conferir os campos de ADIC NATALINO, FERIAS e BRUTO
