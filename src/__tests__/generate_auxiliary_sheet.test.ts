@@ -1139,4 +1139,134 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.auxFardamento.title).toBe('AUX FARD 1.5 SLD');
 
     });
+
+    test('Test calc [AUX ALIM C]: Default', () => {
+        const MockForm: AuxiliarySheetFields = {
+            ...baseMockForm,
+            universo: 'VT',
+            soldoType: 'integral',
+            auxAlimentC: true
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.auxAlimentC.value).toBe(270);
+    });
+
+    test('Test calc [AUX ALIM]: 5x - 10', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-19",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "3º Sgt",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "sem_formacao",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": true,
+            "ferias": true,
+            "adicNatalinoBool": false,
+            "depSalFamiliaQtd": "10",
+            "depIrQtd": "0",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": true,
+            "auxPreEscQtd": "0",
+            "auxFardBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": true,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": false,
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "00",
+            "pnrBool": false,
+            "pjBoolean": false,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "adicCoOrgPercent": "10",
+            "adicCoOrgPg": "2º Ten",
+            "adicCoOrgType": "PDQT",
+            "adicNatalinoMesesQtd": "6",
+            "adicNatalino1ParcelaVal": "0",
+            "auxNatatalidadeQtd": "3",
+            "auxTransporteVal": "1000",
+            "auxFard1VezBool": false,
+            "auxAlimentEspQtd": "10",
+            "auxAlimentEspType": "5",
+            "extraValues": {}
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.auxAliment.value).toBe(450);
+    });
+
+    test('Test calc [AUX ALIM]: 10x - 10', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-19",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "3º Sgt",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "sem_formacao",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": true,
+            "ferias": true,
+            "adicNatalinoBool": false,
+            "depSalFamiliaQtd": "10",
+            "depIrQtd": "0",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": true,
+            "auxPreEscQtd": "0",
+            "auxFardBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": true,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": false,
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "00",
+            "pnrBool": false,
+            "pjBoolean": false,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "adicCoOrgPercent": "10",
+            "adicCoOrgPg": "2º Ten",
+            "adicCoOrgType": "PDQT",
+            "adicNatalinoMesesQtd": "6",
+            "adicNatalino1ParcelaVal": "0",
+            "auxNatatalidadeQtd": "3",
+            "auxTransporteVal": "1000",
+            "auxFard1VezBool": false,
+            "auxAlimentEspQtd": "10",
+            "auxAlimentEspType": "10",
+            "extraValues": {}
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.auxAliment.value).toBe(900);
+    });
 });
