@@ -1,4 +1,5 @@
 import moment from "moment";
+import { adic_hab_data } from "../data/adic_hab_data";
 import { pg_data } from "../data/pg_data";
 import { AuxiliarySheetFields } from "../pages/app/generate_auxiliary_sheet";
 
@@ -25,26 +26,57 @@ export class AuxiliarySheetEtitie {
         this.soldoBase = this.paymentRefereceByDate[this.fields.pgSoldo].soldo
         this.pgRealInfo = this.paymentRefereceByDate[this.fields.pgReal]
     }
-    private trunc(num: number): number {
+
+    private truncateDecimalNumbers(num: number): number {
         return Math.trunc(num * 100) / 100;
     }
 
-    get soldo(): fieldInterface {
-        let soldoCalculated = this.soldoBase
-        let soldoTitle = 'SOLDO'
+    private calculateSoldo(soldoBase: number): number {
+        let soldoCalculated = soldoBase
+
         if (this.fields.soldoType == 'cota') {
-            soldoCalculated = soldoCalculated * (Number(this.fields.soldoPropPercent) / 100)
-            soldoTitle = 'SLD PROP P/COTA'
+            soldoCalculated = soldoBase * (Number(this.fields.soldoPropPercent) / 100)
         }
 
         if (this.fields.universo == 'PN') {
             soldoCalculated = soldoCalculated * (Number(this.fields.cotaParteSoldoPercent) / 100)
         }
 
+        return this.truncateDecimalNumbers(soldoCalculated)
+    }
+
+    private calculateGrossAmountToIR(): number {
+        // ESCREVER TESTE!!!!!
+        // GRAT REP CMDO
+        // LOC ESP
+        // GRAT 2%
+
+        return (
+            this.soldo.value +
+            this.complementoCotaSoldo.value +
+            this.adicTpSv.value +
+            this.adicCompDispMil.value +
+            this.adicHab.value +
+            this.adicMil.value +
+            this.adicPerm.value +
+            this.adicCoOrg.value +
+            this.adicHVoo.value +
+            this.acres25Soldo.value +
+            this.adicPTTC.value
+        )
+    }
+
+    get soldo(): fieldInterface {
+        let soldoTitle = 'SOLDO'
+
+        if (this.fields.soldoType == 'cota') {
+            soldoTitle = 'SLD PROP P/COTA'
+        }
+
         return {
             title: soldoTitle,
             percent: '-',
-            value: this.trunc(soldoCalculated)
+            value: this.calculateSoldo(this.soldoBase)
         }
     }
 
@@ -64,7 +96,7 @@ export class AuxiliarySheetEtitie {
         return {
             title: 'COMPL COTA SOLDO',
             percent: '-',
-            value: soldoCalculated
+            value: this.truncateDecimalNumbers(soldoCalculated)
         }
     }
 
@@ -82,7 +114,7 @@ export class AuxiliarySheetEtitie {
         return {
             title: 'ADIC TP SV',
             percent: this.fields.adicTpSvPercent || '0',
-            value: valueCalculated
+            value: this.truncateDecimalNumbers(valueCalculated)
         }
     }
 
@@ -98,19 +130,180 @@ export class AuxiliarySheetEtitie {
 
         return {
             title: 'AD C DISP MIL',
-            percent: String(this.pgRealInfo.adic_disp),
-            value: valueCalculated
+            percent: valueCalculated > 0 ? String(this.pgRealInfo.adic_disp) : '0',
+            value: this.truncateDecimalNumbers(valueCalculated)
         }
     }
+
+    get adicHab(): fieldInterface {
+        let valueCalculated = 0
+
+        const adicHabData = adic_hab_data.filter(item => {
+            return moment(this.fields.dataReferencia).isBetween(item.startAt, item.endAt)
+        })[0]
+
+        valueCalculated = this.soldo.value * (adicHabData[this.fields.adicHabType || 'sem_formacao'] / 100)
+
+        return {
+            title: 'ADIC HAB',
+            percent: String(adicHabData[this.fields.adicHabType || 'sem_formacao']),
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get adicMil(): fieldInterface {
+        let valueCalculated = 0;
+        if (this.fields.adicMilBool) {
+            valueCalculated = this.soldo.value * (this.paymentRefereceByDate[this.fields.pgSoldo].adic_mil / 100)
+        }
+
+        return {
+            title: 'ADIC MIL',
+            percent: String(this.paymentRefereceByDate[this.fields.pgSoldo].adic_mil),
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get adicPerm(): fieldInterface {
+        let valueCalculated = 0
+        if (this.fields.adicPerm != '0') {
+            valueCalculated = this.soldo.value * (Number(this.fields.adicPerm) / 100)
+        }
+        return {
+            title: 'ADIC PERM',
+            percent: this.fields.adicPerm || '0',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get adicCoOrg(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.adicCoOrgBool && this.fields.adicCoOrgPercent && this.fields.adicCoOrgPg) {
+            valueCalculated = this.calculateSoldo(this.paymentRefereceByDate[this.fields.adicCoOrgPg].soldo) * (Number(this.fields.adicCoOrgPercent) / 100)
+        }
+
+        return {
+            title: 'AD C ORG/ ' + this.fields.adicCoOrgType + '-' + (this.fields.adicCoOrgPg || ''),
+            percent: this.fields.adicCoOrgBool ? String(this.fields.adicCoOrgPercent) : '0',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get adicHVoo(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.adicHVooBool && this.fields.adicHVooPg && this.fields.adicHVooPercent) {
+            valueCalculated = this.calculateSoldo(this.paymentRefereceByDate[this.fields.adicHVooPg].soldo) * (Number(this.fields.adicHVooPercent) / 100)
+        }
+
+        return {
+            title: 'AD C ORG H VOO',
+            percent: this.fields.adicHVooBool ? String(this.fields.adicHVooPercent) : '0',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get acres25Soldo(): fieldInterface {
+        let valueCalculated = 0
+        if (this.fields.acres25Bool) {
+            valueCalculated = this.soldo.value * 0.25
+        }
+        return {
+            title: 'ACRESC 25% SOLDO',
+            percent: this.fields.acres25Bool ? '25' : '0',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    // ATENÇÃO!!!
+    get adicPTTC(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.pttcBool) {
+            valueCalculated =
+                this.soldo.value +
+                this.complementoCotaSoldo.value +
+                this.adicTpSv.value +
+                this.adicCompDispMil.value +
+                this.adicHab.value +
+                this.adicMil.value +
+                this.adicHVoo.value +
+                this.acres25Soldo.value +
+                this.adicPerm.value +
+                this.adicCoOrg.value
+
+            // ESCREVER TESTE!!!!!
+            // GRAT REP CMDO
+            // LOC ESP
+            // GRAT 2%
+
+            valueCalculated *= 0.3
+        }
+
+        return {
+            title: 'ADIC PTTC',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get adicFerias(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.ferias) {
+            valueCalculated = this.calculateGrossAmountToIR() / 3
+
+            if (this.adicPTTC.value > 0) {
+                valueCalculated = this.adicPTTC.value / 3
+            }
+        }
+
+        return {
+            title: 'ADIC FÉRIAS',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get adicNatalino(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.adicNatalinoBool && this.fields.adicNatalinoMesesQtd) {
+            valueCalculated = (
+                this.soldo.value +
+                this.complementoCotaSoldo.value +
+                this.adicTpSv.value +
+                this.adicCompDispMil.value +
+                this.adicHab.value +
+                this.adicMil.value +
+                this.adicHVoo.value +
+                this.acres25Soldo.value +
+                this.adicPerm.value +
+                this.adicCoOrg.value
+            )
+
+            valueCalculated = valueCalculated / 12 * Number(this.fields.adicNatalinoMesesQtd)
+        }
+        return {
+            title: 'ADIC NATAL',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+
+
 }
 
+// Conferir os campos de ADIC NATALINO, FERIAS e BRUTO
 /*
- get adicTpSv(): fieldInterface {
+get adicTpSv(): fieldInterface {
     let valueCalculated = 0
     return {
         title: 'XXXXX',
         percent: '-',
-        value: valueCalculated
+        value: this.truncateDecimalNumbers(valueCalculated)
     }
 }
 */

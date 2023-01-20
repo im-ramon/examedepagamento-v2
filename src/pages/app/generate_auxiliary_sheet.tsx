@@ -32,8 +32,13 @@ export interface AuxiliarySheetFields {
     complemetoCotaSoldoBool?: boolean,
     adicTpSvPercent?: string,
     adicCompDispMilBool?: boolean,
-    adicHabType?: string,
+    adicHabType?: 'sem_formacao' | 'altos_estudos_I' | 'altos_estudos_II' | 'aperfeicoamento' | 'especializacao' | 'formacao',
     adicMilBool?: boolean,
+    adicPerm?: string,
+    adicCoOrgBool?: boolean,
+    adicCoOrgPercent?: string,
+    adicCoOrgPg?: PostGrad,
+    adicCoOrgType?: string,
     adicHVooBool?: boolean,
     adicHVooPercent?: string,
     adicHVooPg?: PostGrad,
@@ -96,7 +101,7 @@ export interface ExtraValues {
 }
 
 const GeneratePayslip: NextPageWithLayout = () => {
-    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm<AuxiliarySheetFields>();
+    const { register, handleSubmit, watch, formState: { errors }, reset, setValue, getValues } = useForm<AuxiliarySheetFields>();
 
     const [extraValueDescription, setExtraValueDescription] = useState<string>("")
     const [extraValueAmount, setExtraValueAmount] = useState<string>("0")
@@ -158,7 +163,9 @@ const GeneratePayslip: NextPageWithLayout = () => {
     const [auxiliarySheetDate, setAuxiliarySheetDate] = useState<string>(moment().format("YYYY-MM-DD"))
 
     const resetAllForm = () => {
-        reset()
+        if (window) {
+            window.location.reload();
+        }
     }
 
     useEffect(() => {
@@ -167,7 +174,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
         })[0]
 
         if (allPgInfo) {
-            const arrayElements = [<option key={'-'} disabled value="-">- Selecione uma opção -</option>]
+            const arrayElements = [<option key={'-'} disabled selected value="-">- Selecione uma opção -</option>]
             Object.keys(allPgInfo).forEach(key => {
                 if (key == 'startAt' || key == 'endAt') {
                     return
@@ -202,8 +209,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                     <FormBlockContainer>
 
                         <FormItem labelText='Universo/ Classificação' supportText='Qual universo/ classificação do examinado?'>
-                            <select defaultValue={'-'} {...register('universo', { required: true })} className={styleInputSelect}>
-                                <option value="-" disabled>- Selecione uma opção -</option>
+                            <select defaultValue={'-'} {...register('universo', { required: true })} required className={styleInputSelect}>
                                 <option value="MA">Militar da Ativa</option>
                                 <option value="VT">Veterano</option>
                                 <option value="PN">Pensionista</option>
@@ -237,13 +243,13 @@ const GeneratePayslip: NextPageWithLayout = () => {
                         </FormItem>
 
                         <FormItem labelText='Post/Grad para Soldo' supportText='Qual o P/G em que o examinado recebe o soldo?' helpText='Deve ser selecionado o Posto/ Graduação em que o examinado recebe o soldo. No caso dos miltiares da ativa, o P/G para soldo e P/G Real são os mesmos, entretanto, no caso dos Militares Veteranos e Pensionistas, essas informações poderão ser difirentes.'>
-                            <select defaultValue={'-'} {...register('pgSoldo')} className={styleInputSelect}>
+                            <select defaultValue={'-'} {...register('pgSoldo', { required: true })} required className={styleInputSelect}>
                                 {pgOptionsToSelectInput}
                             </select>
                         </FormItem>
 
                         <FormItem labelText='Post/Grad Real' supportText='Qual o P/G real do examinado?' helpText='O P/G real é o último Posto ou Graduação do militar (ou instituidor de pensão) enquanto na ativa. Não deve ser considerado: - Postos ou graduações alcançados pelo militar como benefício, na forma prevista em lei, em decorrência de reforma, morte ou transferência para a reserva; - Percepção de soldo ou de remuneração correspondente a grau hierárquico superior ao alcançado na ativa, em decorrência de reforma, morte ou transferência para a reserva; e - Percepção de pensão militar correspondente a grau hierárquico superior ao alcançado pelo militar em atividade, em decorrência de benefícios concedidos pela Lei nº 3.765, de 4 de maio de 1960.'>
-                            <select defaultValue={'-'} {...register('pgReal')} className={styleInputSelect}>
+                            <select defaultValue={'-'} {...register('pgReal', { required: true })} required className={styleInputSelect}>
                                 {pgOptionsToSelectInput}
                             </select>
                         </FormItem>
@@ -254,7 +260,6 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                         <FormItem labelText='Soldo' supportText='Qual tipo de soldo o examinado recebe?' helpText='Escolha a categoria de soldo que o examinado recebe. São duas opções, a primeira "Normal/Integral" significa que o examinado recebe o valor do seu soldo por completo, normalmente militares da ativa, veterenos que completaram o tempo mínimo para reserva e seus pensionistas recebem essa categoria de soldo. A categoria " Soldo Proporcional para Cota" é devida, normalmente, aos militares que fora para a reserva antes do tempo mínimo, como no caso de militares reformados por ser julgado incapaz definitivamente.' badgeColor='green' badgeText='Receita'>
                             <select defaultValue={'-'} {...register('soldoType', { required: true })} className={styleInputSelect}>
-                                <option value="-" disabled>- Selecione uma opção -</option>
                                 <option value="integral">Integral</option>
                                 <option value="cota">Proporcional por cota</option>
                             </select>
@@ -263,7 +268,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                         {watch('soldoType') == 'cota' && (
                             <>
                                 <FormItem labelText='Soldo Proporcional para Cota' supportText='Qual porcentagem de soldo proporcional para cota o examinado recebe?' helpText='O soldo proporcional para cota é difirente da cota-parte do soldo. O soldo proporcional para cota é devido, normalmente, aos militares que foram para a reserva antes do tempo mínimo, como no caso de militares reformados por ser julgado incapaz definitivamente. Os pensionistas desses militares também pode receber o soldo proporcional para cota. Por exemplo, o instituidor da pensão poderia receber soldo proporcional para cota de 29/30 e ao falecer deixar a pensão de 1/3 para cada dependente, logo, a pensão será calculada primeiro sobre o soldo proporcional depois será dividida por cota-parte para cada beneficiário. Referência: Lei nº 6.880, de 9 de dezembro de 1980.'>
-                                    <input {...register('soldoPropPercent', { required: true, min: 0, max: 100 })} defaultValue={0.00} step="0.01" min="0" max="100" type="number" className={styleInputNumber} />
+                                    <input {...register('soldoPropPercent', { required: true, min: 0, max: 100 })} defaultValue={100} step="0.01" min="0" max="100" type="number" className={styleInputNumber} />
                                 </FormItem>
 
                                 <FormItem labelText='Complemento de cota de soldo' supportText='Recebe complemento de cota de soldo?' helpText='Direito extinto'>
@@ -302,13 +307,12 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                         <FormItem labelText='Adicional Habilitação' supportText='Qual nível de habilitação do examinado?' helpText='O Adicional de habilitação é a parcela remuneratória mensal devida ao militar, inerente aos cursos realizados com aproveitamento. Os percentuais podem ser consultados no ANEXO III da Lei nº 13.954, de 16 de dezembro de 2019. Os tipos de cursos existentes devem obedecer às seguintes condições: I - de altos estudos categoria I, realizados a partir de oficiais superiores e de primeiros sargentos; II - de altos estudos categoria II, realizados a partir de oficiais superiores e de segundos sargentos; III - de aperfeiçoamento, realizados a partir de oficiais subalternos e de terceiros sargentos; IV - de especialização, realizados a partir de aspirantes a oficial e de terceiros sargentos; e V - de formação, a partir da conclusão com aproveitamento dos cursos e estágios de formação ou adaptação de oficiais e praças, realizados nas organizações militares das Forças Armadas.' badgeColor='green' badgeText='Receita'>
                             <select defaultValue={'-'} {...register('adicHabType', { required: true })} className={styleInputSelect}>
-                                <option value="-" disabled>- Selecione uma opção -</option>
+                                <option value="sem_formacao">Sem formação (não recebe)</option>
                                 <option value="altos_estudos_I">Altos estudos Categoria I</option>
                                 <option value="altos_estudos_II">Altos estudos Categoria II</option>
                                 <option value="aperfeicoamento">Apefeiçoamento</option>
                                 <option value="especializacao">Especialização</option>
                                 <option value="formacao">Formação</option>
-                                <option value="sem_formacao">Sem formação</option>
                             </select>
                         </FormItem>
 
@@ -321,6 +325,49 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                 </label>
                                 <span className='text-sm mx-2'>Sim</span>
                             </div>
+                        </FormItem>
+
+                        <FormItem labelText='Adicional de Permanência' supportText='Qual o percentual que o examinado recebe de Adicional de Permanência?' helpText='É a parcela remuneratória devida ao militar, mensalmente, incidente sobre o soldo do posto ou da graduação, referente ao período em que continuar ou tenha continuado em serviço, após ter completado o tempo mínimo de permanência no serviço ativo. Situações e percentuais a serem observados: I – 5 (cinco) por cento: militar que, em atividade, a partir de 29 de dezembro de 2000, tenha completado ou venha a completar 720 (setecentos e vinte dias) a mais que o tempo requerido para a transferência para a inatividade remunerada; e II – 5 (cinco) por cento a cada promoção: militar que, tendo satisfeito o requisito do item acima, venha a ser promovido em atividade ao posto ou graduação superior. Os percentuais acima mencionados são acumuláveis entre si.' badgeColor='green' badgeText='Receita'>
+                            <input {...register('adicPerm', { required: true, min: 0, max: 100, })} defaultValue={0} step="5" min="0" max="100" type="number" className={styleInputNumber} />
+                        </FormItem>
+
+                        <FormItem labelText='Adicional de Compensação Orgânica' supportText='Recebe Adicional de Compensação Orgânica?' helpText='O Adicional de Compensação Orgânica é parcela remuneratória mensal devida ao militar para compensação de desgaste orgânico resultante do desempenho continuado de atividades especiais. É possível encontrar os percentuais no Anexo V da Medida Provisória nº 2.215-10, de 31 de agosto de 2001.' badgeColor='green' badgeText='Receita'>
+                            <div className='flex flex-1 items-center justify-center w-full py-1'>
+                                <span className='text-sm mx-2'>Não</span>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" {...register('adicCoOrgBool')} value="" className="sr-only peer" />
+                                    <div className={styleInputToggle}></div>
+                                </label>
+                                <span className='text-sm mx-2'>Sim</span>
+                            </div>
+                            {watch('adicCoOrgBool') && (
+                                <>
+                                    <BreakLine />
+
+                                    <FormItem supportText='Qual tipo?'>
+                                        <select defaultValue={'-'} {...register('adicCoOrgType')} className={styleInputSelect}>
+                                            <option value="PDQT">Paraquedista</option>
+                                            <option value="RAIO-X">Raio-X</option>
+                                            <option value="TO/ OMA/ FO">Tripulante Orgânico</option>
+                                            <option value="TO/ OMA/ FO">Observador Meteorológico</option>
+                                            <option value="TO/ OMA/ FO">Observador Fotogramétrico</option>
+                                            <option value="IM/ MG/ CTA">Imersão a bordo de submarino</option>
+                                            <option value="IM/ MG/ CTA">Mergulho com escafandro ou com aparelho</option>
+                                            <option value="IM/ MG/ CTA">Controle de tráfego aéreo</option>
+                                        </select>
+                                    </FormItem>
+
+                                    <FormItem supportText='Qual percentual?'>
+                                        <input {...register('adicCoOrgPercent', { required: true, min: 0, max: 100 })} defaultValue={0} step="0.01" min="0" max="100" type="number" className={styleInputNumber} />
+                                    </FormItem>
+
+                                    <FormItem supportText='Calculado sobre o soldo de qual soldo?'>
+                                        <select defaultValue={'-'} {...register('adicCoOrgPg')} className={styleInputSelect}>
+                                            {pgOptionsToSelectInput}
+                                        </select>
+                                    </FormItem>
+                                </>
+                            )}
                         </FormItem>
 
                         <FormItem labelText='Adicional de Horas de Voo (ART24MP)' supportText='Recebe Adicional de Horas de Voo?' helpText='O Adicional de habilitação é a parcela remuneratória mensal devida ao militar, inerente aos cursos realizados com aproveitamento. Os percentuais podem ser consultados no ANEXO III da Lei nº 13.954, de 16 de dezembro de 2019. Os tipos de cursos existentes devem obedecer às seguintes condições: I - de altos estudos categoria I, realizados a partir de oficiais superiores e de primeiros sargentos; II - de altos estudos categoria II, realizados a partir de oficiais superiores e de segundos sargentos; III - de aperfeiçoamento, realizados a partir de oficiais subalternos e de terceiros sargentos; IV - de especialização, realizados a partir de aspirantes a oficial e de terceiros sargentos; e V - de formação, a partir da conclusão com aproveitamento dos cursos e estágios de formação ou adaptação de oficiais e praças, realizados nas organizações militares das Forças Armadas.' badgeColor='green' badgeText='Receita'>
@@ -655,7 +702,6 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                         <FormItem labelText='Desconto de dependentes no FuSEx' supportText='Qual percentual de desconto de dependentes no FuSEx?' helpText='Deve ser analisado a quantidade de dependentes que o militar/ pensionista possui cadastrado como dependentes no FuSEx. Para 1 (um) dependente cadastrado, exceto o cônjuge ou companheira(o), o desconto será de 0,4% sobre o bruto. Para 2 (dois) ou mais dependentes cadastrados,   exceto o cônjuge ou companheira(o),  o desconto será de 0,5% sobre o bruto, não ultrapassando essa alíquota.' badgeColor='red' badgeText='Desconto'>
                             <select defaultValue={'-'} {...register('descDepFusexType', { required: true })} className={styleInputSelect}>
-                                <option value="-" disabled>- Selecione uma opção -</option>
                                 <option value="00">Não desconta</option>
                                 <option value="04">0,4%</option>
                                 <option value="05">0,5%</option>

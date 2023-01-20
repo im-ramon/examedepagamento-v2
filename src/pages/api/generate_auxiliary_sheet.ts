@@ -11,9 +11,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             { ...auxiliarySheet.complementoCotaSoldo },
             { ...auxiliarySheet.adicTpSv },
             { ...auxiliarySheet.adicCompDispMil },
+            { ...auxiliarySheet.adicHab },
+            { ...auxiliarySheet.adicMil },
+            { ...auxiliarySheet.adicPerm },
+            { ...auxiliarySheet.adicCoOrg },
+            { ...auxiliarySheet.adicHVoo },
+            { ...auxiliarySheet.acres25Soldo },
+            { ...auxiliarySheet.adicPTTC },
+            { ...auxiliarySheet.adicFerias },
+            { ...auxiliarySheet.adicNatalino },
         ],
         descontos: [
-
+            data
         ]
     })
 }

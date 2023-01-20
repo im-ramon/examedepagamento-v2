@@ -6,8 +6,8 @@ export const adic_hab_data: AdicHabDataProps[] = [
         'especializacao': 16,
         'formacao': 12,
         'sem_formacao': 0,
-        'periodo_ini': '2001-08-31',
-        'periodo_fim': '2020-06-30'
+        'startAt': '2001-08-31',
+        'endAt': '2020-06-30'
     },
     {
         'altos_estudos_I': 42,
@@ -16,8 +16,8 @@ export const adic_hab_data: AdicHabDataProps[] = [
         'especializacao': 19,
         'formacao': 12,
         'sem_formacao': 0,
-        'periodo_ini': '2020-07-01',
-        'periodo_fim': '2021-06-30'
+        'startAt': '2020-07-01',
+        'endAt': '2021-06-30'
     },
     {
         'altos_estudos_I': 54,
@@ -26,8 +26,8 @@ export const adic_hab_data: AdicHabDataProps[] = [
         'especializacao': 22,
         'formacao': 12,
         'sem_formacao': 0,
-        'periodo_ini': '2021-07-01',
-        'periodo_fim': '2022-06-30'
+        'startAt': '2021-07-01',
+        'endAt': '2022-06-30'
     },
     {
         'altos_estudos_I': 66,
@@ -36,8 +36,8 @@ export const adic_hab_data: AdicHabDataProps[] = [
         'especializacao': 25,
         'formacao': 12,
         'sem_formacao': 0,
-        'periodo_ini': '2022-07-01',
-        'periodo_fim': '2023-06-30'
+        'startAt': '2022-07-01',
+        'endAt': '2023-06-30'
     },
     {
         'altos_estudos_I': 73,
@@ -46,8 +46,8 @@ export const adic_hab_data: AdicHabDataProps[] = [
         'especializacao': 27,
         'formacao': 12,
         'sem_formacao': 0,
-        'periodo_ini': '2023-07-01',
-        'periodo_fim': '2200-12-31'
+        'startAt': '2023-07-01',
+        'endAt': '2200-12-31'
     },
 ]
 
@@ -58,6 +58,6 @@ export interface AdicHabDataProps {
     especializacao: number;
     formacao: number;
     sem_formacao: number;
-    periodo_ini: string;
-    periodo_fim: string;
+    startAt: string;
+    endAt: string;
 }
