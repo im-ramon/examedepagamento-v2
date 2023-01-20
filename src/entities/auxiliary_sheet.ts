@@ -543,7 +543,7 @@ export class AuxiliarySheetEtitie {
         }
         return {
             title: 'P MIL EXT',
-            percent: '3',
+            percent: this.fields.pMil30Bool ? '3' : '0',
             value: this.truncateDecimalNumbers(valueCalculated)
         }
     }
@@ -556,7 +556,7 @@ export class AuxiliarySheetEtitie {
         }
         return {
             title: 'FUSEX 3%',
-            percent: '3',
+            percent: this.fields.fusex3Bool ? '3' : '0',
             value: this.truncateDecimalNumbers(valueCalculated)
         }
     }
