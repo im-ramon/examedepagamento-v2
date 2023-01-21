@@ -118,7 +118,6 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.adicTpSv.value).toBe(382.50);
     });
 
-
     test('Test calc [AD C DISP MIL | ADIC TP SV]: When AD C DISP MIL is bigger then ADIC TP SV', () => {
         const MockForm: AuxiliarySheetFields = {
             ...baseMockForm,
@@ -207,7 +206,6 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.adicPerm.value).toBe(1338.75);
     });
 
-
     test('Test calc [ADIC COORG]: 10% of Cap QAO', () => {
         const MockForm: AuxiliarySheetFields = {
             ...baseMockForm,
@@ -221,7 +219,6 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
 
         expect(auxialarySheet.adicCoOrg.value).toBe(913.50);
     });
-
 
     test('Test calc [AD C ORG H VOO]: 10% of 2º Ten', () => {
         const MockForm: AuxiliarySheetFields = {
@@ -703,7 +700,6 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.auxNatalidade.value).toBe(7650);
     });
 
-
     test('Test calc [AUX NATALIDATE]: For 2 children - 2º Sgt', () => {
         const MockForm: AuxiliarySheetFields = {
             "universo": "MA",
@@ -868,7 +864,6 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.auxInvalidez.value).toBe(1520);
     });
 
-
     test('Test calc [AUX INVALIDEZ]: For Cap', () => {
         const MockForm: AuxiliarySheetFields = {
             "universo": "VT",
@@ -975,7 +970,6 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.auxPreEsc[1].value).toBe(304.95);
         expect(auxialarySheet.auxPreEsc[2]).toBeUndefined();
     });
-
 
     test('Test calc [ASSIST PRE-ESC]: For 0 dependent', () => {
         const MockForm: AuxiliarySheetFields = {
@@ -1306,7 +1300,6 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.gratRepCmdo.value).toBe(382.50);
     });
 
-
     test('Test calc [GRAT REPRES 2%]: 7 days of 2º Sgt', () => {
         const MockForm: AuxiliarySheetFields = {
             "universo": "MA",
@@ -1588,6 +1581,157 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
         expect(auxialarySheet.descDepFusex.value).toBe(22.18);
+    });
+
+    test('Test calc [BRUTO]: Calculte gross to IR', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-20",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "Cap",
+            "pgReal": "Cap",
+            "soldoType": "integral",
+            "adicTpSvPercent": "33",
+            "adicCompDispMilBool": true,
+            "adicHabType": "aperfeicoamento",
+            "adicMilBool": false,
+            "adicPerm": "5",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": false,
+            "ferias": false,
+            "adicNatalinoBool": false,
+            "depSalFamiliaQtd": "0",
+            "depIrQtd": "0",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": false,
+            "auxPreEscQtd": "0",
+            "auxFardBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": false,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": false,
+        }
+
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.grossAmountToIRAndDiscounts).toBe(16351.65);
+    });
+
+    test('Test calc [IR - MENSAL]: With all conditions', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-20",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "Cel",
+            "pgReal": "Cel",
+            "soldoType": "integral",
+            "adicTpSvPercent": "52",
+            "adicCompDispMilBool": false,
+            "adicHabType": "altos_estudos_I",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": false,
+            "ferias": true,
+            "adicNatalinoBool": true,
+            "depSalFamiliaQtd": "0",
+            "depIrQtd": "5",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": false,
+            "auxPreEscQtd": "0",
+            "auxFardBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": false,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": false,
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "0",
+            "pnrBool": false,
+            "pjBoolean": false,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "adicNatalinoMesesQtd": "12",
+            "adicNatalino1ParcelaVal": "1.99",
+            "extraValues": {}
+        }
+
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.irMensal.value).toBe(5718.61);
+        expect(auxialarySheet.irFerias.value).toBe(617.19);
+        expect(auxialarySheet.irAdicNatalino.value).toBe(6522.08);
+    });
+
+    test('Test calc [IR - MENSAL]: With PJ', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-20",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "Cel",
+            "pgReal": "Cel",
+            "soldoType": "integral",
+            "adicTpSvPercent": "52",
+            "adicCompDispMilBool": false,
+            "adicHabType": "altos_estudos_I",
+            "adicMilBool": true,
+            "adicPerm": "0",
+            "adicCoOrgBool": false,
+            "adicHVooBool": false,
+            "acres25Bool": false,
+            "pttcBool": false,
+            "ferias": true,
+            "adicNatalinoBool": true,
+            "depSalFamiliaQtd": "0",
+            "depIrQtd": "5",
+            "auxTransporteBool": false,
+            "auxNatatalidadeBool": false,
+            "auxInvalidezBool": false,
+            "auxPreEscQtd": "0",
+            "auxFardBool": false,
+            "auxAlimentC": false,
+            "auxAlimentEspBool": false,
+            "gratRepreType": "-",
+            "gratCmdoBool": false,
+            "gratRep2Bool": false,
+            "pMilBool": true,
+            "pMil15Bool": false,
+            "pMil30Bool": false,
+            "fusex3Bool": false,
+            "descDepFusexType": "0",
+            "pnrBool": false,
+            "pjBoolean": true,
+            "pjAdicNatalBoolean": false,
+            "existemValoresExtraBool": false,
+            "pMilPgAcimaBool": false,
+            "adicNatalinoMesesQtd": "12",
+            "adicNatalino1ParcelaVal": "1.99",
+            "pj1Val": "500",
+            "pj2Val": "0",
+            "pj3Val": "0",
+            "pj4Val": "0",
+            "pj5Val": "0",
+            "pj6Val": "0",
+            "extraValues": {}
+        }
+
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.irMensal.value).toBe(5581.11);
     });
 
 });
