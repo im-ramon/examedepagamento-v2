@@ -1479,4 +1479,115 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
         expect(auxialarySheet.adicFerias.value).toBe(1224.08);
     });
 
+    test('Test calc [P MIL 10,5% - 1,5%]: 3º Sgt, ADIC HAB 12% and same PG.', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-20",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "3º Sgt",
+            "pgReal": "Cap",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "formacao",
+            "adicMilBool": false,
+            "adicPerm": "0",
+            "pMilBool": true,
+            "pMil15Bool": true,
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.pMil[0].value).toBe(449.82);
+        expect(auxialarySheet.pMil[1].value).toBe(64.25);
+    });
+
+    test('Test calc [P MIL 10,5% - 1,5%]: 3º Sgt, ADIC HAB 12% and PG 2º Sgt', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "MA",
+            "dataReferencia": "2023-01-20",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "3º Sgt",
+            "pgReal": "Cap",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "adicCompDispMilBool": false,
+            "adicHabType": "formacao",
+            "adicMilBool": false,
+            "adicPerm": "0",
+            "pMilBool": true,
+            "pMil15Bool": true,
+            "pMilPgAcimaBool": true,
+            "pMilPgAcimaPg": "2º Sgt"
+        }
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.pMil[0].value).toBe(560.95);
+        expect(auxialarySheet.pMil[1].value).toBe(80.13);
+    });
+
+    test('Test calc [P MIL 3%]: 3º Sgt, ADIC MIL', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "PN",
+            "dataReferencia": "2023-01-20",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "3º Sgt",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "cotaParteSoldoPercent": "100",
+            "adicMilBool": true,
+            "pMilBool": true,
+            "pMil15Bool": true,
+            "pMil30Bool": true,
+        }
+
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.pMilExt.value).toBe(133.10);
+    });
+
+    test('Test calc [FUSEX 3%]: 3º Sgt, ADIC MIL', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "PN",
+            "dataReferencia": "2023-01-20",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "3º Sgt",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "cotaParteSoldoPercent": "100",
+            "adicMilBool": true,
+            "fusex3Bool": true,
+        }
+
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.fusex.value).toBe(133.10);
+    });
+
+    test('Test calc [DESC DEP FUSEX]: 3º Sgt, ADIC MIL - 0,5', () => {
+        const MockForm: AuxiliarySheetFields = {
+            "universo": "PN",
+            "dataReferencia": "2023-01-20",
+            "maior65": false,
+            "isentoIr": false,
+            "pgSoldo": "3º Sgt",
+            "pgReal": "3º Sgt",
+            "soldoType": "integral",
+            "adicTpSvPercent": "0",
+            "cotaParteSoldoPercent": "100",
+            "adicMilBool": true,
+            "fusex3Bool": true,
+            "descDepFusexType": "5"
+        }
+
+        const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
+
+        expect(auxialarySheet.descDepFusex.value).toBe(22.18);
+    });
+
 });
