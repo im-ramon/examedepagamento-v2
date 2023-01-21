@@ -317,7 +317,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -369,7 +369,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -422,7 +422,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -475,7 +475,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -529,7 +529,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -583,7 +583,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -637,7 +637,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -693,7 +693,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicNatalino1ParcelaVal": "0",
             "auxNatatalidadeQtd": "3",
             "auxTransporteVal": "1000",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -749,7 +749,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicNatalino1ParcelaVal": "0",
             "auxNatatalidadeQtd": "2",
             "auxTransporteVal": "1000",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -805,7 +805,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicNatalino1ParcelaVal": "0",
             "auxNatatalidadeQtd": "3",
             "auxTransporteVal": "1000",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -857,7 +857,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -909,7 +909,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -961,7 +961,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -1016,7 +1016,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -1071,7 +1071,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -1125,7 +1125,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "adicCoOrgPercent": "10",
             "adicCoOrgPg": "2º Ten",
             "adicCoOrgType": "PDQT",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -1198,7 +1198,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "auxFard1VezBool": false,
             "auxAlimentEspQtd": "10",
             "auxAlimentEspType": "5",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -1257,7 +1257,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "auxFard1VezBool": false,
             "auxAlimentEspQtd": "10",
             "auxAlimentEspType": "10",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -1354,7 +1354,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "auxFard1VezBool": false,
             "auxAlimentEspQtd": "10",
             "auxAlimentEspType": "10",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -1415,7 +1415,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "auxFard1VezBool": false,
             "auxAlimentEspQtd": "10",
             "auxAlimentEspType": "10",
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -1464,7 +1464,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "pjAdicNatalBoolean": false,
             "existemValoresExtraBool": false,
             "pMilPgAcimaBool": false,
-            "extraValues": {}
+            "extraValues": []
         }
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
@@ -1619,7 +1619,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
 
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
 
-        expect(auxialarySheet.grossAmountToIRAndDiscounts).toBe(16351.65);
+        expect(auxialarySheet.grossAmountToDiscounts).toBe(16351.65);
     });
 
     test('Test calc [IR - MENSAL]: With all conditions', () => {
@@ -1666,7 +1666,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "pMilPgAcimaBool": false,
             "adicNatalinoMesesQtd": "12",
             "adicNatalino1ParcelaVal": "1.99",
-            "extraValues": {}
+            "extraValues": []
         }
 
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
@@ -1726,7 +1726,7 @@ describe('Auxialary sheet Entitie teste white 3º Sgt base to calc', () => {
             "pj4Val": "0",
             "pj5Val": "0",
             "pj6Val": "0",
-            "extraValues": {}
+            "extraValues": []
         }
 
         const auxialarySheet = new AuxiliarySheetEtitie(MockForm)
