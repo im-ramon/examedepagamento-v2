@@ -22,7 +22,7 @@ export type PostGrad = 'Gen Ex Inat' | 'Gen Ex' | 'Gen Div' | 'Gen Bda' | 'Cel' 
 export interface AuxiliarySheetFields {
     universo?: 'MA' | 'VT' | 'PN',
     dataReferencia?: string,
-    maior65?: boolean,
+    maior65: boolean,
     isentoIr?: boolean,
     pgSoldo: PostGrad,
     pgReal: PostGrad,

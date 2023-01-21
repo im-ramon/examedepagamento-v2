@@ -45,8 +45,33 @@ export class AuxiliarySheetEtitie {
         return this.truncateDecimalNumbers(soldoCalculated)
     }
 
-    // ATENÇÃO!!!
-    get grossAmountToDiscounts(): number {
+    private calculateIR(gross: number, discounts: number, dependents: number, isOlderThan65: boolean): number {
+        let base = gross - discounts - (dependents * 189.59) - (isOlderThan65 ? 1903.98 : 0);
+
+        let aliquota = 0;
+        let parcela = 0;
+
+        if (base <= 1903.98) {
+            aliquota = 0;
+            parcela = 0;
+        } else if (base >= 1903.99 && base <= 2826.65) {
+            aliquota = 0.075;
+            parcela = 142.8;
+        } else if (base >= 2826.66 && base <= 3751.05) {
+            aliquota = 0.15;
+            parcela = 354.8;
+        } else if (base >= 3751.06 && base <= 4664.68) {
+            aliquota = 0.225;
+            parcela = 636.13;
+        } else if (base >= 4664.69) {
+            aliquota = 0.275;
+            parcela = 869.36;
+        }
+
+        return Number((((base * aliquota) - parcela)).toFixed(2));
+    }
+
+    get grossAmountToIRAndDiscounts(): number {
         return (
             this.soldo.value +
             this.complementoCotaSoldo.value +
@@ -63,8 +88,18 @@ export class AuxiliarySheetEtitie {
             this.gratRepCmdo.value +
             this.gratRep2.value
         )
+    }
 
-        // ESCREVER TESTE!!!!!
+    get discountsAmountToIR(): number {
+        return (
+            this.pMil[0].value +
+            this.pMil[1].value +
+            this.pMilExt.value +
+            this.fusex.value +
+            this.pensaoJudiciaria.reduce((prev, curr) => {
+                return prev + curr.value
+            }, 0)
+        )
     }
 
     get soldo(): fieldInterface {
@@ -251,7 +286,7 @@ export class AuxiliarySheetEtitie {
         let valueCalculated = 0
 
         if (this.fields.ferias) {
-            valueCalculated = this.grossAmountToDiscounts / 3
+            valueCalculated = this.grossAmountToIRAndDiscounts / 3
 
             if (this.adicPTTC.value > 0) {
                 valueCalculated = this.adicPTTC.value / 3
@@ -366,7 +401,7 @@ export class AuxiliarySheetEtitie {
 
         if (this.fields.auxPreEscQtd != "0") {
             let auxPreEscBaseValue = 321
-            let gross = this.grossAmountToDiscounts
+            let gross = this.grossAmountToIRAndDiscounts
             let calcBaseSdSoldo = this.paymentRefereceByDate["Sd Eng"].soldo
             let quota = gross / calcBaseSdSoldo
             let quotaToCal = 0
@@ -482,7 +517,7 @@ export class AuxiliarySheetEtitie {
 
         return {
             title: 'GRAT REPR CMDO',
-            percent: '10',
+            percent: this.fields.gratCmdoBool ? '10' : '0',
             value: this.truncateDecimalNumbers(valueCalculated)
         }
     }
@@ -507,10 +542,10 @@ export class AuxiliarySheetEtitie {
         let percentBetweenPg = 0
 
         if (this.fields.pMilBool) {
-            valueCalculatedPMil10_5 = this.grossAmountToDiscounts * 0.105
+            valueCalculatedPMil10_5 = this.grossAmountToIRAndDiscounts * 0.105
 
             if (this.fields.pMil15Bool) {
-                valueCalculatedPMil1_5 = this.grossAmountToDiscounts * 0.015
+                valueCalculatedPMil1_5 = this.grossAmountToIRAndDiscounts * 0.015
             }
 
             if (this.fields.pMilPgAcimaBool && this.fields.pMilPgAcimaPg) {
@@ -539,7 +574,7 @@ export class AuxiliarySheetEtitie {
         let valueCalculated = 0
 
         if (this.fields.pMil30Bool && this.fields.universo == 'PN') {
-            valueCalculated = Number(this.grossAmountToDiscounts * 0.03)
+            valueCalculated = Number(this.grossAmountToIRAndDiscounts * 0.03)
         }
         return {
             title: 'P MIL EXT',
@@ -552,7 +587,7 @@ export class AuxiliarySheetEtitie {
         let valueCalculated = 0
 
         if (this.fields.fusex3Bool) {
-            valueCalculated = Number(this.grossAmountToDiscounts * 0.03)
+            valueCalculated = Number(this.grossAmountToIRAndDiscounts * 0.03)
         }
         return {
             title: 'FUSEX 3%',
@@ -565,9 +600,9 @@ export class AuxiliarySheetEtitie {
         let valueCalculated = 0
 
         if (this.fields.descDepFusexType == "4") {
-            valueCalculated = Number(this.grossAmountToDiscounts * 0.004)
+            valueCalculated = Number(this.grossAmountToIRAndDiscounts * 0.004)
         } else if (this.fields.descDepFusexType == "5") {
-            valueCalculated = Number(this.grossAmountToDiscounts * 0.005)
+            valueCalculated = Number(this.grossAmountToIRAndDiscounts * 0.005)
         }
 
         return {
@@ -609,21 +644,125 @@ export class AuxiliarySheetEtitie {
         ]
     }
 
+    get pensaoJudiciaria(): fieldInterface[] {
+        let pjList: fieldInterface[] = []
 
-}
+        if (this.fields.pjBoolean) {
+            pjList = [this.fields.pj1Val, this.fields.pj2Val, this.fields.pj3Val, this.fields.pj4Val, this.fields.pj5Val, this.fields.pj6Val]
+                .map(value => {
+                    return {
+                        title: 'PENS JUDICIARIA',
+                        percent: '-',
+                        value: Number(value)
+                    }
+                })
+        }
 
-// Conferir os campos de ADIC NATALINO, FERIAS e BRUTO
-// Dependentes para IR
+        return pjList
+    }
 
-/*
+    get pensaoJudiciariaAdicNatal(): fieldInterface[] {
+        let pjList: fieldInterface[] = []
 
-get adicTpSv(): fieldInterface {
-    let valueCalculated = 0
-    return {
-        title: 'XXXXX',
-        percent: '-',
-        value: this.truncateDecimalNumbers(valueCalculated)
+        if (this.fields.pjAdicNatalBoolean) {
+            pjList = [this.fields.pjAdicNatal1Val, this.fields.pjAdicNatal2Val, this.fields.pjAdicNatal3Val, this.fields.pjAdicNatal4Val, this.fields.pjAdicNatal5Val, this.fields.pjAdicNatal6Val]
+                .map(value => {
+                    return {
+                        title: 'PENS JUDICIARIA 13º',
+                        percent: '-',
+                        value: Number(value)
+                    }
+                })
+        }
+
+        return pjList
+    }
+
+    get dedAdAdicNatalino(): fieldInterface {
+        let valueCalculated = 0
+
+        if (this.fields.adicNatalino1ParcelaVal) {
+            valueCalculated = Number(this.fields.adicNatalino1ParcelaVal)
+        }
+
+        return {
+            title: 'DED AD AD NATAL',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get irMensal(): fieldInterface {
+        let valueCalculated = 0
+
+        if (!this.fields.isentoIr) {
+            valueCalculated = this.calculateIR(
+                this.grossAmountToIRAndDiscounts,
+                this.discountsAmountToIR,
+                Number(this.fields.depIrQtd),
+                this.fields.maior65
+            )
+
+            // Vide Art. 67 da Lei nº 9.430/99
+            if (valueCalculated <= 10) {
+                valueCalculated = 0
+            }
+        }
+
+        return {
+            title: 'IMPOSTO RENDA',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get irFerias(): fieldInterface {
+        let valueCalculated = 0
+
+        if (!this.fields.isentoIr && this.adicFerias.value > 0) {
+            valueCalculated = this.calculateIR(
+                this.adicFerias.value,
+                this.discountsAmountToIR,
+                Number(this.fields.depIrQtd),
+                this.fields.maior65
+            )
+
+            // Vide Art. 67 da Lei nº 9.430/99
+            if (valueCalculated <= 10) {
+                valueCalculated = 0
+            }
+        }
+
+        return {
+            title: 'IMPOSTO RENDA FÉRIAS',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get irAdicNatalino(): fieldInterface {
+        let valueCalculated = 0
+
+        if (!this.fields.isentoIr && this.adicNatalino.value > 0) {
+            valueCalculated = this.calculateIR(
+                this.adicNatalino.value,
+                this.pensaoJudiciariaAdicNatal.reduce((prev, curr) => {
+                    return prev + curr.value
+                }, 0),
+                Number(this.fields.depIrQtd),
+                this.fields.maior65
+            )
+
+            // Vide Art. 67 da Lei nº 9.430/99
+            if (valueCalculated <= 10) {
+                valueCalculated = 0
+            }
+        }
+
+        return {
+            title: 'IMPOSTO RENDA 13º',
+            percent: '-',
+            value: this.truncateDecimalNumbers(valueCalculated)
+        }
     }
 }
-
-*/

@@ -37,7 +37,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             auxiliarySheet.fusex,
             auxiliarySheet.descDepFusex,
             ...auxiliarySheet.pnr,
+            ...auxiliarySheet.pensaoJudiciaria,
+            ...auxiliarySheet.pensaoJudiciariaAdicNatal,
+            auxiliarySheet.dedAdAdicNatalino,
+            auxiliarySheet.irMensal,
+            auxiliarySheet.irFerias,
+            auxiliarySheet.irAdicNatalino,
         ],
+
         data: [
             data
         ]
