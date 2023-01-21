@@ -189,8 +189,6 @@ const GeneratePayslip: NextPageWithLayout = () => {
     function clearExtraValuesForm() {
         setExtraValueDescription('')
         setExtraValueAmount('')
-        setExtraValueType('receita')
-        setExtraValueTaxable('0')
     }
 
     const styleInputNumber = "block w-32 p-2 mx-auto text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
@@ -885,10 +883,14 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                 return (
                                     <div key={index} className='bg-white/50 dark:bg-black/10 border dark:border-gray-700 border-gray-200 shadow-md rounded-xl px-4 py-2 mb-3 flex justify-between items-center'>
                                         <div className='flex text-sm'>
-                                            <p className='pr-3 border-r dark:border-gray-700 border-gray-200'><strong>Descrição:</strong> {el.description}</p>
+                                            {el.type == "receita" ?
+                                                <span className='ml-2 w-20 text-center bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300'>Receita</span>
+                                                :
+                                                <span className='ml-2 w-20 text-center bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300'>Desconto</span>
+                                            }
+                                            <p className='px-3 border-r border-l dark:border-gray-700 border-gray-200'><strong>Descrição:</strong> {el.description}</p>
                                             <p className='ml-3 pr-3 border-r dark:border-gray-700 border-gray-200'><strong>Valor: </strong>R$ {el.value}</p>
-                                            <p className='ml-3 pr-3 border-r dark:border-gray-700 border-gray-200'><strong>Tributável:</strong> {el.isTaxable == '1' ? 'Sim' : 'Não'}</p>
-                                            <p className='ml-3'><strong>Tipo: </strong><span className='capitalize'>{el.type}</span></p>
+                                            <p className='ml-3 pr-3 dark:border-gray-700 border-gray-200'><strong>Tributável:</strong> {el.isTaxable == '1' ? 'Sim' : 'Não'}</p>
                                         </div>
                                         <div className='cursor-pointer' onClick={() => excludeExtraValueInArray(index)}>
                                             <BiTrash size={20} className="text-red-400" />
@@ -903,7 +905,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                         <div className='lg:col-span-10 grid gap-4 lg:gap-2 grid-cols-1 lg:grid-cols-2'>
                                             <div className='flex items-center pr-2 mr-2'>
                                                 <label>Descrição: </label>
-                                                <input value={extraValueDescription} onChange={e => setExtraValueDescription(e.target.value.toLocaleUpperCase())} placeholder='Ex: SOLDO AT' type="text" className="block flex-1 p-2 ml-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                                                <input value={extraValueDescription} onChange={e => setExtraValueDescription(e.target.value.toLocaleUpperCase())} type="text" className="block flex-1 p-2 ml-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
                                             </div>
 
                                             <div className='flex items-center justify-center pr-2 mr-2'>
@@ -939,7 +941,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                                 Salvar
                                             </ButtonDefaultSmall>
                                             <div className="lg:my-0.5 my-3"></div>
-                                            <ButtonDefaultSmall color='yellow' type='button' variant='solid' click={() => { setExtraValueDescription(''); setExtraValueAmount('0') }} >
+                                            <ButtonDefaultSmall color='yellow' type='button' variant='solid' click={() => { clearExtraValuesForm() }} >
                                                 Limpar
                                             </ButtonDefaultSmall>
                                         </div>
