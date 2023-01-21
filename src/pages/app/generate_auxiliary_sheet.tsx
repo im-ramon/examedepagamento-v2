@@ -734,9 +734,9 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                                     <FormItem supportText='Qual o tipo de desconto de PNR da unidade?'>
                                         <select defaultValue={'-'} {...register('pnrType', { required: true })} className={styleInputSelect}>
-                                            <option value="-" disabled>- Selecione uma opção -</option>
-                                            <option value="50">5,0%</option>
-                                            <option value="35">3,5%</option>
+                                            <option value="0" disabled>- Selecione uma opção -</option>
+                                            <option value="5.0">5,0%</option>
+                                            <option value="3.5">3,5%</option>
                                         </select>
                                     </FormItem>
                                 </>

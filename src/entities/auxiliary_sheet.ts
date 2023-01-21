@@ -577,6 +577,38 @@ export class AuxiliarySheetEtitie {
         }
     }
 
+    get pnr(): fieldInterface[] {
+        let pnr_f_ex_mnt = 0
+        let pnr_cod_ua = 0
+        let pnr_f_ex_cnst = 0
+
+        if (this.fields.pnrBool && this.fields.pnrType && this.fields.pnrType !== "0") {
+            let baseValue = this.soldo.value * (Number(this.fields.pnrType) / 100)
+
+            pnr_f_ex_cnst = baseValue * 0.2;
+            pnr_f_ex_mnt = baseValue * 0.1;
+            pnr_cod_ua = baseValue - pnr_f_ex_cnst - pnr_f_ex_mnt;
+        }
+
+        return [
+            {
+                title: 'PNR (F EX-CNST)',
+                percent: '-',
+                value: this.truncateDecimalNumbers(pnr_f_ex_cnst)
+            },
+            {
+                title: 'PNR (COD/UA)',
+                percent: '-',
+                value: this.truncateDecimalNumbers(pnr_cod_ua)
+            },
+            {
+                title: 'PNR (F EX-MNT)',
+                percent: '-',
+                value: this.truncateDecimalNumbers(pnr_f_ex_mnt)
+            }
+        ]
+    }
+
 
 }
 

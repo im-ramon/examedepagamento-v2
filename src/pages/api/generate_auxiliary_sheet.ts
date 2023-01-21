@@ -36,6 +36,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             auxiliarySheet.pMilExt,
             auxiliarySheet.fusex,
             auxiliarySheet.descDepFusex,
+            ...auxiliarySheet.pnr,
         ],
         data: [
             data
