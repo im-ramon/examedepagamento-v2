@@ -2,6 +2,8 @@ import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import type { ReactElement, ReactNode } from 'react'
 import { useEffect } from 'react'
+import { Flip, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { useDarkMode } from 'usehooks-ts'
 import '../../styles/globals.css'
 
@@ -45,5 +47,24 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
     const getLayout = Component.getLayout ?? ((page) => page)
 
-    return getLayout(<Component {...pageProps} />)
+    return getLayout(
+        <>
+            <Component {...pageProps} />
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop
+                transition={Flip}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                toastClassName='rounded-2xl dark:bg-gray-800 dark:text-white shadow-md'
+                className='text-sm mr-4'
+                theme={`${isDarkMode ? 'dark' : 'light'}`}
+            />
+        </>
+    )
 }

@@ -3,6 +3,8 @@ import Head from 'next/head';
 import { ReactElement, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiErrorCircle, BiTrash } from 'react-icons/bi';
+import { toast } from 'react-toastify';
+import AuxiliarySheet from '../../components/AuxiliarySheet';
 import BlockTitle from '../../components/BlockTitle';
 import { BreakLine } from '../../components/BreakLine';
 import { ButtonDefault } from '../../components/ButtonDefault';
@@ -101,6 +103,23 @@ export interface ExtraValues {
     isTaxable: '0' | '1';
 }
 
+export interface AuxiliarySheetDataProps {
+    receitas: {
+        title: string;
+        percent: string;
+        value: number;
+    }[],
+    descontos: {
+        title: string;
+        percent: string;
+        value: number;
+    }[],
+    somatorios: {
+        receitas: number;
+        descontos: number;
+    }
+}
+
 const GeneratePayslip: NextPageWithLayout = () => {
     const { register, handleSubmit, watch, formState: { errors }, reset, setValue, getValues } = useForm<AuxiliarySheetFields>();
 
@@ -110,25 +129,43 @@ const GeneratePayslip: NextPageWithLayout = () => {
     const [extraValueTaxable, setExtraValueTaxable] = useState<'0' | '1'>('0')
     const [extraValues, setExtraValues] = useState<ExtraValues[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [showAuxiliarySheet, setShowAuxiliarySheet] = useState<boolean>(false)
+    const [auxiliarySheetData, setAuxiliarySheetData] = useState<AuxiliarySheetDataProps>({
+        receitas: [{
+            title: 'string',
+            percent: 'string',
+            value: 1
+        }],
+        descontos: [{
+            title: 'string',
+            percent: 'string',
+            value: 2,
+        }],
+        somatorios: {
+            receitas: 0,
+            descontos: 0
+        }
+    }
+    )
 
     const onSubmit: SubmitHandler<AuxiliarySheetFields> = async data => {
         setIsLoading(true)
 
-        const requestData = {
-            ...data,
-            extraValues: [
-                ...extraValues
-            ]
-        }
+        const requestData = { ...data, extraValues }
 
-        await api.post('/generate_auxiliary_sheet', requestData)
-            .then(responseData => console.log(responseData.data))
-            .catch(e => console.error(e))
+        await api.post<AuxiliarySheetDataProps>('/generate_auxiliary_sheet', requestData)
+            .then(responseData => {
+                setAuxiliarySheetData(responseData.data)
+                setShowAuxiliarySheet(true)
+            })
+            .catch(e => {
+                toast.error("Não foi possível gerar a ficha auxiliar no momento. Código: " + e.response.status + "/" + e.code)
+                console.error(e)
+            })
             .finally(() => {
                 setIsLoading(false)
             })
     };
-
 
     function pushExtraValuesInArrayAndClearItsForm() {
         setExtraValues([
@@ -193,9 +230,11 @@ const GeneratePayslip: NextPageWithLayout = () => {
             <Head>
                 <title>{appIdentity.app_name + ' | Gerar ficha auxiliar'}</title>
             </Head>
+
+            <AuxiliarySheet isVisible={showAuxiliarySheet} closeModal={() => { setShowAuxiliarySheet(false) }} data={auxiliarySheetData} />
+
             <PageTitle title='Gerar ficha auxilar' sub_title='Responda o formulário abaixo com as informação do militar/ pensionista que deseja gerar uma ficha auxiliar. Se sugir dúvidas, clique na interrogação (?) no canto de cada campo.' />
             <div>
-
                 <form onSubmit={handleSubmit(onSubmit)} className="relative block pb-8">
                     {/* <div className="flex items-center p-4 -mb-4 text-sm text-green-700 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800">
                         <BiCheckCircle size={16} />
