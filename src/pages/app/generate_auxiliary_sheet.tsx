@@ -91,7 +91,7 @@ export interface AuxiliarySheetFields {
     pjAdicNatal5Val?: string,
     pjAdicNatal6Val?: string,
     existemValoresExtraBool?: boolean,
-    extraValues?: ExtraValues[] | {}
+    extraValues?: ExtraValues[]
 };
 
 export interface ExtraValues {
@@ -116,9 +116,9 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
         const requestData = {
             ...data,
-            extraValues: {
+            extraValues: [
                 ...extraValues
-            }
+            ]
         }
 
         await api.post('/generate_auxiliary_sheet', requestData)

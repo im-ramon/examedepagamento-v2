@@ -30,6 +30,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             auxiliarySheet.auxAliment,
             auxiliarySheet.gratLocEsp,
             auxiliarySheet.gratRepCmdo,
+            ...auxiliarySheet.extraValues.receitas,
         ],
         descontos: [
             ...auxiliarySheet.pMil,
@@ -43,6 +44,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             auxiliarySheet.irMensal,
             auxiliarySheet.irFerias,
             auxiliarySheet.irAdicNatalino,
+            ...auxiliarySheet.extraValues.descontos,
         ],
 
         data: [

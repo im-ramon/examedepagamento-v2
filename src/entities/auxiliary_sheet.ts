@@ -71,7 +71,7 @@ export class AuxiliarySheetEtitie {
         return Number((((base * aliquota) - parcela)).toFixed(2));
     }
 
-    get grossAmountToIRAndDiscounts(): number {
+    get grossAmountToDiscounts(): number {
         return (
             this.soldo.value +
             this.complementoCotaSoldo.value +
@@ -98,7 +98,8 @@ export class AuxiliarySheetEtitie {
             this.fusex.value +
             this.pensaoJudiciaria.reduce((prev, curr) => {
                 return prev + curr.value
-            }, 0)
+            }, 0) +
+            this.extraValues.descontosTributaveis
         )
     }
 
@@ -286,7 +287,7 @@ export class AuxiliarySheetEtitie {
         let valueCalculated = 0
 
         if (this.fields.ferias) {
-            valueCalculated = this.grossAmountToIRAndDiscounts / 3
+            valueCalculated = this.grossAmountToDiscounts / 3
 
             if (this.adicPTTC.value > 0) {
                 valueCalculated = this.adicPTTC.value / 3
@@ -401,7 +402,7 @@ export class AuxiliarySheetEtitie {
 
         if (this.fields.auxPreEscQtd != "0") {
             let auxPreEscBaseValue = 321
-            let gross = this.grossAmountToIRAndDiscounts
+            let gross = this.grossAmountToDiscounts
             let calcBaseSdSoldo = this.paymentRefereceByDate["Sd Eng"].soldo
             let quota = gross / calcBaseSdSoldo
             let quotaToCal = 0
@@ -542,10 +543,10 @@ export class AuxiliarySheetEtitie {
         let percentBetweenPg = 0
 
         if (this.fields.pMilBool) {
-            valueCalculatedPMil10_5 = this.grossAmountToIRAndDiscounts * 0.105
+            valueCalculatedPMil10_5 = this.grossAmountToDiscounts * 0.105
 
             if (this.fields.pMil15Bool) {
-                valueCalculatedPMil1_5 = this.grossAmountToIRAndDiscounts * 0.015
+                valueCalculatedPMil1_5 = this.grossAmountToDiscounts * 0.015
             }
 
             if (this.fields.pMilPgAcimaBool && this.fields.pMilPgAcimaPg) {
@@ -574,7 +575,7 @@ export class AuxiliarySheetEtitie {
         let valueCalculated = 0
 
         if (this.fields.pMil30Bool && this.fields.universo == 'PN') {
-            valueCalculated = Number(this.grossAmountToIRAndDiscounts * 0.03)
+            valueCalculated = Number(this.grossAmountToDiscounts * 0.03)
         }
         return {
             title: 'P MIL EXT',
@@ -587,7 +588,7 @@ export class AuxiliarySheetEtitie {
         let valueCalculated = 0
 
         if (this.fields.fusex3Bool) {
-            valueCalculated = Number(this.grossAmountToIRAndDiscounts * 0.03)
+            valueCalculated = Number(this.grossAmountToDiscounts * 0.03)
         }
         return {
             title: 'FUSEX 3%',
@@ -600,9 +601,9 @@ export class AuxiliarySheetEtitie {
         let valueCalculated = 0
 
         if (this.fields.descDepFusexType == "4") {
-            valueCalculated = Number(this.grossAmountToIRAndDiscounts * 0.004)
+            valueCalculated = Number(this.grossAmountToDiscounts * 0.004)
         } else if (this.fields.descDepFusexType == "5") {
-            valueCalculated = Number(this.grossAmountToIRAndDiscounts * 0.005)
+            valueCalculated = Number(this.grossAmountToDiscounts * 0.005)
         }
 
         return {
@@ -697,7 +698,7 @@ export class AuxiliarySheetEtitie {
 
         if (!this.fields.isentoIr) {
             valueCalculated = this.calculateIR(
-                this.grossAmountToIRAndDiscounts,
+                this.grossAmountToDiscounts + this.extraValues.receitasTributaveis,
                 this.discountsAmountToIR,
                 Number(this.fields.depIrQtd),
                 this.fields.maior65
@@ -763,6 +764,43 @@ export class AuxiliarySheetEtitie {
             title: 'IMPOSTO RENDA 13º',
             percent: '-',
             value: this.truncateDecimalNumbers(valueCalculated)
+        }
+    }
+
+    get extraValues(): { receitas: fieldInterface[], descontos: fieldInterface[], receitasTributaveis: number, descontosTributaveis: number } {
+        let receitas: fieldInterface[] = []
+        let descontos: fieldInterface[] = []
+        let receitasTributaveis: number = 0
+        let descontosTributaveis: number = 0
+
+
+        if (this.fields.extraValues && this.fields.existemValoresExtraBool) {
+            let receitasFiltered = this.fields.extraValues.filter(item => item.type === 'receita')
+            receitasTributaveis = receitasFiltered.reduce((prev, curr) => {
+                return curr.isTaxable == '1' ? prev + Number(curr.value) : prev + 0
+            }, 0)
+
+            receitas = receitasFiltered.map((item): fieldInterface => {
+                return { title: item.description, percent: '-', value: Number(item.value) }
+            })
+
+            let descontosFiltered = this.fields.extraValues.filter(item => item.type === 'desconto')
+            descontosTributaveis = descontosFiltered.reduce((prev, curr) => {
+                return curr.isTaxable == '1' ? prev + Number(curr.value) : prev + 0
+            }, 0)
+            descontos = descontosFiltered.map((item): fieldInterface => {
+                return { title: item.description, percent: '-', value: Number(item.value) }
+            })
+        }
+        return {
+            receitas: [
+                ...receitas
+            ],
+            descontos: [
+                ...descontos
+            ],
+            receitasTributaveis,
+            descontosTributaveis
         }
     }
 }
