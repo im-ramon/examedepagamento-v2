@@ -40,7 +40,7 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
             <div className='animate-auxiliary_sheet'>
                 <div id='auxiliary_sheet-container' className='max-w-6xl mx-auto'>
                     <div className='flex select-none cursor-pointer justify-center items-center py-2 text-primary-400 px-4 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-t-3xl '>
-                        <ButtonDefault color='yellow' type='button' click={closeModal} variant='solid'>
+                        <ButtonDefault gradientDuoTone='purpleToPink' color='dark' size='md' type='button' variant='outline' click={closeModal}>
                             <TbArrowBackUp className='inline-block mr-2' />
                             Continuar editando
                         </ButtonDefault>
@@ -162,11 +162,11 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
 
                     </div>
                     <div className='flex justify-center py-4 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-b-3xl '>
-                        <ButtonDefault color='green' type='button' variant='solid'>
+                        <ButtonDefault gradientDuoTone='greenToBlue' color='dark' size='md' type='button' variant='solid'>
                             Salvar
                             <BiSave className='inline-block ml-2' />
                         </ButtonDefault>
-                        <ButtonDefault color='blue' type='button' variant='solid' click={handlePrint}>
+                        <ButtonDefault gradientDuoTone='tealToLime' color='dark' size='md' type='button' variant='solid' click={handlePrint}>
                             Imprimir
                             <BiPrinter className='inline-block ml-2' />
                         </ButtonDefault>

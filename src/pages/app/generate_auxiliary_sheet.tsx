@@ -2,13 +2,12 @@ import moment from 'moment';
 import Head from 'next/head';
 import { ReactElement, useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
-import { BiErrorCircle, BiTrash } from 'react-icons/bi';
+import { BiBrushAlt, BiCheckDouble, BiErrorCircle, BiSave, BiTrash } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import AuxiliarySheet from '../../components/AuxiliarySheet';
 import BlockTitle from '../../components/BlockTitle';
 import { BreakLine } from '../../components/BreakLine';
 import { ButtonDefault } from '../../components/ButtonDefault';
-import { ButtonDefaultSmall } from '../../components/ButtonDefaultSmall';
 import { FormBlockContainer } from '../../components/FormBlockContainer';
 import { FormItem } from '../../components/FormItem';
 import LayoutRouteApp from "../../components/layouts/LayoutRouteApp";
@@ -928,14 +927,24 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className='lg:col-span-2 flex justify-center flex-col mt-4 lg:mt-0'>
-                                            <ButtonDefaultSmall color='green' type='button' variant='solid' click={pushExtraValuesInArrayAndClearItsForm}>
-                                                Salvar
-                                            </ButtonDefaultSmall>
-                                            <div className="lg:my-0.5 my-3"></div>
-                                            <ButtonDefaultSmall color='yellow' type='button' variant='solid' click={() => { clearExtraValuesForm() }} >
-                                                Limpar
-                                            </ButtonDefaultSmall>
+                                        <div className='lg:col-span-2 flex justify-center flex-row lg:flex-col mt-4 lg:mt-0'>
+                                            <div>
+                                                <ButtonDefault size='xs' type='button' gradientDuoTone='tealToLime' disabled={isLoading} color='warning' variant='solid' click={pushExtraValuesInArrayAndClearItsForm}>
+                                                    <div className='flex items-center justify-center'>
+                                                        <span className='mr-1'>Salvar</span>
+                                                        <BiSave size={16} />
+                                                    </div>
+                                                </ButtonDefault>
+                                            </div>
+                                            <div className="lg:my-0.5 mx-3"></div>
+                                            <div>
+                                                <ButtonDefault size='xs' type='button' gradientDuoTone='pinkToOrange' disabled={isLoading} color='warning' variant='outline' click={clearExtraValuesForm}>
+                                                    <div className='flex items-center justify-center'>
+                                                        <span className='mr-1'>Limpar</span>
+                                                        <BiBrushAlt size={16} />
+                                                    </div>
+                                                </ButtonDefault>
+                                            </div>
                                         </div>
                                     </div>
                                 </FormItem>
@@ -945,17 +954,22 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
 
                     <div className='flex justify-end py-2 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-t-3xl fixed'>
-                        <ButtonDefault type='submit' isLoading={isLoading} color='green' variant='solid'>Gerar ficha</ButtonDefault>
-                        <ButtonDefault type='button' disabled={isLoading} color='yellow' variant='solid' click={reset}>Limpar formulário</ButtonDefault>
+                        <ButtonDefault size='md' gradientDuoTone='tealToLime' type='submit' isLoading={isLoading} color='success' variant='solid'>
+                            <div className='flex items-center justify-center'>
+                                <span className='mr-2'>Gerar ficha</span>
+                                <BiCheckDouble size={16} />
+                            </div>
+                        </ButtonDefault>
+                        <div className='mx-2'></div>
+                        <ButtonDefault size='md' type='button' gradientDuoTone='pinkToOrange' disabled={isLoading} color='warning' variant='outline' click={reset}>
+                            <div className='flex items-center justify-center'>
+                                <span className='mr-2'>Limpar formulário</span>
+                                <BiBrushAlt size={16} />
+                            </div>
+                        </ButtonDefault>
                     </div>
 
 
-                    {/* <div className='flex justify-end py-2 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-t-3xl fixed'>
-                        <ButtonDefault type='submit' disabled={isLoading} color='blue' variant='solid'>
-                            <span>Salvar rascunho</span>
-                            <BiSave className='inline-block ml-2 text-md' />
-                        </ButtonDefault>
-                    </div> */}
                 </form>
             </div>
         </>
