@@ -95,8 +95,8 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                                         <>
                                             <div className='col-span-3 pl-1 flex items-center'><span>{el.title || <br />}</span></div>
                                             <div className='text-center flex items-center justify-center'><span>{el.percent}</span></div>
-                                            <div className='col-span-2 text-right pr-1 flex items-center justify-end'><span>{el.value !== null ? Number(el.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''}</span></div>
-                                            <div className='col-span-2'><input type="text" defaultValue={el.value !== null ? Number(el.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''} className='bg-none text-right w-full py-0.5 pr-1' /></div>
+                                            <div className='col-span-2 text-right pr-1 flex items-center justify-end'><span>{el.value ? Number(el.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''}</span></div>
+                                            <div className='col-span-2'><input type="text" defaultValue={el.value ? Number(el.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''} className='bg-none text-right w-full py-0.5 pr-1' /></div>
                                         </>
                                     )
                                 })}
