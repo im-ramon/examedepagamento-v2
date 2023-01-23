@@ -1,6 +1,6 @@
 import moment from 'moment';
 import Head from 'next/head';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiErrorCircle, BiTrash } from 'react-icons/bi';
 import { toast } from 'react-toastify';
@@ -12,8 +12,9 @@ import { ButtonDefaultSmall } from '../../components/ButtonDefaultSmall';
 import { FormBlockContainer } from '../../components/FormBlockContainer';
 import { FormItem } from '../../components/FormItem';
 import LayoutRouteApp from "../../components/layouts/LayoutRouteApp";
+import { OptionsPG } from '../../components/OptionsPg';
 import PageTitle from '../../components/PageTitle';
-import { pg_data } from '../../data/pg_data';
+import { AppContext } from '../../contexts/app.context';
 import { api } from '../../services/api';
 import { appIdentity } from '../../utils/util_texts';
 import { NextPageWithLayout } from "../_app";
@@ -103,7 +104,7 @@ export interface ExtraValues {
     isTaxable: '0' | '1';
 }
 
-export interface AuxiliarySheetDataProps {
+export interface AuxiliarySheetAPIResponseProps {
     receitas: {
         title: string;
         percent: string;
@@ -117,10 +118,15 @@ export interface AuxiliarySheetDataProps {
     somatorios: {
         receitas: number;
         descontos: number;
+    },
+    extra: {
+        date: string;
+        pg_real: string;
     }
 }
 
 const GeneratePayslip: NextPageWithLayout = () => {
+    const { contextFormData, setContextFormData } = useContext(AppContext)
     const { register, handleSubmit, watch, formState: { errors }, reset, setValue, getValues } = useForm<AuxiliarySheetFields>();
 
     const [extraValueDescription, setExtraValueDescription] = useState<string>("")
@@ -130,7 +136,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
     const [extraValues, setExtraValues] = useState<ExtraValues[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [showAuxiliarySheet, setShowAuxiliarySheet] = useState<boolean>(false)
-    const [auxiliarySheetData, setAuxiliarySheetData] = useState<AuxiliarySheetDataProps>({
+    const [auxiliarySheetData, setAuxiliarySheetData] = useState<AuxiliarySheetAPIResponseProps>({
         receitas: [{
             title: 'string',
             percent: 'string',
@@ -144,6 +150,10 @@ const GeneratePayslip: NextPageWithLayout = () => {
         somatorios: {
             receitas: 0,
             descontos: 0
+        },
+        extra: {
+            date: '',
+            pg_real: ''
         }
     }
     )
@@ -152,8 +162,9 @@ const GeneratePayslip: NextPageWithLayout = () => {
         setIsLoading(true)
 
         const requestData = { ...data, extraValues }
+        setContextFormData(requestData)
 
-        await api.post<AuxiliarySheetDataProps>('/generate_auxiliary_sheet', requestData)
+        await api.post<AuxiliarySheetAPIResponseProps>('/generate_auxiliary_sheet', requestData)
             .then(responseData => {
                 setAuxiliarySheetData(responseData.data)
                 setShowAuxiliarySheet(true)
@@ -195,33 +206,14 @@ const GeneratePayslip: NextPageWithLayout = () => {
     const styleInputSelect = "block w-64 mx-auto px-2 py-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
     const styleInputToggle = "w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300/50 dark:peer-focus:ring-primary-800/50 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600";
 
-    const [pgOptionsToSelectInput, setPgOptionsToSelectInput] = useState<any>([])
-    const [auxiliarySheetDate, setAuxiliarySheetDate] = useState<string>(moment().format("YYYY-MM-DD"))
-
-    const resetAllForm = () => {
-        if (window) {
-            window.location.reload();
-        }
-    }
-
     useEffect(() => {
-        const allPgInfo = pg_data.filter((item) => {
-            return moment(auxiliarySheetDate).isBetween(item.startAt, item.endAt)
-        })[0]
-
-        if (allPgInfo) {
-            const arrayElements = [<option key={'-'} disabled selected value="-">- Selecione uma opção -</option>]
-            Object.keys(allPgInfo).forEach(key => {
-                if (key == 'startAt' || key == 'endAt') {
-                    return
-                }
-                arrayElements.push(<option key={key} value={key}>{key}</option>)
-            })
-            setPgOptionsToSelectInput([...arrayElements])
+        if (contextFormData) {
+            for (const key in contextFormData) {
+                // @ts-expect-error
+                setValue(key, contextFormData[key])
+            }
         }
-
-
-    }, [auxiliarySheetDate])
+    }, [contextFormData, setValue])
 
     return (
         <>
@@ -247,7 +239,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                     <FormBlockContainer>
 
                         <FormItem labelText='Universo/ Classificação' supportText='Qual universo/ classificação do examinado?'>
-                            <select defaultValue={'-'} {...register('universo', { required: true })} required className={styleInputSelect}>
+                            <select  {...register('universo', { required: true })} required className={styleInputSelect}>
                                 <option value="MA">Militar da Ativa</option>
                                 <option value="VT">Veterano</option>
                                 <option value="PN">Pensionista</option>
@@ -255,7 +247,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                         </FormItem>
 
                         <FormItem labelText='Data do contracheque' supportText='Qual a data do contracheque?'>
-                            <input defaultValue={auxiliarySheetDate} type="date" min="2020-01-01" placeholder="Data" {...register("dataReferencia", { onChange: (e) => { setAuxiliarySheetDate(e.target.value) }, min: "2020-01-01" })} className={styleInputSelect} />
+                            <input defaultValue={moment().format("YYYY-MM-DD")} type="date" min="2020-01-01" placeholder="Data" {...register("dataReferencia", { min: "2020-01-01" })} className={styleInputSelect} />
                         </FormItem>
 
                         <FormItem labelText='Idade' supportText='O examinado tem mais de 65 anos?' helpText='Essa informação irá influenciar no valor final do imposto de renda.'>
@@ -281,14 +273,14 @@ const GeneratePayslip: NextPageWithLayout = () => {
                         </FormItem>
 
                         <FormItem labelText='Post/Grad para Soldo' supportText='Qual o P/G em que o examinado recebe o soldo?' helpText='Deve ser selecionado o Posto/ Graduação em que o examinado recebe o soldo. No caso dos miltiares da ativa, o P/G para soldo e P/G Real são os mesmos, entretanto, no caso dos Militares Veteranos e Pensionistas, essas informações poderão ser difirentes.'>
-                            <select defaultValue={'-'} {...register('pgSoldo', { required: true })} required className={styleInputSelect}>
-                                {pgOptionsToSelectInput}
+                            <select  {...register('pgSoldo', { required: true })} className={styleInputSelect}>
+                                <OptionsPG />
                             </select>
                         </FormItem>
 
                         <FormItem labelText='Post/Grad Real' supportText='Qual o P/G real do examinado?' helpText='O P/G real é o último Posto ou Graduação do militar (ou instituidor de pensão) enquanto na ativa. Não deve ser considerado: - Postos ou graduações alcançados pelo militar como benefício, na forma prevista em lei, em decorrência de reforma, morte ou transferência para a reserva; - Percepção de soldo ou de remuneração correspondente a grau hierárquico superior ao alcançado na ativa, em decorrência de reforma, morte ou transferência para a reserva; e - Percepção de pensão militar correspondente a grau hierárquico superior ao alcançado pelo militar em atividade, em decorrência de benefícios concedidos pela Lei nº 3.765, de 4 de maio de 1960.'>
-                            <select defaultValue={'-'} {...register('pgReal', { required: true })} required className={styleInputSelect}>
-                                {pgOptionsToSelectInput}
+                            <select  {...register('pgReal', { required: true })} required className={styleInputSelect}>
+                                <OptionsPG />
                             </select>
                         </FormItem>
                     </FormBlockContainer>
@@ -297,7 +289,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                     <FormBlockContainer>
 
                         <FormItem labelText='Soldo' supportText='Qual tipo de soldo o examinado recebe?' helpText='Escolha a categoria de soldo que o examinado recebe. São duas opções, a primeira "Normal/Integral" significa que o examinado recebe o valor do seu soldo por completo, normalmente militares da ativa, veterenos que completaram o tempo mínimo para reserva e seus pensionistas recebem essa categoria de soldo. A categoria " Soldo Proporcional para Cota" é devida, normalmente, aos militares que fora para a reserva antes do tempo mínimo, como no caso de militares reformados por ser julgado incapaz definitivamente.' badgeColor='green' badgeText='Receita'>
-                            <select defaultValue={'-'} {...register('soldoType', { required: true })} className={styleInputSelect}>
+                            <select  {...register('soldoType', { required: true })} className={styleInputSelect}>
                                 <option value="integral">Integral</option>
                                 <option value="cota">Proporcional por cota</option>
                             </select>
@@ -344,7 +336,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                         </FormItem>
 
                         <FormItem labelText='Adicional Habilitação' supportText='Qual nível de habilitação do examinado?' helpText='O Adicional de habilitação é a parcela remuneratória mensal devida ao militar, inerente aos cursos realizados com aproveitamento. Os percentuais podem ser consultados no ANEXO III da Lei nº 13.954, de 16 de dezembro de 2019. Os tipos de cursos existentes devem obedecer às seguintes condições: I - de altos estudos categoria I, realizados a partir de oficiais superiores e de primeiros sargentos; II - de altos estudos categoria II, realizados a partir de oficiais superiores e de segundos sargentos; III - de aperfeiçoamento, realizados a partir de oficiais subalternos e de terceiros sargentos; IV - de especialização, realizados a partir de aspirantes a oficial e de terceiros sargentos; e V - de formação, a partir da conclusão com aproveitamento dos cursos e estágios de formação ou adaptação de oficiais e praças, realizados nas organizações militares das Forças Armadas.' badgeColor='green' badgeText='Receita'>
-                            <select defaultValue={'-'} {...register('adicHabType', { required: true })} className={styleInputSelect}>
+                            <select  {...register('adicHabType', { required: true })} className={styleInputSelect}>
                                 <option value="sem_formacao">Sem formação (não recebe)</option>
                                 <option value="altos_estudos_I">Altos estudos Categoria I</option>
                                 <option value="altos_estudos_II">Altos estudos Categoria II</option>
@@ -383,7 +375,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                     <BreakLine />
 
                                     <FormItem supportText='Qual tipo?'>
-                                        <select defaultValue={'-'} {...register('adicCoOrgType')} className={styleInputSelect}>
+                                        <select  {...register('adicCoOrgType')} className={styleInputSelect}>
                                             <option value="PDQT">Paraquedista</option>
                                             <option value="RAIO-X">Raio-X</option>
                                             <option value="TO/ OMA/ FO">Tripulante Orgânico</option>
@@ -400,8 +392,8 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                     </FormItem>
 
                                     <FormItem supportText='Calculado sobre o soldo de qual soldo?'>
-                                        <select defaultValue={'-'} {...register('adicCoOrgPg')} className={styleInputSelect}>
-                                            {pgOptionsToSelectInput}
+                                        <select  {...register('adicCoOrgPg')} className={styleInputSelect}>
+                                            <OptionsPG />
                                         </select>
                                     </FormItem>
                                 </>
@@ -426,8 +418,8 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                     </FormItem>
 
                                     <FormItem supportText='Calculado sobre o soldo de qual soldo?'>
-                                        <select defaultValue={'-'} {...register('adicHVooPg')} className={styleInputSelect}>
-                                            {pgOptionsToSelectInput}
+                                        <select  {...register('adicHVooPg')} className={styleInputSelect}>
+                                            <OptionsPG />
                                         </select>
                                     </FormItem>
                                 </>
@@ -665,8 +657,8 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                     </FormItem>
 
                                     <FormItem supportText='Sobre qual posto ou graduação?'>
-                                        <select defaultValue={'-'} {...register('gratRep2Pg')} className={styleInputSelect}>
-                                            {pgOptionsToSelectInput}
+                                        <select  {...register('gratRep2Pg')} className={styleInputSelect}>
+                                            <OptionsPG />
                                         </select>
                                     </FormItem>
                                 </>
@@ -703,8 +695,8 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                     {watch('pMilPgAcimaBool') && (
                                         <>
                                             <FormItem supportText='Sobre qual posto/ gradução o examinado contribui para a Pensão Militar?'>
-                                                <select defaultValue={'-'} {...register('pMilPgAcimaPg')} className={styleInputSelect}>
-                                                    {pgOptionsToSelectInput}
+                                                <select  {...register('pMilPgAcimaPg')} className={styleInputSelect}>
+                                                    <OptionsPG />
                                                 </select>
                                             </FormItem>
                                         </>
@@ -748,7 +740,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                         </FormItem>
 
                         <FormItem labelText='Desconto de dependentes no FuSEx' supportText='Qual percentual de desconto de dependentes no FuSEx?' helpText='Deve ser analisado a quantidade de dependentes que o militar/ pensionista possui cadastrado como dependentes no FuSEx. Para 1 (um) dependente cadastrado, exceto o cônjuge ou companheira(o), o desconto será de 0,4% sobre o bruto. Para 2 (dois) ou mais dependentes cadastrados,   exceto o cônjuge ou companheira(o),  o desconto será de 0,5% sobre o bruto, não ultrapassando essa alíquota.' badgeColor='red' badgeText='Desconto'>
-                            <select defaultValue={'-'} {...register('descDepFusexType', { required: true })} className={styleInputSelect}>
+                            <select  {...register('descDepFusexType', { required: true })} className={styleInputSelect}>
                                 <option value="0">Não desconta</option>
                                 <option value="4">0,4%</option>
                                 <option value="5">0,5%</option>
@@ -770,7 +762,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                     <BreakLine />
 
                                     <FormItem supportText='Qual o tipo de desconto de PNR da unidade?'>
-                                        <select defaultValue={'-'} {...register('pnrType', { required: true })} className={styleInputSelect}>
+                                        <select  {...register('pnrType', { required: true })} className={styleInputSelect}>
                                             <option value="0" disabled>- Selecione uma opção -</option>
                                             <option value="5.0">5,0%</option>
                                             <option value="3.5">3,5%</option>
@@ -954,8 +946,16 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
                     <div className='flex justify-end py-2 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-t-3xl fixed'>
                         <ButtonDefault type='submit' isLoading={isLoading} color='green' variant='solid'>Gerar ficha</ButtonDefault>
-                        <ButtonDefault type='button' disabled={isLoading} color='yellow' variant='solid' click={resetAllForm}>Limpar formulário</ButtonDefault>
+                        <ButtonDefault type='button' disabled={isLoading} color='yellow' variant='solid' click={reset}>Limpar formulário</ButtonDefault>
                     </div>
+
+
+                    {/* <div className='flex justify-end py-2 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-t-3xl fixed'>
+                        <ButtonDefault type='submit' disabled={isLoading} color='blue' variant='solid'>
+                            <span>Salvar rascunho</span>
+                            <BiSave className='inline-block ml-2 text-md' />
+                        </ButtonDefault>
+                    </div> */}
                 </form>
             </div>
         </>

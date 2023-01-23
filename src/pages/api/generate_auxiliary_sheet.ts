@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { AuxiliarySheetEtitie } from "../../entities/auxiliary_sheet";
+import { AuxiliarySheetAPIResponseProps } from "../app/generate_auxiliary_sheet";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const data = req.body
@@ -45,7 +46,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         auxiliarySheet.irAdicNatalino,
     ].filter(item => item.value > 0)
 
-    res.status(200).json({
+    const response: AuxiliarySheetAPIResponseProps = {
         receitas: [
             ...receitasList,
             ...auxiliarySheet.extraValues.receitas,
@@ -57,6 +58,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         somatorios: {
             receitas: receitasList.reduce((prev, item) => prev + item.value, 0) + auxiliarySheet.extraValues.receitas.reduce((prev, item) => prev + item.value, 0),
             descontos: descontosList.reduce((prev, item) => prev + item.value, 0) + auxiliarySheet.extraValues.descontos.reduce((prev, item) => prev + item.value, 0),
+        },
+        extra: {
+            date: auxiliarySheet.date,
+            pg_real: auxiliarySheet.pgReal
         }
-    })
+    }
+
+    res.status(200).json(response)
 }

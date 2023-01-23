@@ -6,6 +6,7 @@ import { Flip, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useDarkMode } from 'usehooks-ts'
 import '../../styles/globals.css'
+import { AppProvider } from '../contexts/app.context'
 
 function addInitialStyleClassInBodyTag(): void {
     const bodyClassList = document.querySelector('body')?.classList
@@ -48,7 +49,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     const getLayout = Component.getLayout ?? ((page) => page)
 
     return getLayout(
-        <>
+        <AppProvider>
             <Component {...pageProps} />
             <ToastContainer
                 position="top-center"
@@ -65,6 +66,6 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
                 className='text-sm mr-4'
                 theme={`${isDarkMode ? 'dark' : 'light'}`}
             />
-        </>
+        </AppProvider>
     )
 }

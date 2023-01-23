@@ -1,14 +1,15 @@
+import moment from 'moment';
 import { useRef, useState } from 'react';
 import { BiPrinter, BiSave } from 'react-icons/bi';
 import { TbArrowBackUp } from 'react-icons/tb';
 import { useReactToPrint } from 'react-to-print';
-import { AuxiliarySheetDataProps } from '../pages/app/generate_auxiliary_sheet';
+import { AuxiliarySheetAPIResponseProps } from '../pages/app/generate_auxiliary_sheet';
 import { ButtonDefault } from './ButtonDefault';
 
 interface AuxiliarySheetProps {
     isVisible: boolean;
     closeModal: () => void;
-    data: AuxiliarySheetDataProps
+    data: AuxiliarySheetAPIResponseProps
 }
 
 const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) => {
@@ -39,7 +40,7 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
             <div className='animate-auxiliary_sheet'>
                 <div id='auxiliary_sheet-container' className='max-w-6xl mx-auto'>
                     <div className='flex select-none cursor-pointer justify-center items-center py-2 text-primary-400 px-4 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-t-3xl '>
-                        <ButtonDefault color='yellow' type='button' click={close} variant='solid'>
+                        <ButtonDefault color='yellow' type='button' click={closeModal} variant='solid'>
                             <TbArrowBackUp className='inline-block mr-2' />
                             Continuar editando
                         </ButtonDefault>
@@ -54,13 +55,13 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                             <input type="text" className='col-span-2 p-0' />
 
                             <label className='col-span-4 text-right mr-1'><strong>MÊS:</strong></label>
-                            <p className='col-span-5'>01/2023</p>
+                            <p className='col-span-5'>{moment(data.extra.date).format("MM/YYYY")}</p>
 
                             <label><strong>NOME:</strong></label>
                             <input type="text" className='col-span-7 p-0' />
 
                             <label className='text-right mr-1'><strong>P/G:</strong></label>
-                            <p className='col-span-3'>3º Sgt</p>
+                            <p className='col-span-3'>{data.extra.pg_real}</p>
 
 
                             <label><strong>IDT:</strong></label>

@@ -15,6 +15,7 @@ export class AuxiliarySheetEtitie {
     private paymentRefereceByDate
     private pgRealInfo
     private soldoBase: number
+    private sheetDate: string
 
     constructor(fields: AuxiliarySheetFields) {
         this.fields = fields;
@@ -25,6 +26,7 @@ export class AuxiliarySheetEtitie {
 
         this.soldoBase = this.paymentRefereceByDate[this.fields.pgSoldo].soldo
         this.pgRealInfo = this.paymentRefereceByDate[this.fields.pgReal]
+        this.sheetDate = fields.dataReferencia || ''
     }
 
     private truncateDecimalNumbers(num: number): number {
@@ -69,6 +71,14 @@ export class AuxiliarySheetEtitie {
         }
 
         return Number((((base * aliquota) - parcela)).toFixed(2));
+    }
+
+    get date(): string {
+        return this.sheetDate;
+    }
+
+    get pgReal(): string {
+        return this.pgRealInfo.pg_full;
     }
 
     get grossAmountToDiscounts(): number {
