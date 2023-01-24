@@ -1,9 +1,11 @@
 import moment from 'moment';
 import { useRef, useState } from 'react';
-import { BiPrinter, BiSave } from 'react-icons/bi';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { BiGitCompare, BiPrinter, BiSave } from 'react-icons/bi';
 import { TbArrowBackUp } from 'react-icons/tb';
 import { useReactToPrint } from 'react-to-print';
 import { AuxiliarySheetAPIResponseProps } from '../pages/app/generate_auxiliary_sheet';
+import { convert_in_BRL } from '../utils/util_convert_in_BRL';
 import { ButtonDefault } from './ButtonDefault';
 
 interface AuxiliarySheetProps {
@@ -14,12 +16,35 @@ interface AuxiliarySheetProps {
 
 const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) => {
     const componentRef = useRef(null);
+
+    const { register, handleSubmit, setValue, getValues } = useForm();
+
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
     });
 
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [showUserNameInPrint, setShowUserNameInPrint] = useState<boolean>(true);
     const [showBossNameInPrint, setShowBossNameInPrint] = useState<boolean>(true);
+
+    const onSubmit: SubmitHandler<any> = async data => {
+        // setIsLoading(true)
+
+        const requestData = data
+        console.log(requestData)
+
+        // await api.post<AuxiliarySheetAPIResponseProps>('/store_auxiliary_sheet', requestData)
+        //     .then(responseData => {
+        //         console.log(responseData)
+        //     })
+        //     .catch(e => {
+        //         toast.error('Erro!')
+        //         console.error(e)
+        //     })
+        //     .finally(() => {
+        //         setIsLoading(false)
+        //     })
+    };
 
     function addWhiteLineWhenTheListIsSmallerThenEithteen(listOfValues: { title: string; percent: string; value: number | null }[]) {
         const list = listOfValues
@@ -35,40 +60,63 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
         }
     }
 
+    const [totalReceitas, setTotalReceitas] = useState<string>('');
+
+    function setAndSumValuesFromTheValoresContrachequeField() {
+        let listOfValues: string[] = []
+        for (let index = 1; index <= 16; index++) {
+            listOfValues.push(getValues('valorContraqueReceita' + index) || '0')
+        }
+        const sum = listOfValues.map(item => Number(item.replace(/[^0-9|\,]/gi, '').replace(',', '.'))).reduce((curr, prev) => curr + prev, 0)
+
+        setTotalReceitas(String(convert_in_BRL(sum)))
+    }
+
+    function matchValuesInAuxiliarySheet() {
+        data.receitas.forEach((element, index) => {
+            setValue('valorContraqueReceita' + (index + 1), convert_in_BRL(element.value))
+        });
+        setAndSumValuesFromTheValoresContrachequeField()
+    }
+
     return (
         <div id='auxiliary_sheet-modal' onClick={e => closeAuxiliarySheetWhenClickOutside(e.target as HTMLElement)} className={`fixed w-full top-0 right-0 bg-gray-900/50 backdrop-blur-sm z-50 p-24 overflow-y-scroll h-full ${isVisible ? '' : 'hidden'}`}>
             <div className='animate-auxiliary_sheet'>
-                <div id='auxiliary_sheet-container' className='max-w-6xl mx-auto'>
+                <form onSubmit={handleSubmit(onSubmit)} id='auxiliary_sheet-container' className='max-w-6xl mx-auto'>
                     <div className='flex select-none cursor-pointer justify-center items-center py-2 text-primary-400 px-4 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-t-3xl '>
-                        <ButtonDefault gradientDuoTone='purpleToPink' color='dark' size='md' type='button' variant='outline' click={closeModal}>
+                        <ButtonDefault gradientDuoTone='purpleToPink' color='dark' size='md' type='button' variant='outline' click={closeModal} helpText="Continue editando sua ficha auxiliar">
                             <TbArrowBackUp className='inline-block mr-2' />
                             Continuar editando
                         </ButtonDefault>
+                        <ButtonDefault gradientDuoTone='pinkToOrange' color='dark' size='md' type='button' variant='outline' click={matchValuesInAuxiliarySheet} helpText="Igular colunas “valor pesquisado” e “valor contracheque”">
+                            Igualar valores
+                            <BiGitCompare className='inline-block ml-2' />
+                        </ButtonDefault>
 
                     </div>
-                    <div id='auxiliary_sheet' ref={componentRef} className='bg-white text-black rounded-lg border-2 print:border-none p-2'>
+                    <div id='auxiliary_sheet' ref={componentRef} className='bg-white text-black border-2 print:border-none p-2'>
                         <div className='col-span-12 !border-none flex justify-center font-bold text-lg'>
                             FICHA AUXILIAR
                         </div>
-                        <div className='col-span-12 grid grid-cols-12 !border-none px-2 pt-3 pb-2'>
+                        <div className='col-span-12 grid grid-cols-12 !border-none px-2 gap-0.5 pt-3 pb-2'>
                             <label><strong>UG:</strong></label>
-                            <input type="text" className='col-span-2 p-0' />
+                            <input type="text" className='auxiliary_sheet-title p-0 pl-1 col-span-2 border-dashed border border-gray-400 print:border-none' />
 
                             <label className='col-span-4 text-right mr-1'><strong>MÊS:</strong></label>
                             <p className='col-span-5'>{moment(data.extra.date).format("MM/YYYY")}</p>
 
                             <label><strong>NOME:</strong></label>
-                            <input type="text" className='col-span-7 p-0' />
+                            <input type="text" className='auxiliary_sheet-title p-0 pl-1 col-span-7 border-dashed border border-gray-400 print:border-none' />
 
                             <label className='text-right mr-1'><strong>P/G:</strong></label>
                             <p className='col-span-3'>{data.extra.pg_real}</p>
 
 
                             <label><strong>IDT:</strong></label>
-                            <input type="text" className='col-span-2 p-0' />
+                            <input type="text" className='auxiliary_sheet-title p-0 pl-1 col-span-3 border-dashed border border-gray-400 print:border-none' />
 
                             <label className='col-span-2 text-right mr-1'><strong>CPF:</strong></label>
-                            <input type="text" className='col-span-2 p-0' />
+                            <input type="text" className='auxiliary_sheet-title p-0 pl-1 col-span-2 border-dashed border border-gray-400 print:border-none' />
 
                         </div>
 
@@ -81,7 +129,7 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                                 </div>
                                 <div className='row-span-18 col-span-3 col-start-10 text-center h-full'>
                                     <strong>OBSERVAÇÕES</strong>
-                                    <textarea className='w-full mt-2 h-5/6 p-1' ></textarea>
+                                    <textarea {...register('obsReceitas')} className='w-full mt-2 h-5/6 p-1' ></textarea>
                                 </div>
 
                                 <div className='col-span-3 text-center flex justify-center items-center'><strong className='p-1'>DISCRIMINAÇÃO</strong></div>
@@ -95,15 +143,15 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                                         <>
                                             <div className='col-span-3 pl-1 flex items-center'><span>{el.title || <br />}</span></div>
                                             <div className='text-center flex items-center justify-center'><span>{el.percent}</span></div>
-                                            <div className='col-span-2 text-right pr-1 flex items-center justify-end'><span>{el.value !== null ? Number(el.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''}</span></div>
-                                            <div className='col-span-2'><input type="text" defaultValue={el.value !== null ? Number(el.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''} className='bg-none text-right w-full py-0.5 pr-1' /></div>
+                                            <div className='col-span-2 text-right pr-1 flex items-center justify-end'><span>{el.value ? convert_in_BRL(Number(el.value)) : ''}</span></div>
+                                            <div className='col-span-2'><input type="text" {...register(`valorContraqueReceita${index + 1}`, { onChange: setAndSumValuesFromTheValoresContrachequeField })} className='bg-none text-right w-full py-0.5 pr-1' /></div>
                                         </>
                                     )
                                 })}
 
                                 <div className='col-span-5 flex justify-center items-center'><span>SOMA</span></div>
-                                <div className='col-span-2 flex justify-end items-center'><span className='pr-1'>{Number(data.somatorios.receitas).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></div>
-                                <div className='col-span-2 flex justify-end items-center'><input type="text" defaultValue={Number(data.somatorios.receitas).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} className='text-right w-full py-0.5 pr-1' /></div>
+                                <div className='col-span-2 flex justify-end items-center'><span className='pr-1'>{convert_in_BRL(Number(data.somatorios.receitas))}</span></div>
+                                <div className='col-span-2 flex justify-end items-center'> <span className='text-right w-full py-0.5 pr-1'>{totalReceitas}</span></div>
                                 <div className='col-span-3 flex justify-end items-center'><span></span></div>
                             </div>
                         </div>
@@ -120,7 +168,7 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
 
                             <div className='text-gray-500 !border-none print:hidden'>
                                 Exibir nome do examinador na impressão?
-                                <input type="checkbox" className="w-4 h-4 ml-2 text-primary-600 !bg-gray-100 !border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:!bg-gray-700 dark:!border-gray-600" checked={showUserNameInPrint} onChange={() => setShowUserNameInPrint(!showUserNameInPrint)} />
+                                <input type="checkbox" className="w-4 h-4 ml-2 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:!bg-gray-700 dark:!border-gray-600" checked={showUserNameInPrint} onChange={() => setShowUserNameInPrint(!showUserNameInPrint)} />
                             </div>
                             {
                                 showUserNameInPrint && (
@@ -145,7 +193,7 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
 
                             <div className='text-gray-500 !border-none print:hidden'>
                                 Exibir nome do chefe da equipe na impressão?
-                                <input type="checkbox" className="w-4 h-4 ml-2 text-primary-600 !bg-gray-100 !border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:!bg-gray-700 dark:!border-gray-600" checked={showBossNameInPrint} onChange={() => setShowBossNameInPrint(!showBossNameInPrint)} />
+                                <input type="checkbox" className="w-4 h-4 ml-2 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:!bg-gray-700 dark:!border-gray-600" checked={showBossNameInPrint} onChange={() => setShowBossNameInPrint(!showBossNameInPrint)} />
                             </div>
                             {
                                 showBossNameInPrint && (
@@ -162,16 +210,17 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
 
                     </div>
                     <div className='flex justify-center py-4 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-b-3xl '>
-                        <ButtonDefault gradientDuoTone='greenToBlue' color='dark' size='md' type='button' variant='solid'>
+                        <ButtonDefault gradientDuoTone='greenToBlue' color='dark' size='md' type='submit' variant='solid'>
                             Salvar
                             <BiSave className='inline-block ml-2' />
                         </ButtonDefault>
+
                         <ButtonDefault gradientDuoTone='tealToLime' color='dark' size='md' type='button' variant='solid' click={handlePrint}>
                             Imprimir
                             <BiPrinter className='inline-block ml-2' />
                         </ButtonDefault>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     )

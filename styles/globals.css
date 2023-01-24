@@ -57,7 +57,7 @@ aside>div:first-child {
     border: 1px solid black;
 }
 
-#auxiliary_sheet input[type='text'],
+#auxiliary_sheet input[type='text']:not(.auxiliary_sheet-title),
 textarea {
     border: none;
     background: none;
