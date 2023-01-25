@@ -23,6 +23,9 @@ module.exports = {
                 "warning": "#ff8307",
                 "info": "#17a2b8",
             },
+            spacing: {
+                '2.25': '0.5632rem',
+            },
             maxWidth: {
                 "8xl": "90rem"
             },

@@ -929,7 +929,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                         </div>
                                         <div className='lg:col-span-2 flex justify-center flex-row lg:flex-col mt-4 lg:mt-0'>
                                             <div>
-                                                <ButtonDefault size='xs' type='button' gradientDuoTone='tealToLime' disabled={isLoading} color='warning' variant='solid' click={pushExtraValuesInArrayAndClearItsForm}>
+                                                <ButtonDefault type='button' disabled={isLoading} color='orange' variant='solid' click={pushExtraValuesInArrayAndClearItsForm}>
                                                     <div className='flex items-center justify-center'>
                                                         <span className='mr-1'>Salvar</span>
                                                         <BiSave size={16} />
@@ -938,7 +938,7 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                             </div>
                                             <div className="lg:my-0.5 mx-3"></div>
                                             <div>
-                                                <ButtonDefault size='xs' type='button' gradientDuoTone='pinkToOrange' disabled={isLoading} color='warning' variant='outline' click={clearExtraValuesForm}>
+                                                <ButtonDefault type='button' disabled={isLoading} color='orange' variant='outline' click={clearExtraValuesForm}>
                                                     <div className='flex items-center justify-center'>
                                                         <span className='mr-1'>Limpar</span>
                                                         <BiBrushAlt size={16} />
@@ -954,14 +954,14 @@ const GeneratePayslip: NextPageWithLayout = () => {
 
 
                     <div className='flex justify-end py-2 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-t-3xl fixed'>
-                        <ButtonDefault size='md' gradientDuoTone='tealToLime' type='submit' isLoading={isLoading} color='success' variant='solid'>
+                        <ButtonDefault type='submit' isLoading={isLoading} color='green' variant='solid'>
                             <div className='flex items-center justify-center'>
                                 <span className='mr-2'>Gerar ficha</span>
                                 <BiCheckDouble size={16} />
                             </div>
                         </ButtonDefault>
                         <div className='mx-2'></div>
-                        <ButtonDefault size='md' type='button' gradientDuoTone='pinkToOrange' disabled={isLoading} color='warning' variant='outline' click={reset}>
+                        <ButtonDefault type='button' disabled={isLoading} color='yellow' variant='outline' click={reset}>
                             <div className='flex items-center justify-center'>
                                 <span className='mr-2'>Limpar formulário</span>
                                 <BiBrushAlt size={16} />

@@ -1,0 +1,36 @@
+/* BUTTONS */
+.default_button {
+    transition: all 0.3s ease-in-out;
+    outline: 2px solid rgba(0, 0, 0, 0);
+    background-size: 100%;
+
+    &:hover {
+        background-size: 200%;
+        transition: all 0.3s ease-in-out;
+        outline: 2px solid rgba(0, 0, 0, 0.4);
+    }
+}
+
+.green {
+    background-image: linear-gradient(to left, #2ea32e 8%, #7cc41e 86.9%);
+}
+
+.blue {
+    background-image: linear-gradient(to right, #1581da 0%, #51b9ab 100%);
+}
+
+.orange {
+    background-image: linear-gradient(to left, #fc6076 0%, #ff9a44 100%);
+}
+
+.purple {
+    background-image: linear-gradient(to left, #b224ef 0%, #7579ff 100%);
+}
+
+.yellow {
+    background-image: linear-gradient(to left, #ffdd00 40%, #bd9100 100%);
+}
+
+.red {
+    background-image: linear-gradient(to left, #ff833b 0%, #ff2525 100%);
+}

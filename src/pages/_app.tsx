@@ -6,6 +6,7 @@ import { Flip, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useDarkMode } from 'usehooks-ts'
 import '../../styles/globals.css'
+import '../../styles/styles.scss'
 import { AppProvider } from '../contexts/app.context'
 
 function addInitialStyleClassInBodyTag(): void {

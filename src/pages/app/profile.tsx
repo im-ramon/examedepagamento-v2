@@ -67,7 +67,7 @@ const Profile: NextPageWithLayout = () => {
                         Na versão atual do App ainda não é possível alterar seu nome. Caso tenha cadastrado algum dado incorrento, envie um e-mail para <a href="mailto:contato@ramonoliveira.dev">contato@ramonoliveira.dev</a> com as informações que deseja alterar.
                     </p>
                     <div className='flex justify-center py-2 px-2 lg:right-16 rounded-3xl lg:col-span-2'>
-                        <ButtonDefault type='submit' isLoading={!true} color='dark' gradientDuoTone='tealToLime' size='md' variant='solid'>Salvar</ButtonDefault>
+                        <ButtonDefault type='submit' isLoading={!true} color='green' variant='solid'>Salvar</ButtonDefault>
                     </div>
                 </form>
             </Card>

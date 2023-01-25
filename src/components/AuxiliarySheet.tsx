@@ -84,11 +84,11 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
             <div className='animate-auxiliary_sheet'>
                 <form onSubmit={handleSubmit(onSubmit)} id='auxiliary_sheet-container' className='max-w-6xl mx-auto'>
                     <div className='flex select-none cursor-pointer justify-center items-center py-2 text-primary-400 px-4 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-t-3xl '>
-                        <ButtonDefault gradientDuoTone='purpleToPink' color='dark' size='md' type='button' variant='outline' click={closeModal} helpText="Continue editando sua ficha auxiliar">
+                        <ButtonDefault color='yellow' type='button' variant='outline' click={closeModal} helpText="Continue editando sua ficha auxiliar">
                             <TbArrowBackUp className='inline-block mr-2' />
                             Continuar editando
                         </ButtonDefault>
-                        <ButtonDefault gradientDuoTone='pinkToOrange' color='dark' size='md' type='button' variant='outline' click={matchValuesInAuxiliarySheet} helpText="Igular colunas “valor pesquisado” e “valor contracheque”">
+                        <ButtonDefault color='purple' type='button' variant='outline' click={matchValuesInAuxiliarySheet} helpText="Igular colunas “valor pesquisado” e “valor contracheque”">
                             Igualar valores
                             <BiGitCompare className='inline-block ml-2' />
                         </ButtonDefault>
@@ -210,12 +210,12 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
 
                     </div>
                     <div className='flex justify-center py-4 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-b-3xl '>
-                        <ButtonDefault gradientDuoTone='greenToBlue' color='dark' size='md' type='submit' variant='solid'>
+                        <ButtonDefault color='green' type='submit' variant='solid'>
                             Salvar
                             <BiSave className='inline-block ml-2' />
                         </ButtonDefault>
 
-                        <ButtonDefault gradientDuoTone='tealToLime' color='dark' size='md' type='button' variant='solid' click={handlePrint}>
+                        <ButtonDefault color='blue' type='button' variant='solid' click={handlePrint}>
                             Imprimir
                             <BiPrinter className='inline-block ml-2' />
                         </ButtonDefault>
