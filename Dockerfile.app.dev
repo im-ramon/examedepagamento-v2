@@ -1,0 +1,10 @@
+FROM node:18.13-slim
+
+USER node
+
+WORKDIR /home/node/app
+
+# Allows hot refresh from Next.JS
+ENV CHOKIDAR_USEPOLLING=true
+
+CMD ["/home/node/app/start.sh"]
