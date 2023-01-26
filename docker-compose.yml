@@ -1,4 +1,26 @@
+version: '3.7'
+
 services:
   pocketbase:
-    image: pocketbase
-    ports: -8090:8090
+    build:
+      context: .
+      dockerfile: Dockerfile.pocketbase
+    restart: always
+    ports:
+      - 8090:8090
+    volumes:
+      - ./pb_data:/pb/pb_data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    restart: always
+    depends_on:
+      - pocketbase
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=production
+
+# docker compose up -d --build

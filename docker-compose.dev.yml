@@ -1,0 +1,9 @@
+services:
+  app:
+    command: npm run dev
+    volumes:
+      - .:/home/node/app
+    environment:
+      - NODE_ENV=development
+
+# docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
