@@ -14,7 +14,7 @@ import LayoutRouteApp from "../../components/layouts/LayoutRouteApp";
 import { OptionsPG } from '../../components/OptionsPg';
 import PageTitle from '../../components/PageTitle';
 import { AppContext } from '../../contexts/app.context';
-import { api } from '../../services/api';
+import { api } from '../../services/next_api';
 import { appIdentity } from '../../utils/util_texts';
 import { NextPageWithLayout } from "../_app";
 
