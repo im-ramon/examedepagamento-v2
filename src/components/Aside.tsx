@@ -1,17 +1,26 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { BiBook, BiCustomize, BiDotsVerticalRounded, BiGridAlt, BiHelpCircle, BiHomeAlt, BiMoon, BiSun, BiUser, BiX } from "react-icons/bi";
 import { useDarkMode } from 'usehooks-ts';
 import logo from '../assets/images/img/logo.png';
+import { pb } from '../services/pocktbase';
 import AsideDivider from './AsideDivider';
 import AsideLinks from './AsideLinks';
 
+
 export function Aside() {
+    const router = useRouter()
+
     const [showAside, setShowAside] = useState<boolean>(true)
     const [showConfigMenu, setShowConfigMenu] = useState<boolean>(true)
     const { isDarkMode, toggle } = useDarkMode()
+
+    function handleSingOut() {
+        pb.authStore.clear();
+        router.push('/');
+    }
 
     return (
         <aside className={`absolute lg:relative top-0 left-0 z-10 flex flex-col transition-all duration-300 bg-white dark:bg-gradient-to-b dark:from-gray-700 dark:to-gray-800 dark:text-white h-full ${showAside ? 'w-60 border-r dark:border-r-gray-700' : 'w-0 border-none'}`}>
@@ -73,7 +82,9 @@ export function Aside() {
                                 </li>
                             </ul>
                             <div className="py-0">
-                                <Link href="/" className="no-underline block transition-all px-4 py-2 rounded-bl-xl  rounded-br-xl text-sm text-red-700 hover:bg-gray-100 dark:hover:bg-red-500 dark:text-red-500 dark:hover:text-white">Sair</Link>
+                                <span onClick={handleSingOut} className="cursor-pointer no-underline block transition-all px-4 py-2 rounded-bl-xl rounded-br-xl text-sm text-red-700 hover:bg-gray-100 dark:hover:bg-red-500 dark:text-red-500 dark:hover:text-white">
+                                    Sair
+                                </span>
                             </div>
                         </div>
                     </div>

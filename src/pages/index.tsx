@@ -1,7 +1,6 @@
 import { Inter } from '@next/font/google'
 import Head from 'next/head'
-import Link from 'next/link'
-import { ButtonDefault } from '../components/ButtonDefault'
+import RouteLink from '../components/RouteLink'
 import { appIdentity } from '../utils/util_texts'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -22,9 +21,9 @@ export default function Home() {
                     <div className='bg-gray-900/30 flex justify-between rounded-2xl p-4 backdrop-blur-md border border-gray-800/75 shadow-md'>
                         <h1>Exame de pagamento | Logo</h1>
                         <ul className='flex no-underline'>
-                            <li><Link className='no-underline mx-2 text-white hover:text-primary-900 transition-colors' href="/app">Dashboard</Link></li>
-                            <li><Link className='no-underline mx-2 text-white hover:text-primary-900 transition-colors' href="/auth/singin">Entrar</Link></li>
-                            <li><Link className='no-underline mx-2 text-white hover:text-primary-900 transition-colors' href="/auth/singup">Cadastrar-se</Link></li>
+                            <li className='mx-2'><RouteLink href='/app' text='Dashboard' /></li>
+                            <li className='mx-2'><RouteLink href='/auth/singin' text='Entrar' /></li>
+                            <li className='mx-2'><RouteLink href='/auth/singup' text='Cadastrar-se' /></li>
                         </ul>
                     </div>
 
@@ -35,12 +34,12 @@ export default function Home() {
                             <div className='flex flex-col justify-start mb-8'>
                                 <p>
                                     <span id="app_presatation" className='text-4xl md:text-7xl font-bold'>EXAME DE PAGAMENTO</span>
-                                    <p className='mt-8 px-1'>Uma <strong>nova forma</strong> de realiar o <strong>Exame de Pagamento de Pessoal</strong> no Exército Brasileiro!</p>
+                                    {/* <p className='mt-8 px-1'>Uma <strong>nova forma</strong> de realiar o <strong>Exame de Pagamento de Pessoal</strong> no Exército Brasileiro!</p> */}
                                     <br />
-                                    <p className='px-1'>Poupe tempo, minimize erros, tenha acesso fácil à toda legislação e encontre possíveis divergências no pagamento de pessoal com facilidade e seguraça.</p>
+                                    {/* <p className='px-1'>Poupe tempo, minimize erros, tenha acesso fácil à toda legislação e encontre possíveis divergências no pagamento de pessoal com facilidade e seguraça.</p> */}
                                 </p>
                             </div>
-                            <ButtonDefault color='green' type='button' variant='solid'>Conhecer</ButtonDefault>
+                            {/* <ButtonDefault color='green' type='button' variant='solid'>Conhecer</ButtonDefault> */}
                         </div>
                     </div>
 

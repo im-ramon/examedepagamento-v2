@@ -1,10 +1,13 @@
 import moment from 'moment';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { BiGitCompare, BiPrinter, BiSave } from 'react-icons/bi';
 import { TbArrowBackUp } from 'react-icons/tb';
 import { useReactToPrint } from 'react-to-print';
+import { toast } from 'react-toastify';
+import { AppContext } from '../contexts/app.context';
 import { AuxiliarySheetAPIResponseProps } from '../pages/app/generate_auxiliary_sheet';
+import { pocktbase_api } from '../services/pocktbase_api';
 import { convert_in_BRL } from '../utils/util_convert_in_BRL';
 import { ButtonDefault } from './ButtonDefault';
 
@@ -19,6 +22,9 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
 
     const { register, handleSubmit, setValue, getValues } = useForm();
 
+    const { contextFormData, setContextFormData } = useContext(AppContext)
+
+
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
     });
@@ -28,22 +34,25 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
     const [showBossNameInPrint, setShowBossNameInPrint] = useState<boolean>(true);
 
     const onSubmit: SubmitHandler<any> = async data => {
-        // setIsLoading(true)
+        setIsLoading(true)
 
-        const requestData = data
-        console.log(requestData)
-
-        // await api.post<AuxiliarySheetAPIResponseProps>('/store_auxiliary_sheet', requestData)
-        //     .then(responseData => {
-        //         console.log(responseData)
-        //     })
-        //     .catch(e => {
-        //         toast.error('Erro!')
-        //         console.error(e)
-        //     })
-        //     .finally(() => {
-        //         setIsLoading(false)
-        //     })
+        await pocktbase_api.post('/collections/auxiliary_sheets/records', {
+            userId: '',
+            formData: JSON.stringify(contextFormData),
+            editableValues: JSON.stringify(data)
+        })
+            .then(data => {
+                const id: string = data.data.id
+                toast.success(`Código: ${id.slice(0, 7)}`, { autoClose: false })
+                toast.success(`Ficha auxiliar salva! Guarde o código a seguir para poder editá-la.`, { autoClose: false })
+            })
+            .catch(e => {
+                console.error(e)
+                toast.error('Não foi possível salvar a ficha auxiliar.')
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
     };
 
     function addWhiteLineWhenTheListIsSmallerThenEithteen(listOfValues: { title: string; percent: string; value: number | null }[]) {
@@ -210,7 +219,7 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
 
                     </div>
                     <div className='flex justify-center py-4 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-b-3xl '>
-                        <ButtonDefault color='green' type='submit' variant='solid'>
+                        <ButtonDefault color='green' type='submit' isLoading={isLoading} disabled={isLoading} variant='solid'>
                             Salvar
                             <BiSave className='inline-block ml-2' />
                         </ButtonDefault>
