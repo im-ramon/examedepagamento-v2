@@ -1,11 +1,12 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { BiBook, BiCustomize, BiDotsVerticalRounded, BiGridAlt, BiHelpCircle, BiHomeAlt, BiMoon, BiSun, BiUser, BiX } from "react-icons/bi";
 import { useDarkMode } from 'usehooks-ts';
 import logo from '../assets/images/img/logo.png';
 import { pb } from '../services/pocktbase';
+import { removeCookie } from '../utils/cookies';
 import AsideDivider from './AsideDivider';
 import AsideLinks from './AsideLinks';
 
@@ -14,13 +15,37 @@ export function Aside() {
     const router = useRouter()
 
     const [showAside, setShowAside] = useState<boolean>(true)
+    const [userName, setUserName] = useState<string>('')
+    const [userEmail, setUserEmail] = useState<string>('')
     const [showConfigMenu, setShowConfigMenu] = useState<boolean>(true)
     const { isDarkMode, toggle } = useDarkMode()
 
     function handleSingOut() {
+        removeCookie('token')
         pb.authStore.clear();
         router.push('/');
+
+        if (window) {
+            window.localStorage.clear();
+        }
     }
+
+    useEffect(() => {
+        if (window) {
+            const auth = window.localStorage.getItem('pocketbase_auth')
+            if (auth) {
+                const pocketbase_auth = JSON.parse(auth)
+
+                if (pocketbase_auth.model.name) {
+                    setUserName(pocketbase_auth.model.name)
+                }
+
+                if (pocketbase_auth.model.email) {
+                    setUserEmail(pocketbase_auth.model.email)
+                }
+            }
+        }
+    }, [])
 
     return (
         <aside className={`absolute lg:relative top-0 left-0 z-10 flex flex-col transition-all duration-300 bg-white dark:bg-gradient-to-b dark:from-gray-700 dark:to-gray-800 dark:text-white h-full ${showAside ? 'w-60 border-r dark:border-r-gray-700' : 'w-0 border-none'}`}>
@@ -89,8 +114,8 @@ export function Aside() {
                         </div>
                     </div>
                     <div className='flex-1 flex flex-col select-none justify-center overflow-hidden'>
-                        <p className='text-xs'>Ramon Oliveira</p>
-                        <p className='text-xs text-gray-500'>contato@ramonoliveira.dev</p>
+                        <p className='text-xs overflow-hidden whitespace-nowrap overflow-ellipsis'>{userName}</p>
+                        <p className='text-xs overflow-hidden whitespace-nowrap overflow-ellipsis text-gray-500'>{userEmail}</p>
                     </div>
                 </div>
             </div >

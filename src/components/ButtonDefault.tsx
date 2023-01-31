@@ -13,7 +13,7 @@ interface ButtonDefaultProps {
 
 export function ButtonDefault({ type, children, isLoading, variant, color, click, disabled, helpText }: ButtonDefaultProps) {
     return (
-        <button title={helpText} type={type} className={`default_button shadow-md mx-auto rounded-full text-white text-sm font-semibold ${color} ${disabled || isLoading ? 'cursor-not-allowed' : ''}`} onClick={() => { click && click() }} disabled={isLoading || disabled}>
+        <button title={helpText} type={type} className={`default_button shadow-md rounded-full text-white text-sm font-semibold ${color} ${disabled || isLoading ? 'cursor-not-allowed' : ''}`} onClick={() => { click && click() }} disabled={isLoading || disabled}>
             <div className={`rounded-full flex items-center px-4 py-2.25 m-0.5 transition-all duration-300 ${variant == 'outline' ? 'bg-white dark:bg-black hover:dark:bg-transparent' : ''}`}>
                 {isLoading && <div className="mr-3 flex justify-center items-center -translate-y-0.5"><Spinner size="sm" light={true} /></div>}
                 {children}

@@ -1,10 +1,13 @@
 import Head from 'next/head';
-import { ReactElement } from 'react';
+import { ReactElement, useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { ButtonDefault } from '../../components/ButtonDefault';
 import { Card } from '../../components/Card';
 import LayoutRouteApp from "../../components/layouts/LayoutRouteApp";
 import PageTitle from '../../components/PageTitle';
+import { AppContext, UserDataProps } from '../../contexts/app.context';
+import { pb } from '../../services/pocktbase';
 import { appIdentity } from '../../utils/util_texts';
 import { NextPageWithLayout } from "../_app";
 
@@ -18,13 +21,44 @@ interface FormInputs {
 }
 
 const Profile: NextPageWithLayout = () => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormInputs>();
+    const { userData, setUserData } = useContext(AppContext)
 
-    const onSubmit: SubmitHandler<FormInputs> = data => {
-        console.log(data)
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormInputs>();
+
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const onSubmit: SubmitHandler<FormInputs> = async data => {
+        setIsLoading(true)
+        const updateData = {
+            pg: data.userPg,
+            boss_name: data.bossName,
+            boss_pg: data.bossPg,
+            signature_place: data.signatureLocation,
+            om: data.om,
+        }
+        await pb.collection('users').update<UserDataProps>(userData.id, updateData)
+            .then(data => {
+                toast.success('Dados salvos com sucesso!')
+                setUserData(data)
+            })
+            .catch(err => { console.log(err) })
+            .finally(() => {
+                setIsLoading(false)
+            })
     };
 
     const styleInputNumber = "block w-full mt-1 lg:mt-0 lg:w-auto disabled:opacity-50 disabled:cursor-not-allowed p-2 flex-1 ml-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
+
+    useEffect(() => {
+        if (userData) {
+            setValue('userName', userData.name);
+            setValue('userPg', userData.pg);
+            setValue('bossName', userData.boss_name);
+            setValue('bossPg', userData.boss_pg);
+            setValue('signatureLocation', userData.signature_place);
+            setValue('om', userData.om);
+        }
+    }, [userData, setValue])
 
     return (
         <>
@@ -67,7 +101,7 @@ const Profile: NextPageWithLayout = () => {
                         Na versão atual do App ainda não é possível alterar seu nome. Caso tenha cadastrado algum dado incorrento, envie um e-mail para <a href="mailto:contato@ramonoliveira.dev">contato@ramonoliveira.dev</a> com as informações que deseja alterar.
                     </p>
                     <div className='flex justify-center py-2 px-2 lg:right-16 rounded-3xl lg:col-span-2'>
-                        <ButtonDefault type='submit' isLoading={!true} color='green' variant='solid'>Salvar</ButtonDefault>
+                        <ButtonDefault type='submit' isLoading={isLoading} color='green' variant='solid'>Salvar</ButtonDefault>
                     </div>
                 </form>
             </Card>

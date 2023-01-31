@@ -3,9 +3,10 @@ import { useRouter } from 'next/router';
 interface RouteLinkProps {
     href: string;
     text: string;
+    underline: boolean;
 }
 
-function RouteLink({ href, text }: RouteLinkProps) {
+function RouteLink({ href, text, underline }: RouteLinkProps) {
     const router = useRouter()
 
     const handleClick = (e: any) => {
@@ -14,7 +15,7 @@ function RouteLink({ href, text }: RouteLinkProps) {
     }
 
     return (
-        <a href={href} onClick={e => handleClick(e)}>
+        <a href={href} onClick={e => handleClick(e)} className={underline ? '' : 'no-underline'}>
             {text}
         </a>
     )

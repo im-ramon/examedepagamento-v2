@@ -2,12 +2,14 @@ import { Modal } from "flowbite-react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from 'next/router';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BiHomeAlt, BiMailSend } from "react-icons/bi";
 import { FiLock, FiMail } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { ButtonDefault } from "../../components/ButtonDefault";
+import { AppContext, UserDataProps } from "../../contexts/app.context";
 import { pb } from "../../services/pocktbase";
 import { setCookie } from "../../utils/cookies";
 import { appIdentity } from "../../utils/util_texts";
@@ -23,16 +25,22 @@ export default function SingIn() {
 
     const [showModal, setShowModal] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [showPassword, setShowPassword] = useState<boolean>(false)
 
     const { register, handleSubmit, formState: { errors }, reset, setValue, getValues } = useForm<loginFields>();
+
+    const { setUserData } = useContext(AppContext)
+
 
     const onSubmit: SubmitHandler<loginFields> = async data => {
         setIsLoading(true)
 
         await pb.collection('users').authWithPassword(data.email, data.password)
             .then((data) => {
-                setCookie('token', data.token)
                 router.push('/app')
+                // @ts-expect-error
+                setUserData(data as UserDataProps)
+                setCookie('token', data.token)
             })
             .catch((error) => {
                 console.log(error)
@@ -67,7 +75,10 @@ export default function SingIn() {
                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 <FiLock className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                             </div>
-                            <input type="password" {...register('password', { required: true, min: 8 })} required id="password" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="••••••••" />
+                            <input type={showPassword ? 'text' : 'password'} {...register('password', { required: true, min: 8 })} required id="password" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="••••••••" />
+                            <div onClick={() => setShowPassword(!showPassword)} className="absolute top-1/2 -translate-y-1/2 right-3 hover:bg-red-50/10 cursor-pointer transition-all rounded-full p-1">
+                                {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+                            </div>
                         </div>
                         <div className="flex items-end justify-end">
                             <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" className="text-sm text-primary-600" type="button" onClick={() => { setShowModal(true) }}>

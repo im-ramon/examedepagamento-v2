@@ -1,8 +1,9 @@
 import moment from 'moment';
 import Head from 'next/head';
+import Link from 'next/link';
 import { ReactElement, useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
-import { BiBrushAlt, BiCheckDouble, BiErrorCircle, BiSave, BiTrash } from 'react-icons/bi';
+import { BiBrushAlt, BiCheckCircle, BiCheckDouble, BiErrorCircle, BiSave, BiTrash } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import AuxiliarySheet from '../../components/AuxiliarySheet';
 import BlockTitle from '../../components/BlockTitle';
@@ -125,7 +126,7 @@ export interface AuxiliarySheetAPIResponseProps {
 }
 
 const GeneratePayslip: NextPageWithLayout = () => {
-    const { contextFormData, setContextFormData } = useContext(AppContext)
+    const { contextFormData, setContextFormData, contextFormDataId, setContextFormDataId } = useContext(AppContext)
     const { register, handleSubmit, watch, formState: { errors }, reset, setValue, getValues } = useForm<AuxiliarySheetFields>();
 
     const [extraValueDescription, setExtraValueDescription] = useState<string>("")
@@ -201,6 +202,12 @@ const GeneratePayslip: NextPageWithLayout = () => {
         setExtraValueAmount('')
     }
 
+    function clearForm() {
+        setContextFormData(undefined)
+        setContextFormDataId('')
+        reset()
+    }
+
     const styleInputNumber = "block w-32 p-2 mx-auto text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
     const styleInputSelect = "block w-64 mx-auto px-2 py-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
     const styleInputToggle = "w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300/50 dark:peer-focus:ring-primary-800/50 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600";
@@ -225,15 +232,19 @@ const GeneratePayslip: NextPageWithLayout = () => {
             <PageTitle title='Gerar ficha auxilar' sub_title='Responda o formulário abaixo com as informação do militar/ pensionista que deseja gerar uma ficha auxiliar. Se sugir dúvidas, clique na interrogação (?) no canto de cada campo.' />
             <div>
                 <form onSubmit={handleSubmit(onSubmit)} className="relative block pb-8">
-                    {/* <div className="flex items-center p-4 -mb-4 text-sm text-green-700 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800">
-                        <BiCheckCircle size={16} />
-                        <span className="font-medium ml-2">Você está criando uma nova ficha auxiliar. Para ver as fichas salvas, <Link href="/app/manage_auxiliary_sheet">clique aqui</Link>.</span>
-                    </div> */}
 
-                    <div className="flex items-center p-4 -mb-4 text-sm text-yellow-700 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800" role="alert">
-                        <BiErrorCircle size={16} />
-                        <span className="font-medium ml-2">Você está editando a ficha auxiliar nº xxxx. Ao gerar a salvar, os dados serão sobreescritos no banco de dados</span>
-                    </div>
+                    {contextFormDataId === '' ? (
+                        <div className="flex items-center p-4 -mb-4 text-sm text-green-700 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800">
+                            <BiCheckCircle size={16} />
+                            <span className="font-medium ml-2">Você está criando uma nova ficha auxiliar. Para ver as fichas salvas, <Link href="/app/manage_auxiliary_sheet">clique aqui</Link>.</span>
+                        </div>
+                    ) : (
+                        <div className="flex items-center p-4 -mb-4 text-sm text-yellow-700 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800" role="alert">
+                            <BiErrorCircle size={16} />
+                            <span className="font-medium ml-2">Você está editando a ficha auxiliar código <u>“{contextFormDataId.slice(0, 7)}”</u>. Ao gerar e salvar, os dados serão sobreescritos no banco de dados</span>
+                        </div>
+                    )}
+
                     <BlockTitle title='Informações gerais' />
                     <FormBlockContainer>
 
@@ -961,15 +972,13 @@ const GeneratePayslip: NextPageWithLayout = () => {
                             </div>
                         </ButtonDefault>
                         <div className='mx-2'></div>
-                        <ButtonDefault type='button' disabled={isLoading} color='yellow' variant='outline' click={reset}>
+                        <ButtonDefault type='button' disabled={isLoading} color='yellow' variant='outline' click={clearForm}>
                             <div className='flex items-center justify-center'>
                                 <span className='mr-2'>Limpar formulário</span>
                                 <BiBrushAlt size={16} />
                             </div>
                         </ButtonDefault>
                     </div>
-
-
                 </form>
             </div>
         </>

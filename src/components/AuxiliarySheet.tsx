@@ -1,5 +1,6 @@
 import moment from 'moment';
-import { useContext, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { BiGitCompare, BiPrinter, BiSave } from 'react-icons/bi';
 import { TbArrowBackUp } from 'react-icons/tb';
@@ -7,6 +8,7 @@ import { useReactToPrint } from 'react-to-print';
 import { toast } from 'react-toastify';
 import { AppContext } from '../contexts/app.context';
 import { AuxiliarySheetAPIResponseProps } from '../pages/app/generate_auxiliary_sheet';
+import { pb } from '../services/pocktbase';
 import { pocktbase_api } from '../services/pocktbase_api';
 import { convert_in_BRL } from '../utils/util_convert_in_BRL';
 import { ButtonDefault } from './ButtonDefault';
@@ -17,12 +19,51 @@ interface AuxiliarySheetProps {
     data: AuxiliarySheetAPIResponseProps
 }
 
+interface EditableValuesProps {
+    obsReceitas: string;
+    valorContraqueReceita1: string;
+    valorContraqueReceita2: string;
+    valorContraqueReceita3: string;
+    valorContraqueReceita4: string;
+    valorContraqueReceita5: string;
+    valorContraqueReceita6: string;
+    valorContraqueReceita7: string;
+    valorContraqueReceita8: string;
+    valorContraqueReceita9: string;
+    valorContraqueReceita10: string;
+    valorContraqueReceita11: string;
+    valorContraqueReceita12: string;
+    valorContraqueReceita13: string;
+    valorContraqueReceita14: string;
+    valorContraqueReceita15: string;
+    valorContraqueReceita16: string;
+    obsDescontos: string;
+    valorContraqueDesconto1: string;
+    valorContraqueDesconto2: string;
+    valorContraqueDesconto3: string;
+    valorContraqueDesconto4: string;
+    valorContraqueDesconto5: string;
+    valorContraqueDesconto6: string;
+    valorContraqueDesconto7: string;
+    valorContraqueDesconto8: string;
+    valorContraqueDesconto9: string;
+    valorContraqueDesconto10: string;
+    valorContraqueDesconto11: string;
+    valorContraqueDesconto12: string;
+    valorContraqueDesconto13: string;
+    valorContraqueDesconto14: string;
+    valorContraqueDesconto15: string;
+    valorContraqueDesconto16: string;
+}
+
 const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) => {
     const componentRef = useRef(null);
 
     const { register, handleSubmit, setValue, getValues } = useForm();
 
-    const { contextFormData, setContextFormData } = useContext(AppContext)
+    const { contextFormData, contextEditableValues, userData, contextFormDataId } = useContext(AppContext)
+
+    const router = useRouter()
 
 
     const handlePrint = useReactToPrint({
@@ -36,23 +77,43 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
     const onSubmit: SubmitHandler<any> = async data => {
         setIsLoading(true)
 
-        await pocktbase_api.post('/collections/auxiliary_sheets/records', {
-            userId: '',
+        const fetchData = {
+            userId: userData.id,
             formData: JSON.stringify(contextFormData),
             editableValues: JSON.stringify(data)
-        })
-            .then(data => {
-                const id: string = data.data.id
-                toast.success(`Código: ${id.slice(0, 7)}`, { autoClose: false })
-                toast.success(`Ficha auxiliar salva! Guarde o código a seguir para poder editá-la.`, { autoClose: false })
-            })
-            .catch(e => {
-                console.error(e)
-                toast.error('Não foi possível salvar a ficha auxiliar.')
-            })
-            .finally(() => {
-                setIsLoading(false)
-            })
+        }
+
+        if (contextFormDataId) {
+            await pb.collection('auxiliary_sheets').update(contextFormDataId, fetchData)
+                .then(data => {
+                    toast.success(`Ficha auxiliar atualizada!`)
+                })
+                .catch(e => {
+                    console.error(e)
+                    toast.error('Não foi possível salvar a ficha auxiliar.')
+                })
+                .finally(() => {
+                    router.push('/app/manage_auxiliary_sheet')
+                    setIsLoading(false)
+                })
+        } else {
+            await pocktbase_api.post('/collections/auxiliary_sheets/records', fetchData)
+                .then(data => {
+                    const id: string = data.data.id
+                    toast.success(`Código: ${id.slice(0, 7)}`, { autoClose: false })
+                    toast.success(`Ficha auxiliar salva! Guarde o código a seguir para poder editá-la.`, { autoClose: 15000 })
+                })
+                .catch(e => {
+                    console.error(e)
+                    toast.error('Não foi possível salvar a ficha auxiliar.')
+                })
+                .finally(() => {
+                    router.push('/app/manage_auxiliary_sheet')
+                    setIsLoading(false)
+                })
+        }
+
+
     };
 
     function addWhiteLineWhenTheListIsSmallerThenEithteen(listOfValues: { title: string; percent: string; value: number | null }[]) {
@@ -69,24 +130,55 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
         }
     }
 
-    const [totalReceitas, setTotalReceitas] = useState<string>('');
+    const [totalReceitas, setTotalReceitas] = useState<number>(0);
+    const [totalDescontos, setTotalDescontos] = useState<number>(0);
 
     function setAndSumValuesFromTheValoresContrachequeField() {
-        let listOfValues: string[] = []
-        for (let index = 1; index <= 16; index++) {
-            listOfValues.push(getValues('valorContraqueReceita' + index) || '0')
-        }
-        const sum = listOfValues.map(item => Number(item.replace(/[^0-9|\,]/gi, '').replace(',', '.'))).reduce((curr, prev) => curr + prev, 0)
+        const arrayTypes = ['valorContraqueReceita', 'valorContraqueDesconto']
 
-        setTotalReceitas(String(convert_in_BRL(sum)))
+        arrayTypes.forEach(el => {
+            let listOfValues: string[] = []
+            for (let index = 1; index <= 16; index++) {
+                listOfValues.push(getValues(el + index) || '0')
+            }
+            const sum = listOfValues.map(item => Number(item.replace(/[^0-9|\,]/gi, '').replace(',', '.'))).reduce((curr, prev) => curr + prev, 0)
+
+            if (el == 'valorContraqueReceita') {
+                setTotalReceitas(sum)
+            }
+
+            if (el == 'valorContraqueDesconto') {
+                setTotalDescontos(sum)
+            }
+
+        })
+
     }
 
     function matchValuesInAuxiliarySheet() {
         data.receitas.forEach((element, index) => {
             setValue('valorContraqueReceita' + (index + 1), convert_in_BRL(element.value))
         });
+
+        data.descontos.forEach((element, index) => {
+            setValue('valorContraqueDesconto' + (index + 1), convert_in_BRL(element.value))
+        });
+
         setAndSumValuesFromTheValoresContrachequeField()
     }
+
+    useEffect(() => {
+        const valuesJSON = (contextEditableValues as EditableValuesProps)
+
+        for (const key in valuesJSON) {
+            // @ts-expect-error
+            setValue(key, valuesJSON[key])
+        }
+
+        setAndSumValuesFromTheValoresContrachequeField()
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [contextEditableValues, setValue])
 
     return (
         <div id='auxiliary_sheet-modal' onClick={e => closeAuxiliarySheetWhenClickOutside(e.target as HTMLElement)} className={`fixed w-full top-0 right-0 bg-gray-900/50 backdrop-blur-sm z-50 p-24 overflow-y-scroll h-full ${isVisible ? '' : 'hidden'}`}>
@@ -97,6 +189,7 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                             <TbArrowBackUp className='inline-block mr-2' />
                             Continuar editando
                         </ButtonDefault>
+                        <div className="mx-2"></div>
                         <ButtonDefault color='purple' type='button' variant='outline' click={matchValuesInAuxiliarySheet} helpText="Igular colunas “valor pesquisado” e “valor contracheque”">
                             Igualar valores
                             <BiGitCompare className='inline-block ml-2' />
@@ -153,24 +246,63 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                                             <div className='col-span-3 pl-1 flex items-center'><span>{el.title || <br />}</span></div>
                                             <div className='text-center flex items-center justify-center'><span>{el.percent}</span></div>
                                             <div className='col-span-2 text-right pr-1 flex items-center justify-end'><span>{el.value ? convert_in_BRL(Number(el.value)) : ''}</span></div>
-                                            <div className='col-span-2'><input type="text" {...register(`valorContraqueReceita${index + 1}`, { onChange: setAndSumValuesFromTheValoresContrachequeField })} className='bg-none text-right w-full py-0.5 pr-1' /></div>
+                                            <div className='col-span-2'><input type="text" {...register(`valorContraqueReceita${index + 1}`, { onBlur: setAndSumValuesFromTheValoresContrachequeField })} className='bg-none text-right w-full py-0.5 pr-1' /></div>
                                         </>
                                     )
                                 })}
 
                                 <div className='col-span-5 flex justify-center items-center'><span>SOMA</span></div>
                                 <div className='col-span-2 flex justify-end items-center'><span className='pr-1'>{convert_in_BRL(Number(data.somatorios.receitas))}</span></div>
-                                <div className='col-span-2 flex justify-end items-center'> <span className='text-right w-full py-0.5 pr-1'>{totalReceitas}</span></div>
+                                <div className='col-span-2 flex justify-end items-center'> <span className='text-right w-full py-0.5 pr-1'>{convert_in_BRL(totalReceitas)}</span></div>
                                 <div className='col-span-3 flex justify-end items-center'><span></span></div>
                             </div>
                         </div>
 
-                        {/* <p>D</p><p>E</p><p>S</p><p>C</p><p>O</p><p>N</p><p>T</p><p>O</p><p>S</p> */}
+                        <div className='col-span-12 !border-none'>
+                            <div className='auxiliary_sheet grid grid-cols-12 !border-b-none'>
+                                <div className='row-span-18 text-center flex flex-col justify-center'>
+                                    <p>D</p><p>E</p><p>S</p><p>C</p><p>O</p><p>N</p><p>T</p><p>O</p><p>S</p>
+                                </div>
+                                <div className='row-span-18 col-span-3 col-start-10 text-center h-full'>
+                                    <strong>OBSERVAÇÕES</strong>
+                                    <textarea {...register('obsDescontos')} className='w-full mt-2 h-5/6 p-1' ></textarea>
+                                </div>
+
+                                <div className='col-span-3 text-center flex justify-center items-center'><strong className='p-1'>DISCRIMINAÇÃO</strong></div>
+                                <div className='text-center flex justify-center items-center'><strong className='p-1'>%</strong></div>
+                                <div className='col-span-2 text-center flex justify-center items-center'><strong className='p-1'>VALOR PESQUISADO</strong></div>
+                                <div className='col-span-2 text-center flex justify-center items-center'><strong className='p-1'>VALOR CONTRACHEQUE</strong></div>
+
+
+                                {addWhiteLineWhenTheListIsSmallerThenEithteen(data.descontos).map((el, index) => {
+                                    return (
+                                        <>
+                                            <div className='col-span-3 pl-1 flex items-center'><span>{el.title || <br />}</span></div>
+                                            <div className='text-center flex items-center justify-center'><span>{el.percent}</span></div>
+                                            <div className='col-span-2 text-right pr-1 flex items-center justify-end'><span>{el.value ? convert_in_BRL(Number(el.value)) : ''}</span></div>
+                                            <div className='col-span-2'><input type="text" {...register(`valorContraqueDesconto${index + 1}`, { onChange: setAndSumValuesFromTheValoresContrachequeField })} className='bg-none text-right w-full py-0.5 pr-1' /></div>
+                                        </>
+                                    )
+                                })}
+
+                                <div className='col-span-5 flex justify-center items-center'><span>SOMA</span></div>
+                                <div className='col-span-2 flex justify-end items-center'><span className='pr-1'>{convert_in_BRL(Number(data.somatorios.descontos))}</span></div>
+                                <div className='col-span-2 flex justify-end items-center'> <span className='text-right w-full py-0.5 pr-1'>{convert_in_BRL(totalDescontos)}</span></div>
+                                <div className='col-span-3 flex justify-end items-center'><span></span></div>
+
+                                <div className='col-span-5 flex justify-center items-center'><span>LÍQUIDO A RECEBER</span></div>
+                                <div className='col-span-2 flex justify-end items-center'><span className='pr-1'>{convert_in_BRL(Number(data.somatorios.receitas - data.somatorios.descontos))}</span></div>
+                                <div className='col-span-2 flex justify-end items-center'> <span className='text-right w-full py-0.5 pr-1'>{convert_in_BRL(totalReceitas - totalDescontos)}</span></div>
+                                <div className='col-span-3 flex justify-end items-center'><span></span></div>
+                            </div>
+                        </div>
+
+
 
                         <div className='col-span-12 flex justify-center flex-col items-center !border-none'>
                             <br />
                             <br />
-                            <p>Feira de Santana, BA, 1º de janeiro de 2022.</p>
+                            <p>{userData.signature_place}, <input type="text" className='p-0 m-0' defaultValue='1º de janeiro de 2023.' /></p>
                             <br />
                             <br />
                             <br />
@@ -183,7 +315,7 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                                 showUserNameInPrint && (
                                     <>
 
-                                        <p>Ramon Oliveira - 3º Sgt</p>
+                                        <p>{userData.name + ' - ' + userData.pg}</p>
                                         <p>Membro da Equipe</p>
                                     </>
                                 )
@@ -207,8 +339,8 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                             {
                                 showBossNameInPrint && (
                                     <>
-                                        <p>Ramon Oliveira - 3º Sgt</p>
-                                        <p>Membro da Equipe</p>
+                                        <p>{userData.boss_name + ' - ' + userData.boss_pg}</p>
+                                        <p>Chefe da Equipe</p>
                                     </>
                                 )
                             }
@@ -220,10 +352,10 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                     </div>
                     <div className='flex justify-center py-4 px-2 bottom-0 right-0 lg:right-16 dark:bg-black/10  bg-white/50 backdrop-blur-sm dark:border-gray-800 border-t border-l rounded-b-3xl '>
                         <ButtonDefault color='green' type='submit' isLoading={isLoading} disabled={isLoading} variant='solid'>
-                            Salvar
+                            {contextFormDataId === '' ? 'Salvar' : 'Atualizar'}
                             <BiSave className='inline-block ml-2' />
                         </ButtonDefault>
-
+                        <div className="mx-2"></div>
                         <ButtonDefault color='blue' type='button' variant='solid' click={handlePrint}>
                             Imprimir
                             <BiPrinter className='inline-block ml-2' />
