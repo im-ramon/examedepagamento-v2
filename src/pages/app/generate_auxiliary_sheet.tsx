@@ -218,6 +218,9 @@ const GeneratePayslip: NextPageWithLayout = () => {
                 // @ts-expect-error
                 setValue(key, contextFormData[key])
             }
+            if (contextFormData.extraValues) {
+                setExtraValues(contextFormData.extraValues)
+            }
         }
     }, [contextFormData, setValue])
 
@@ -950,10 +953,9 @@ const GeneratePayslip: NextPageWithLayout = () => {
                                             <div className="lg:my-0.5 mx-3"></div>
                                             <div>
                                                 <ButtonDefault type='button' disabled={isLoading} color='orange' variant='outline' click={clearExtraValuesForm}>
-                                                    <div className='flex items-center justify-center'>
-                                                        <span className='mr-1'>Limpar</span>
-                                                        <BiBrushAlt size={16} />
-                                                    </div>
+
+                                                    <span className='mr-1 '>Limpar</span>
+                                                    <BiBrushAlt size={16} />
                                                 </ButtonDefault>
                                             </div>
                                         </div>
@@ -974,8 +976,8 @@ const GeneratePayslip: NextPageWithLayout = () => {
                         <div className='mx-2'></div>
                         <ButtonDefault type='button' disabled={isLoading} color='yellow' variant='outline' click={clearForm}>
                             <div className='flex items-center justify-center'>
-                                <span className='mr-2'>Limpar formulário</span>
-                                <BiBrushAlt size={16} />
+                                <span className='mr-2 text-gray-800 dark:text-white'>Limpar formulário</span>
+                                <BiBrushAlt className='text-gray-800 dark:text-white' size={16} />
                             </div>
                         </ButtonDefault>
                     </div>

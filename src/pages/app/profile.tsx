@@ -47,7 +47,7 @@ const Profile: NextPageWithLayout = () => {
             })
     };
 
-    const styleInputNumber = "block w-full mt-1 lg:mt-0 lg:w-auto disabled:opacity-50 disabled:cursor-not-allowed p-2 flex-1 ml-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
+    const styleInputNumber = "block w-full mt-1 lg:mt-0 lg:w-auto disabled:opacity-70 disabled:cursor-not-allowed p-2 flex-1 ml-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
 
     useEffect(() => {
         if (userData) {

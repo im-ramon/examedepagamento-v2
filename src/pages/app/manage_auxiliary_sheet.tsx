@@ -1,4 +1,5 @@
 import { Modal, Spinner } from 'flowbite-react';
+import moment from 'moment';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ReactElement, useContext, useEffect, useState } from 'react';
@@ -40,6 +41,7 @@ const ManagePayslip: NextPageWithLayout = () => {
     const [auxiliarySheets, setAuxiliarySheets] = useState<showAuxiliarySheetProps[] | null>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [deleteId, setDeleteId] = useState<string>('')
+    const [lastLocalStyleSheetUpdate, setLastLocalStyleSheetUpdate] = useState<string>('-')
 
     async function fetchAuxiliarySheet() {
         setIsLoading(true)
@@ -74,6 +76,8 @@ const ManagePayslip: NextPageWithLayout = () => {
                 })
 
                 window.localStorage.setItem('@examedepagmento:auxiliary_sheets', JSON.stringify(formatedAuxiliarySheets))
+                window.localStorage.setItem('@examedepagmento:auxiliary_sheets_date', moment().format())
+                setLastLocalStyleSheetUpdate(moment().format())
                 setAuxiliarySheets(formatedAuxiliarySheets)
             })
             .catch(err => {
@@ -116,6 +120,11 @@ const ManagePayslip: NextPageWithLayout = () => {
     useEffect(() => {
         if (window) {
             const localData = window.localStorage.getItem('@examedepagmento:auxiliary_sheets')
+            const localDataDate = window.localStorage.getItem('@examedepagmento:auxiliary_sheets_date')
+
+            if (localDataDate) {
+                setLastLocalStyleSheetUpdate(localDataDate)
+            }
 
             if (localData) {
                 setAuxiliarySheets(JSON.parse(localData))
@@ -161,10 +170,13 @@ const ManagePayslip: NextPageWithLayout = () => {
                             </div>
                         )
                     }))}
+            <p className='text-center mb-5 opacity-30 text-sm'>
+                Última atualização: {moment(lastLocalStyleSheetUpdate).isValid() ? moment(lastLocalStyleSheetUpdate).format('DD/MM/YYYY [às] HH:mm') : '-'}
+            </p>
             <div className='flex justify-center items-center'>
                 <ButtonDefault type='button' color='blue' variant='solid' click={fetchAuxiliarySheet}>
                     <span>Atualizar registros</span>
-                    <BiRefresh className='ml-2 hover:rotate-180 transition-all' size={20} />
+                    <BiRefresh className='ml-2 hover:-rotate-180 transition-all' size={20} />
                 </ButtonDefault>
             </div>
 
@@ -194,7 +206,7 @@ const ManagePayslip: NextPageWithLayout = () => {
                                 variant='outline'
                                 click={() => setDeleteId('')}
                             >
-                                Voltar
+                                <span className='text-gray-800 dark:text-white'>Voltar</span>
                             </ButtonDefault>
                         </div>
                     </div>

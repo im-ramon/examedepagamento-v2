@@ -1,19 +1,25 @@
+import copy from 'copy-to-clipboard';
+import { Modal } from 'flowbite-react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { BiBook, BiCustomize, BiDotsVerticalRounded, BiGridAlt, BiHelpCircle, BiHomeAlt, BiMoon, BiSun, BiUser, BiX } from "react-icons/bi";
+import { FcKey } from "react-icons/fc";
+import { TbHeartHandshake } from 'react-icons/tb';
+import { toast } from 'react-toastify';
 import { useDarkMode } from 'usehooks-ts';
 import logo from '../assets/images/img/logo.png';
+import pix from '../assets/images/svg/pix.svg';
 import { pb } from '../services/pocktbase';
 import { removeCookie } from '../utils/cookies';
 import AsideDivider from './AsideDivider';
 import AsideLinks from './AsideLinks';
 
-
 export function Aside() {
     const router = useRouter()
 
+    const [showModalDonate, setShowModalDonate] = useState<boolean>(true)
     const [showAside, setShowAside] = useState<boolean>(true)
     const [userName, setUserName] = useState<string>('')
     const [userEmail, setUserEmail] = useState<string>('')
@@ -30,6 +36,12 @@ export function Aside() {
         }
     }
 
+    function setModalDonateVisualized() {
+        if (window) {
+            window.localStorage.setItem('@examedepagamento:show_donate', 'true')
+        }
+    }
+
     useEffect(() => {
         if (window) {
             const auth = window.localStorage.getItem('pocketbase_auth')
@@ -43,6 +55,11 @@ export function Aside() {
                 if (pocketbase_auth.model.email) {
                     setUserEmail(pocketbase_auth.model.email)
                 }
+            }
+
+            const showDonate = window.localStorage.getItem('@examedepagamento:show_donate')
+            if (showDonate) {
+                setShowModalDonate(false)
             }
         }
     }, [])
@@ -84,6 +101,14 @@ export function Aside() {
                     <AsideLinks to='/app/profile' title='Perfil'>
                         <BiUser size={20} />
                     </AsideLinks>
+                    <li onClick={() => { setShowModalDonate(true) }}>
+                        <span className={`cursor-pointer relative no-underline justify-between flex flex-row items-center h-11 focus:outline-none dark:hover:bg-gray-700 dark:text-white hover:bg-gray-300 text-gray-600 outline-none hover:text-gray-800 transition-all pr-6 dark:bg-green-900/50 bg-green-600/20`}>
+                            <span className="inline-flex justify-center items-center ml-4">
+                                <TbHeartHandshake className='text-green-500' size={20} />
+                            </span>
+                            <span className="ml-2 text-sm tracking-wide truncate mr-auto">Apoie</span>
+                        </span>
+                    </li>
                 </ul>
             </div>
             <div id='config_menu' className='mt-auto transition-all select-none'>
@@ -93,7 +118,7 @@ export function Aside() {
                             {showConfigMenu ? <BiDotsVerticalRounded size={22} className={`${showAside ? '' : 'bg-white dark:bg-gray-700 p-1 box-content shadow-lg rounded-xl'}`} /> : <BiX className={`${showAside ? '' : 'bg-white dark:bg-gray-700 p-1 box-content shadow-lg rounded-xl'}`} size={22} />}
                         </button>
 
-                        <div id="dropdownAvatar" className={`z-20 left-4 bg-white divide-y divide-gray-100 rounded-xl shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ${showConfigMenu ? 'hidden' : 'absolute left-0 bottom-16 '}`}>
+                        <div id="dropdownAvatar" className={`z-20 left-4 bg-gray-300/15 divide-y divide-gray-200 rounded-xl shadow-lg w-44 dark:bg-gray-700 dark:divide-gray-600 ${showConfigMenu ? 'hidden' : 'absolute left-0 bottom-16 '}`}>
                             <div className="px-4 py-3 text-sm text-gray-900 dark:text-white flex items-center cursor-pointer transition-all" onClick={toggle}>
                                 <div className='mr-2'><span className="font-medium truncate">Alternar tema: </span></div>
                                 <div className='mr-2'><BiMoon size={16} className={`${isDarkMode ? '' : 'hidden'}`} /><BiSun size={16} className={`${isDarkMode ? 'hidden' : ''}`} /></div>
@@ -119,6 +144,34 @@ export function Aside() {
                     </div>
                 </div>
             </div >
+
+            <Modal show={showModalDonate} size="2xl" popup={true} onClose={() => { setShowModalDonate(false); setModalDonateVisualized() }} >
+                <Modal.Header />
+                <Modal.Body>
+                    <div className="rounded-lg p-4">
+                        <div className='flex justify-center items-center mb-12'>
+                            <TbHeartHandshake className='text-green-500' size={64} />
+                        </div>
+                        <p className="text-center font-bold text-xl mb-4">
+                            Essa idéia precisa de sua ajuda para continuar!
+                        </p>
+                        <p className='text-center'>
+                            Ajude o <strong>App Exame de Pagamento</strong> manter-se online. Doe qualquer valor para contribuir na manutenção mensal do projeto.
+                        </p>
+
+                        <p onClick={() => { copy('6c49a14f-076b-489b-8300-df0382577f0e'); toast.info('Chave Pixa copiada!') }} className="text-center flex justify-center items-center  font-bold text-xl mt-8 mb-4">
+                            <Image src={pix} alt="pix" className='inline-block mr-2 w-4' />
+                            <span>Chave Pix <span className='text-xs'>(clique para copiá-la)</span>:</span>
+                        </p>
+                        <p onClick={() => { copy('6c49a14f-076b-489b-8300-df0382577f0e'); toast.info('Chave Pixa copiada!') }} className="text-center flex justify-center items-center  font-bold text-xl mb-4 cursor-pointer">
+                            <FcKey className='mr-2' />
+                            <span>6c49a14f-076b-489b-8300-df0382577f0e</span>
+                        </p>
+
+                        <p className='text-center'>Iniciais da conta: R.O.D.S</p>
+                    </div>
+                </Modal.Body>
+            </Modal>
 
         </aside >
     )
