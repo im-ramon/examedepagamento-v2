@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { BiBook, BiCustomize, BiDotsVerticalRounded, BiGridAlt, BiHelpCircle, BiHomeAlt, BiMoon, BiSun, BiUser, BiX } from "react-icons/bi";
+import { FaDesktop, FaGithub, FaLinkedinIn, FaRegEnvelope, FaWhatsapp } from "react-icons/fa";
 import { FcKey } from "react-icons/fc";
 import { TbHeartHandshake } from 'react-icons/tb';
 import { toast } from 'react-toastify';
@@ -20,6 +21,7 @@ export function Aside() {
     const router = useRouter()
 
     const [showModalDonate, setShowModalDonate] = useState<boolean>(true)
+    const [showModalAbout, setShowModalAbout] = useState<boolean>(true)
     const [showAside, setShowAside] = useState<boolean>(true)
     const [userName, setUserName] = useState<string>('')
     const [userEmail, setUserEmail] = useState<string>('')
@@ -127,8 +129,13 @@ export function Aside() {
                                 <li>
                                     <a href="/docs/FAQ.pdf" target="_blank" className="no-underline block px-4 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">FAQ</a>
                                 </li>
+
                                 <li>
                                     <a href="/docs/manual.pdf" target="_blank" className="no-underline block px-4 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Manual</a>
+                                </li>
+
+                                <li>
+                                    <span onClick={() => setShowModalAbout(true)} className="no-underline cursor-pointer block px-4 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sobre</span>
                                 </li>
                             </ul>
                             <div className="py-0">
@@ -169,6 +176,35 @@ export function Aside() {
                         </p>
 
                         <p className='text-center'>Iniciais da conta: R.O.D.S</p>
+                    </div>
+                </Modal.Body>
+            </Modal>
+
+            <Modal show={showModalAbout} onClose={() => setShowModalAbout(false)}>
+                <Modal.Header>
+                    Sobre
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="space-y-4">
+                        <p>
+                            <span>Idealizado e desenvolvido por: <a href="https://ramonoliveira.dev">ramonoliveira.dev</a></span>
+                        </p>
+
+                        <p>
+                            <span>Verão do app: 2.1.0</span>
+                        </p>
+
+                        <p>
+                            <span>Repositório: <a href="https://github.com/im-ramon/examedepagamento-v2" target="_blank" rel="noopener noreferrer">www.github.com/im-ramon/examedepagamento-v2</a></span>
+                        </p>
+
+                        <div className='flex justify-center items-center py-2 space-x-4'>
+                            <a href="mailto:contato@ramonoliveira.dev" className='hover:scale-110 hover:text-primary-600 drop-shadow-lg transition-all text-white' target="_blank" rel="noopener noreferrer"><FaRegEnvelope size={24} /></a>
+                            <a href="https://www.linkedin.com/in/ramon-oliveira-21b8571a2/" className='hover:scale-110 hover:text-primary-600 drop-shadow-lg transition-all text-white' target="_blank" rel="noopener noreferrer"><FaLinkedinIn size={24} /></a>
+                            <a href="tel:5575991537677" className='hover:scale-110 hover:text-primary-600 drop-shadow-lg transition-all text-white' target="_blank" rel="noopener noreferrer"><FaWhatsapp size={24} /></a>
+                            <a href="https://github.com/im-ramon" className='hover:scale-110 hover:text-primary-600 drop-shadow-lg transition-all text-white' target="_blank" rel="noopener noreferrer"><FaGithub size={24} /></a>
+                            <a href="https://ramonoliveira.dev/" className='hover:scale-110 hover:text-primary-600 drop-shadow-lg transition-all text-white' target="_blank" rel="noopener noreferrer"><FaDesktop size={24} /></a>
+                        </div>
                     </div>
                 </Modal.Body>
             </Modal>
