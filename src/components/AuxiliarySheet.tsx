@@ -73,6 +73,14 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [showUserNameInPrint, setShowUserNameInPrint] = useState<boolean>(true);
     const [showBossNameInPrint, setShowBossNameInPrint] = useState<boolean>(true);
+    const [signatureDate, setSignatureDate] = useState<string>('~ digite a data aqui ~');
+
+    function storageSignatureDate() {
+        if (window) {
+            window.localStorage.setItem('@examedepagamento:signature_date', signatureDate)
+        }
+        console.log(signatureDate)
+    }
 
     const onSubmit: SubmitHandler<any> = async data => {
         setIsLoading(true)
@@ -166,6 +174,15 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
 
         setAndSumValuesFromTheValoresContrachequeField()
     }
+
+    useEffect(() => {
+        if (window) {
+            const storagedSignatureDate = window.localStorage.getItem('@examedepagamento:signature_date')
+            if (storagedSignatureDate) {
+                setSignatureDate(storagedSignatureDate)
+            }
+        }
+    }, [])
 
     useEffect(() => {
         const valuesJSON = (contextEditableValues as EditableValuesProps)
@@ -302,7 +319,7 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                         <div className='col-span-12 flex justify-center flex-col items-center !border-none'>
                             <br />
                             <br />
-                            <p>{userData.signature_place}, <input type="text" className='p-0 m-0' defaultValue='1º de janeiro de 2023.' /></p>
+                            <p>{userData.signature_place}, <input type="text" className='p-0 m-0' value={signatureDate} onBlur={storageSignatureDate} onChange={(e) => setSignatureDate(e.target.value)} /></p>
                             <br />
                             <br />
                             <br />
