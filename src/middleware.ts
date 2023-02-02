@@ -6,8 +6,10 @@ import { isTokenExpired } from './utils/auth';
 export async function middleware(request: NextRequest) {
     if (request.cookies.has('token')) {
 
-        const authData = await pb.collection('users').authRefresh()
-            .catch(console.error)
+        await pb.collection('users').authRefresh()
+            .catch(e => {
+                console.error('middleware: ', e)
+            })
 
         let cookie = request.cookies.get('token')?.value
         pocktbase_api.defaults.headers.common['Authorization'] = `Bearer ${cookie}`
