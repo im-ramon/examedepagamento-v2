@@ -21,7 +21,7 @@ export function Aside() {
     const router = useRouter()
 
     const [showModalDonate, setShowModalDonate] = useState<boolean>(true)
-    const [showModalAbout, setShowModalAbout] = useState<boolean>(true)
+    const [showModalAbout, setShowModalAbout] = useState<boolean>(false)
     const [showAside, setShowAside] = useState<boolean>(true)
     const [userName, setUserName] = useState<string>('')
     const [userEmail, setUserEmail] = useState<string>('')
