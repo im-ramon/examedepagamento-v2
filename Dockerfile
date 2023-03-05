@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-ARG PB_VERSION=0.11.3
+ARG PB_VERSION=0.13.1
 
 RUN apk add --no-cache \
     unzip \
@@ -18,6 +18,8 @@ RUN chmod -R 710 /pb
 
 USER pocketbase
 
-VOLUME /pb/pb_data
 EXPOSE 8090
 CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090"]
+
+# docker build -t pocketbase .
+# docker run -d -p 8090:8090 -v /home/deploy/examedepagamento/pb_data:/pb/pb_data pocketbase
