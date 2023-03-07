@@ -20,4 +20,4 @@ USER pocketbase
 
 VOLUME /pb/pb_data
 EXPOSE 8090
-CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090", "--origins='http://pocketbase.examedepagamento.com.br,https://pocketbase.examedepagamento.com.br'"]
+CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090"]
