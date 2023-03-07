@@ -5,7 +5,7 @@ import PocketBase from 'pocketbase';
 // const pb = new PocketBase('http://127.0.0.1:8090');
 
 // Production:
-const pb = new PocketBase('pocktbase');
+const pb = new PocketBase('https://pocketbase.examedepagamento.com.br/');
 
 export { pb };
 
