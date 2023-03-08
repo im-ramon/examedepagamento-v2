@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const pocktbase_api = axios.create({
-    baseURL: 'pocktbase',
+    baseURL: 'https://pocketbase.examedepagamento.com.br/api',
 })
 
 
