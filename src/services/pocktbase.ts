@@ -7,5 +7,13 @@ import PocketBase from 'pocketbase';
 // Production:
 const pb = new PocketBase('https://pocketbase.examedepagamento.com.br/');
 
+pb.beforeSend = function (url, options) {
+    options.headers = Object.assign({}, options.headers, {
+        'Access-Control-Allow-Origin': '*'
+    });
+
+    return { url, options };
+};
+
 export { pb };
 
