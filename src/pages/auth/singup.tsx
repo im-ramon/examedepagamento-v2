@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiLeftArrowAlt } from "react-icons/bi";
@@ -13,17 +14,19 @@ import { appIdentity } from "../../utils/util_texts";
 
 export default function SingUp() {
     const { register, handleSubmit, formState: { errors }, reset, setValue, getValues } = useForm<user>();
-
+    const router = useRouter()
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const onSubmit: SubmitHandler<user> = async data => {
-        const formatedUserName = data.name.replace(/[^a-zA-Z]/g, '_')
+        const timestamp = new Date().getTime()
+        const formatedUserName = data.name.replace(/[^a-zA-Z]/g, '_').slice(0, 7) + timestamp
         data.username = formatedUserName
         setIsLoading(true)
 
         await pb.collection('users').create(data)
             .then(async r => {
-                toast.success("Cadastro realizado!")
+                toast.success("Cadastro realizado! Faço login para acessar.")
+                router.push('/auth/singin')
             })
             .catch(e => {
                 console.error(e)

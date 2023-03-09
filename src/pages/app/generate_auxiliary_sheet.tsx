@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { ReactElement, useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiBrushAlt, BiCheckCircle, BiCheckDouble, BiErrorCircle, BiSave, BiTrash } from 'react-icons/bi';
-import { toast } from 'react-toastify';
 import AuxiliarySheet from '../../components/AuxiliarySheet';
 import BlockTitle from '../../components/BlockTitle';
 import { BreakLine } from '../../components/BreakLine';
@@ -15,7 +14,7 @@ import LayoutRouteApp from "../../components/layouts/LayoutRouteApp";
 import { OptionsPG } from '../../components/OptionsPg';
 import PageTitle from '../../components/PageTitle';
 import { AppContext } from '../../contexts/app.context';
-import { api } from '../../services/next_api';
+import handlerAuxiliarySheet from '../../entities/handle_auxiliary_sheet';
 import { appIdentity } from '../../utils/util_texts';
 import { NextPageWithLayout } from "../_app";
 
@@ -164,18 +163,11 @@ const GeneratePayslip: NextPageWithLayout = () => {
         const requestData = { ...data, extraValues }
         setContextFormData(requestData)
 
-        await api.post<AuxiliarySheetAPIResponseProps>('/generate_auxiliary_sheet', requestData)
-            .then(responseData => {
-                setAuxiliarySheetData(responseData.data)
-                setShowAuxiliarySheet(true)
-            })
-            .catch(e => {
-                toast.error("Não foi possível gerar a ficha auxiliar no momento. Código: " + e.response.status + "/" + e.code)
-                console.error(e)
-            })
-            .finally(() => {
-                setIsLoading(false)
-            })
+        const auxiliarySheet = handlerAuxiliarySheet(requestData)
+        setAuxiliarySheetData(auxiliarySheet)
+        setShowAuxiliarySheet(true)
+
+        setIsLoading(false)
     };
 
     function pushExtraValuesInArrayAndClearItsForm() {

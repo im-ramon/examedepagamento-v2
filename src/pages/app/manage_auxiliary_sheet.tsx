@@ -19,8 +19,8 @@ interface RecordProps {
     collectionId: string;
     collectionName: string;
     created: string;
-    editableValues: string;
-    formData: string;
+    observations: string;
+    form_data: string;
     id: string;
     updated: string;
     userId: string;
@@ -40,6 +40,7 @@ const ManagePayslip: NextPageWithLayout = () => {
 
     const [auxiliarySheets, setAuxiliarySheets] = useState<showAuxiliarySheetProps[] | null>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoadingEditButton, setIsLoadingEditButton] = useState<boolean>(false)
     const [deleteId, setDeleteId] = useState<string>('')
     const [lastLocalStyleSheetUpdate, setLastLocalStyleSheetUpdate] = useState<string>('-')
 
@@ -49,8 +50,9 @@ const ManagePayslip: NextPageWithLayout = () => {
             sort: '-created',
         })
             .then(data => {
+                console.log(data)
                 const formatedAuxiliarySheets: showAuxiliarySheetProps[] = data.map(el => {
-                    const formDataJson = JSON.parse(el.formData)
+                    const formDataJson = JSON.parse(el.form_data)
                     let universo = 'Ativa'
 
                     switch (formDataJson.universo) {
@@ -101,10 +103,11 @@ const ManagePayslip: NextPageWithLayout = () => {
     }
 
     async function editAuxiliarySheet(id: string) {
+        setIsLoadingEditButton(true)
         await pb.collection('auxiliary_sheets').getOne<RecordProps>(id)
             .then(data => {
-                const formDataJSON = JSON.parse(data.formData)
-                const editableValuesJSON = JSON.parse(data.editableValues)
+                const formDataJSON = JSON.parse(data.form_data)
+                const editableValuesJSON = JSON.parse(data.observations)
                 setContextFormData(formDataJSON)
                 setContextFormDataId(id)
                 setContextEditableValues(editableValuesJSON)
@@ -113,6 +116,11 @@ const ManagePayslip: NextPageWithLayout = () => {
             .catch(error => {
                 toast.error('Ficha auxiliar não encontrada. Clique em “Atualizar registros”')
                 console.log(error)
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    setIsLoadingEditButton(false)
+                }, 1000)
             })
     }
 
@@ -142,9 +150,9 @@ const ManagePayslip: NextPageWithLayout = () => {
             </Head>
             <PageTitle title='Gerenciar fichas auxilares' sub_title='Visualize, edite ou exclua as fichas auxiliares que você já gerou.' />
             {
-                isLoading ? (
+                (isLoading || isLoadingEditButton) ? (
                     <div className='flex justify-center items-center h-48'>
-                        <span className='mr-2'>Procurando registros</span> <Spinner size={'md'} />
+                        <span className='mr-2'>{isLoadingEditButton ? 'Carregando...' : 'Procurando registros'}</span> <Spinner size={'md'} />
                     </div>
                 )
                     :

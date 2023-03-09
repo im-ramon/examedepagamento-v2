@@ -1,9 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { AuxiliarySheetEtitie } from "../../entities/auxiliary_sheet";
-import { AuxiliarySheetAPIResponseProps } from "../app/generate_auxiliary_sheet";
+import { AuxiliarySheetAPIResponseProps } from "../pages/app/generate_auxiliary_sheet";
+import { AuxiliarySheetEtitie } from "./auxiliary_sheet";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    const data = req.body
+export default function handlerAuxiliarySheet(body: any) {
+    const data = body
     const auxiliarySheet = new AuxiliarySheetEtitie(data)
 
     const receitasList = [
@@ -64,6 +63,5 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             pg_real: auxiliarySheet.pgReal
         }
     }
-
-    res.status(200).json(response)
+    return response
 }

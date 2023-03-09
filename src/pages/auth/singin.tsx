@@ -37,10 +37,11 @@ export default function SingIn() {
 
         await pb.collection('users').authWithPassword(data.email, data.password)
             .then((data) => {
-                router.push('/app')
                 // @ts-expect-error
                 setUserData(data as UserDataProps)
                 setCookie('token', data.token)
+
+                router.push('/app')
             })
             .catch((error) => {
                 console.log(error)
@@ -95,7 +96,7 @@ export default function SingIn() {
                         </div>
                     </form>
                 </div>
-                <Link href="/" title="Voltar para página inicial" className="dark:bg-gray-700 shadow-md border border-gray-800 transition-transform hover:scale-105 p-2 rounded-full mt-4"><BiHomeAlt size={20} /></Link>
+                <Link href="/" title="Voltar para página inicial" className="dark:bg-gray-700 shadow-md border dark:border-gray-800 transition-transform hover:scale-105 p-2 rounded-full mt-4"><BiHomeAlt size={20} /></Link>
             </div>
 
             <Modal show={showModal} onClose={() => setShowModal(false)}>

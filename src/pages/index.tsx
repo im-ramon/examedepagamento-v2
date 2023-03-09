@@ -31,13 +31,13 @@ export default function Home() {
                 <div id='home-container' className="pt-2 w-full relative h-full bg-black rounded-3xl shadow-xl p-0 md:p-4 max-w-8xl mx-auto bg-right bg-no-repeat bg-[url('/background-home.jpg')]">
 
                     <Navbar fluid={true} className="mx-2 !border-gray-200/10 px-2 sm:px-4 py-2.5 rounded-3xl border !bg-white/10">
-                        <Navbar.Brand href="/">
-                            <Image width={28} height={28} src={logo} className="mr-3" alt="Flowbite Logo" />
-                            <span className="self-center text-xl font-semibold whitespace-nowrap text-white">Exame de pagamento</span>
+                        <Navbar.Brand href="/" className='no-underline'>
+                            <Image width={28} height={28} src={logo} className="mr-3" alt="Logo" />
+                            <span className="self-center text-xl font-semibold whitespace-nowrap text-white uppercase">Exame de pagamento</span>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                         <Navbar.Collapse>
-                            <ButtonDefault isLoading={isLoading} color='green' type='button' variant='outline' click={() => { setIsLoading(true); router.push('/app') }}>
+                            <ButtonDefault isLoading={isLoading} color='green' type='button' variant='solid' click={() => { setIsLoading(true); router.push('/app') }}>
                                 <span className='text-white flex justify-center items-center'>
                                     Acessar
                                     <BiLinkExternal className="w-4 h-4 ml-2" />
@@ -53,7 +53,7 @@ export default function Home() {
                                 <p>
                                     <span id="app_presatation" className='text-4xl md:text-7xl font-bold '>EXAME DE PAGAMENTO</span>
                                     <span className='mt-8 px-1 block dark:text-white !text-white'>
-                                        Uma nova forma de realiar o Exame de Pagamento de Pessoal no Exército Brasileiro!
+                                        Uma nova forma de realiar o Exame de Pagamento de Pessoal, no Exército Brasileiro!
                                     </span>
                                     <br />
                                     <span className='px-1 block dark:text-white !text-white'>
@@ -67,7 +67,7 @@ export default function Home() {
                                     <span className='text-white'>Como funciona?</span>
                                 </ButtonDefault>
                                 <div className="mx-2"></div>
-                                <ButtonDefault color='green' type='button' variant='solid' click={() => { router.push('/auth/singin') }}>Conhecer</ButtonDefault>
+                                <ButtonDefault color='blue' type='button' variant='solid' click={() => { router.push('/auth/singin') }}>Conhecer</ButtonDefault>
                             </div>
                         </div>
                     </div>

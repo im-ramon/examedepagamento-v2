@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 import { AppContext } from '../contexts/app.context';
 import { AuxiliarySheetAPIResponseProps } from '../pages/app/generate_auxiliary_sheet';
 import { pb } from '../services/pocktbase';
-import { pocktbase_api } from '../services/pocktbase_api';
 import { convert_in_BRL } from '../utils/util_convert_in_BRL';
 import { ButtonDefault } from './ButtonDefault';
 
@@ -86,9 +85,9 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
         setIsLoading(true)
 
         const fetchData = {
-            userId: userData.id,
-            formData: JSON.stringify(contextFormData),
-            editableValues: JSON.stringify(data)
+            user_id: userData.id,
+            form_data: JSON.stringify(contextFormData),
+            observations: JSON.stringify(data)
         }
 
         if (contextFormDataId) {
@@ -105,11 +104,12 @@ const AuxiliarySheet = ({ isVisible, closeModal, data }: AuxiliarySheetProps) =>
                     setIsLoading(false)
                 })
         } else {
-            await pocktbase_api.post('/collections/auxiliary_sheets/records', fetchData)
+            await pb.collection('auxiliary_sheets').create(fetchData)
                 .then(data => {
-                    const id: string = data.data.id
+                    const id: string = data.id
                     toast.success(`Código: ${id.slice(0, 7)}`, { autoClose: false })
                     toast.success(`Ficha auxiliar salva! Guarde o código a seguir para poder editá-la.`, { autoClose: 15000 })
+                    console.log(data)
                 })
                 .catch(e => {
                     console.error(e)
