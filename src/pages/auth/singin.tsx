@@ -1,7 +1,7 @@
 import { Modal } from "flowbite-react";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
