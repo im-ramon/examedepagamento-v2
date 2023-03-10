@@ -35,6 +35,7 @@ export function Aside() {
 
         if (window) {
             window.localStorage.clear();
+            window.location.reload()
         }
     }
 
