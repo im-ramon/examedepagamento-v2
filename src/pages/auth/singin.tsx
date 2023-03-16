@@ -41,7 +41,9 @@ export default function SingIn() {
                 setUserData(data as UserDataProps)
                 setCookie('token', data.token)
 
-                router.push('/app')
+                setTimeout(() => {
+                    router.push('/app')
+                }, 4000);
             })
             .catch((error) => {
                 console.log(error)
@@ -49,7 +51,9 @@ export default function SingIn() {
                 setValue('password', '')
             })
             .finally(() => {
-                setIsLoading(false)
+                setTimeout(() => {
+                    setIsLoading(false)
+                }, 4000);
             })
     }
 
