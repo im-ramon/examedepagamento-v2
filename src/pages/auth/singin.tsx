@@ -1,3 +1,4 @@
+import copy from "copy-to-clipboard";
 import { Modal } from "flowbite-react";
 import Head from "next/head";
 import Link from "next/link";
@@ -6,6 +7,7 @@ import { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BiHomeAlt, BiMailSend } from "react-icons/bi";
+import { FaRegCopy } from "react-icons/fa";
 import { FiLock, FiMail } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { ButtonDefault } from "../../components/ButtonDefault";
@@ -24,6 +26,7 @@ export default function SingIn() {
     const router = useRouter()
 
     const [showModal, setShowModal] = useState<boolean>(false)
+    const [showModalHelp, setShowModalHelp] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
 
@@ -41,7 +44,9 @@ export default function SingIn() {
                 setUserData(data as UserDataProps)
                 setCookie('token', data.token)
 
-                router.push('/app')
+                setTimeout(() => {
+                    router.push('/app')
+                }, 1000);
             })
             .catch((error) => {
                 console.log(error)
@@ -96,7 +101,9 @@ export default function SingIn() {
                         </div>
                     </form>
                 </div>
+                <span onClick={() => setShowModalHelp(true)} className="p-2 mt-4 cursor-pointer text-primary-800">Não conseguiu acessar? Clique aqui.</span>
                 <Link href="/" title="Voltar para página inicial" className="dark:bg-gray-700 shadow-md border dark:border-gray-800 transition-transform hover:scale-105 p-2 rounded-full mt-4"><BiHomeAlt size={20} /></Link>
+
             </div>
 
             <Modal show={showModal} onClose={() => setShowModal(false)}>
@@ -124,6 +131,42 @@ export default function SingIn() {
                         </ButtonDefault>
                     </Modal.Footer>
                 </form>
+            </Modal>
+
+            <Modal show={showModalHelp} onClose={() => setShowModalHelp(false)}>
+                <Modal.Header>
+                    Problemas para acessar?
+                </Modal.Header>
+                <div>
+                    <Modal.Body>
+                        <div className="space-y-6">
+                            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                Caso não tenha sido redirecionado após fazer login, <Link href={'/app'}>clique aqui</Link>.
+                            </p>
+                            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                Em caso de persistência do erro, entre em contato pelo e-mail abaixo, informando o problema:
+                            </p>
+                            <div className="flex">
+                                <div className="relative mb-6 flex-1 mr-4">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" >
+                                        <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                                    </div>
+                                    <input defaultValue="contato@ramonoliveira.dev" disabled type="email" id="input-group-1" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="usuario@email.com.br" />
+                                </div>
+                                <div>
+                                    <ButtonDefault
+                                        click={() => { copy('contato@ramonoliveira.dev'); toast.success('E-mail copiado!') }}
+                                        color="green"
+                                        type="submit"
+                                        variant="solid">
+                                        Copiar e-mail
+                                        <FaRegCopy size={16} className='inline-block ml-2' />
+                                    </ButtonDefault>
+                                </div>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                </div>
             </Modal>
         </>
     )
