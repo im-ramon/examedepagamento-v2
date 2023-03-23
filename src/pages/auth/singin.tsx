@@ -143,7 +143,7 @@ export default function SingIn() {
                     <Modal.Body>
                         <div className="space-y-6">
                             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                Caso não tenha sido redirecionado após fazer login, <Link href={'/app'}>clique aqui</Link>.
+                                Caso não tenha sido redirecionado após fazer login, <a target="_blank" rel="noreferrer" href="https://examedepagamento.com.br/app">clique aqui</a>.
                             </p>
                             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                                 Em caso de persistência do erro, entre em contato pelo e-mail abaixo, informando o problema:
