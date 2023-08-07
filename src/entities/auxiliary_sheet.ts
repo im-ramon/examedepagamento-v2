@@ -106,6 +106,7 @@ export class AuxiliarySheetEtitie {
             this.pMil[1].value +
             this.pMilExt.value +
             this.fusex.value +
+            this.descDepFusex.value +
             this.pensaoJudiciaria.reduce((prev, curr) => {
                 return prev + curr.value
             }, 0) +
